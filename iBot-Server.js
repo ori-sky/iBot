@@ -1,4 +1,4 @@
-var User = require('iBot-User.js');
+var User = require('./iBot-User.js');
 
 exports.Server = function(host, port, nick, ident, pass)
 {
