@@ -16,6 +16,11 @@ exports.Server = function(host, port, nick, ident, pass)
 	this.user = new User(nick, ident, '', 'iBot');
 	this.users[nick] = this.user;
 
+	this.onConnect = function()
+	{
+		
+	}
+
 	this.connect = function()
 	{
 		this.client = new net.Socket();
