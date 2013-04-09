@@ -32,4 +32,14 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.client.setNoDelay();
 		this.client.connect(port, host, this.onConnect);
 	}
+
+	this.send = function(data)
+	{
+		this.sendSilent(data);
+	}
+
+	this.sendSilent = function(data)
+	{
+		this.client.write(data + '\r\n');
+	}
 }
