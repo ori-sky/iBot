@@ -41,6 +41,7 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.send = function(data)
 	{
+		console.log(data);
 		this.sendSilent(data);
 	}
 
