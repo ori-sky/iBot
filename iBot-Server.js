@@ -18,8 +18,14 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.onConnect = function()
 	{
-		
-	}
+		if(typeof this.pass === 'string' && this.pass !== '')
+		{
+			this.sendSilent('PASS ' + this.pass);
+		}
+
+		this.send('NICK ' + this.nick);
+		this.send('USER ' + this.ident + ' 0 * :' + this.user.realname);
+	}.bind(this);
 
 	this.connect = function()
 	{
