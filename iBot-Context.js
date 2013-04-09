@@ -1,6 +1,6 @@
 exports.Context = function()
 {
-	this.servers = [];
+	this.servers = {};
 
 	this.run = function()
 	{
