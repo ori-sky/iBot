@@ -1,3 +1,4 @@
+var stream = require('stream');
 var net = require('net');
 var readline = require('readline');
 
@@ -18,8 +19,6 @@ exports.Server = function(host, port, nick, ident, pass)
 	this.ident = ident;
 	this.pass = pass;
 
-
-
 	this.users = {};
 	this.channels = {};
 
@@ -34,8 +33,10 @@ exports.Server = function(host, port, nick, ident, pass)
 		}
 		else if(typeof this.pass === 'boolean' && this.pass !== false)
 		{
-			rl.question('Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ', function(pass)
+			console.log('Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
+			rl.question('', function(pass)
 			{
+				console.log('\x1b[1A\x1b[2K');
 				this.pass = pass;
 				this.onConnect();
 			}.bind(this)
