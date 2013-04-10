@@ -1,5 +1,16 @@
-exports.Context = require('./iBot-Context.js').Context;
-exports.Server = require('./iBot-Server.js').Server;
-exports.User = require('./iBot-User.js').User;
-exports.Channel = require('./iBot-Channel.js').Channel;
-exports.Mode = require('./iBot-Mode.js').Mode;
+exports._Context = require('./iBot-Context.js');
+exports._Server = require('./iBot-Server.js');
+exports._User = require('./iBot-User.js');
+exports._Channel = require('./iBot-Channel.js');
+exports._Mode = require('./iBot-Mode.js');
+
+exports.Context = exports._Context.Context;
+exports.Server = exports._Server.Server;
+exports.User = exports._User.User;
+exports.Channel = exports._Channel.Channel;
+exports.Mode = exports._Mode.Mode;
+
+exports.exit = function()
+{
+	exports._Server.exit();
+}
