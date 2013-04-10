@@ -2,7 +2,7 @@ exports.Context = function()
 {
 	this.servers = {};
 
-	this.run = function()
+	this.start = function()
 	{
 		for(var kServer in this.servers)
 		{
