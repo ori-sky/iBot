@@ -1,4 +1,3 @@
-var stream = require('stream');
 var net = require('net');
 var readline = require('readline');
 
