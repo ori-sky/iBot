@@ -3,13 +3,6 @@ var readline = require('readline');
 
 var User = require('./iBot-User.js').User;
 
-var rl = readline.createInterface(
-{
-	input: process.stdin,
-	output: process.stdout
-}
-);
-
 exports.Server = function(host, port, nick, ident, pass)
 {
 	this.host = host;
@@ -32,14 +25,25 @@ exports.Server = function(host, port, nick, ident, pass)
 		}
 		else if(typeof this.pass === 'boolean' && this.pass !== false)
 		{
+			var rl = readline.createInterface(
+			{
+				input: process.stdin,
+				output: process.stdout
+			}
+			);
+
 			console.log('Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
 			rl.question('', function(pass)
 			{
 				console.log('\x1b[1A\x1b[2K');
+
 				this.pass = pass;
 				this.onConnect();
+
+				rl.close();
 			}.bind(this)
 			);
+
 			return;
 		}
 
