@@ -51,8 +51,8 @@ exports.Server = function(host, port, nick, ident, pass)
 	{
 		this.client = new net.Socket();
 
-		this.client.on('data', this.onData);
-		this.client.on('close', this.onClose);
+		//this.client.on('data', this.onData);
+		//this.client.on('close', this.onClose);
 
 		this.client.setEncoding('utf8');
 		this.client.setNoDelay();
