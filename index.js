@@ -1,1 +1,2 @@
-console.log('hello world');
+var iBot = require('./iBot.js');
+var ctx = new iBot.Context();
