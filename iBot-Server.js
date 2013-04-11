@@ -66,12 +66,24 @@ exports.Server = function(host, port, nick, ident, pass)
 	{
 		this.client = new net.Socket();
 
-		//this.client.on('data', this.onData);
+		this.client.on('data', this.onData);
 		//this.client.on('close', this.onClose);
 
 		this.client.setEncoding('utf8');
 		this.client.setNoDelay();
 		this.client.connect(port, host, this.onConnect);
+	}
+
+	this.recv = function(data)
+	{
+		console.log('r> ' + data);
+		var words = data.split(' ');
+
+		var prefix = '';
+		var opcode = '';
+		var params = null;
+
+		//if(words[0][0] === ':'
 	}
 
 	this.send = function(data)
