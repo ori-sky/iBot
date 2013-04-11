@@ -60,7 +60,7 @@ exports.Server = function(host, port, nick, ident, pass)
 		{
 			this.recv(texts[i]);
 		}
-	}
+	}.bind(this);
 
 	this.connect = function()
 	{
