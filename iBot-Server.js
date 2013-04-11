@@ -51,6 +51,17 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.send('USER ' + this.ident + ' 0 * :' + this.user.realname);
 	}.bind(this);
 
+	this.onData = function(data)
+	{
+		var text = data.toString();
+		var texts = text.split('\r\n');
+
+		for(var i=0; i<(texts.length-1); ++i)
+		{
+			this.recv(texts[i]);
+		}
+	}
+
 	this.connect = function()
 	{
 		this.client = new net.Socket();
