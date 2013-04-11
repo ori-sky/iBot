@@ -51,15 +51,19 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.send('USER ' + this.ident + ' 0 * :' + this.user.realname);
 	}.bind(this);
 
+	this.accumulator = '';
+
 	this.onData = function(data)
 	{
-		var text = data.toString();
+		var text = this.accumulator + data.toString();
 		var texts = text.split('\r\n');
 
 		for(var i=0; i<(texts.length-1); ++i)
 		{
 			this.recv(texts[i]);
 		}
+
+		this.accumulator = texts[texts.length - 1];
 	}.bind(this);
 
 	this.connect = function()
