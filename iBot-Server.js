@@ -79,11 +79,72 @@ exports.Server = function(host, port, nick, ident, pass)
 		console.log('r> ' + data);
 		var words = data.split(' ');
 
-		var prefix = '';
+		var prefix = null;
 		var opcode = '';
-		var params = null;
+		var params = [];
+		var paramsIndex = 0;
 
-		//if(words[0][0] === ':'
+		if(words[0][0] === ':')
+		{
+			prefix = {};
+			prefix['mask'] = words[0].substr(1);
+
+			if(prefix['mask'].indexOf('!') !== -1)
+			{
+				var split1 = prefix['mask'].split('!');
+				var split2 = split1[1].split('@');
+
+				prefix['nick'] = split1[0];
+				prefix['ident'] = split2[0];
+				prefix['host'] = split2[1];
+			}
+
+			opcode = words[1];
+
+			if(words.length > 2)
+			{
+				paramsIndex = 2;
+			}
+		}
+		else
+		{
+			opcode = words[0];
+
+			if(words.length > 1)
+			{
+				paramsIndex = 1;
+			}
+		}
+
+		if(paramsIndex > 0)
+		{
+			var inString = false;
+			for(var i=paramsIndex; i<words.length; ++i)
+			{
+				if(!inString && words[i][0] === ':')
+				{
+					inString = true;
+					params.push(words[i].substr(1));
+					continue;
+				}
+
+				if(inString)
+				{
+					params[params.length - 1] += ' ' + words[i];
+				}
+				else
+				{
+					params.push(words[i]);
+				}
+			}
+		}
+
+		switch(opcode)
+		{
+			case 'PING':
+				this.send('PONG :' + params[0]);
+				break;
+		}
 	}
 
 	this.send = function(data)
