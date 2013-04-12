@@ -2,6 +2,6 @@ var iBot = require('./iBot.js');
 var ctx = new iBot.Context();
 
 ctx.servers['dv'] = new iBot.Server('irc.dreamviews.com', 6667, 'iBot^^', 'iBot', true);
-ctx.start();
+ctx.servers['dv'].addModule('core');
 
-//iBot.exit();
+ctx.start();

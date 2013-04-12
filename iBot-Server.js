@@ -28,6 +28,8 @@ exports.Server = function(host, port, nick, ident, pass)
 
 		var module = require('./mod_' + name + '.js');
 		this.modules[name] = new module.mod();
+
+		console.log('Loaded mod_' + name);
 	}
 
 	this.onConnect = function()
@@ -185,9 +187,4 @@ exports.Server = function(host, port, nick, ident, pass)
 	{
 		this.client.write(data + '\r\n');
 	}
-}
-
-exports.exit = function()
-{
-	rl.close();
 }

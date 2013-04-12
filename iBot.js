@@ -9,8 +9,3 @@ exports.Server = exports._Server.Server;
 exports.User = exports._User.User;
 exports.Channel = exports._Channel.Channel;
 exports.Mode = exports._Mode.Mode;
-
-exports.exit = function()
-{
-	exports._Server.exit();
-}
