@@ -66,12 +66,23 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.accumulator = texts[texts.length - 1];
 	}.bind(this);
 
+	this.onClose = function()
+	{
+		this.client.end();
+		this.client.destroy();
+
+		var timeout = setTimeout(function()
+		{
+			this.connect();
+		}.bind(this), 5000);
+	}.bind(this);
+
 	this.connect = function()
 	{
 		this.client = new net.Socket();
 
 		this.client.on('data', this.onData);
-		//this.client.on('close', this.onClose);
+		this.client.on('close', this.onClose);
 
 		this.client.setEncoding('utf8');
 		this.client.setNoDelay();
