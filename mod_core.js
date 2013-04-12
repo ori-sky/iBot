@@ -7,7 +7,7 @@ exports.mod = function(server)
 		switch(opcode)
 		{
 			case 'PING':
-				server.send('PONG :' + params[1]);
+				server.send('PONG :' + params[0]);
 				break;
 		}
 	}
