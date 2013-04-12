@@ -20,14 +20,8 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.addModule = function(name)
 	{
-		var sandboxedServer =
-		{
-			send: this.send,
-			sendSilent: this.sentSilent
-		};
-
 		var module = require('./mod_' + name + '.js');
-		this.modules[name] = new module.mod();
+		this.modules[name] = new module.mod(this);
 
 		console.log('Loaded mod_' + name);
 	}
@@ -169,11 +163,18 @@ exports.Server = function(host, port, nick, ident, pass)
 			}
 		}
 
+		/*
 		switch(opcode)
 		{
 			case 'PING':
 				this.send('PONG :' + params[0]);
 				break;
+		}
+		*/
+
+		for(var mod in this.modules)
+		{
+			this.modules[mod].recv(prefix, opcode, params);
 		}
 	}
 
