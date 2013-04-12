@@ -13,9 +13,22 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.users = {};
 	this.channels = {};
+	this.modules = {};
 
 	this.user = new User(nick, ident, '', 'iBot');
 	this.users[nick] = this.user;
+
+	this.addModule = function(name)
+	{
+		var sandboxedServer =
+		{
+			send: this.send,
+			sendSilent: this.sentSilent
+		};
+
+		var module = require('./mod_' + name + '.js');
+		this.modules[name] = new module.mod();
+	}
 
 	this.onConnect = function()
 	{
