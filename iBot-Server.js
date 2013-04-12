@@ -23,7 +23,7 @@ exports.Server = function(host, port, nick, ident, pass)
 		var module = require('./mod_' + name + '.js');
 		this.modules[name] = new module.mod(this);
 
-		console.log('Loaded mod_' + name);
+		console.error('Loaded mod_' + name);
 	}
 
 	this.onConnect = function()
@@ -100,7 +100,7 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.recv = function(data)
 	{
-		console.log('r> ' + data);
+		console.error('r> ' + data);
 		var words = data.split(' ');
 
 		var prefix = null;
@@ -180,7 +180,7 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.send = function(data)
 	{
-		console.log(data);
+		console.error(data);
 		this.sendSilent(data);
 	}
 
