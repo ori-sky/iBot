@@ -1,3 +1,6 @@
+var vm = require('vm');
+var sandbox = vm.createContext({});
+
 exports.mod = function(server)
 {
 	this.recv = function(prefix, opcode, params)
@@ -13,11 +16,49 @@ exports.mod = function(server)
 				switch(words[0])
 				{
 					case '!_load':
-						server.reloadModule(words[1]);
-						server.send('PRIVMSG ' + params[0] + ' :done');
+						if(prefix['host'] === 'shockk.pony')
+						{
+							server.reloadModule(words[1]);
+							server.send('PRIVMSG ' + params[0] + ' :done');
+						}
 						break;
 					case '!_raw':
-						server.send(params[1].substr(6));
+						if(prefix['host'] === 'shockk.pony')
+						{
+							server.send(words.slice(1).join(' '));
+						}
+						break;
+					case '!_js':
+						if(prefix['host'] === 'shockk.pony')
+						{
+							var js = words.slice(1).join(' ');
+
+							sandbox._ =
+							{
+								root: sandbox,
+								echoResult: false,
+								send: server.send,
+								params: params,
+								words: words
+							};
+
+							try
+							{
+								var result = vm.runInContext(js, sandbox);
+
+								if(sandbox._.echoResult === true)
+								{
+									server.send('PRIVMSG ' + params[0] + ' :Result: ' + result);
+								}
+
+								delete sandbox._;
+							}
+							catch(e)
+							{
+								console.error(e.stack);
+								server.send('PRIVMSG ' + params[0] + ' :' + e.message);
+							}
+						}
 						break;
 					case '!test':
 						server.send('PRIVMSG ' + params[0] + ' :test');
