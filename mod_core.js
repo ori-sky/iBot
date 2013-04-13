@@ -15,8 +15,8 @@ exports.mod = function(server)
 				switch(words[0])
 				{
 					case '!_load':
-						//server.send('PRIVMSG ' + params[0] + ' :denied');
 						server.reloadModule(words[1]);
+						server.send('PRIVMSG ' + params[0] + ' :done');
 						break;
 				}
 				break;
