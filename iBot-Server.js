@@ -173,18 +173,16 @@ exports.Server = function(host, port, nick, ident, pass)
 			}
 		}
 
-		/*
-		switch(opcode)
-		{
-			case 'PING':
-				this.send('PONG :' + params[0]);
-				break;
-		}
-		*/
-
 		for(var mod in this.modules)
 		{
-			this.modules[mod].recv(prefix, opcode, params);
+			try
+			{
+				this.modules[mod].recv(prefix, opcode, params);
+			}
+			catch(e)
+			{
+				console.error(e.stack);
+			}
 		}
 	}
 
