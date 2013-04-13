@@ -16,20 +16,20 @@ exports.mod = function(server)
 				switch(words[0])
 				{
 					case '!_load':
-						if(prefix['host'] === 'shockk.pony')
+						if(server.master.test(prefix['mask']))
 						{
 							server.reloadModule(words[1]);
 							server.send('PRIVMSG ' + params[0] + ' :done');
 						}
 						break;
 					case '!_raw':
-						if(prefix['host'] === 'shockk.pony')
+						if(server.master.test(prefix['mask']))
 						{
 							server.send(words.slice(1).join(' '));
 						}
 						break;
 					case '!_js':
-						if(prefix['host'] === 'shockk.pony')
+						if(server.master.test(prefix['mask']))
 						{
 							var js = words.slice(1).join(' ');
 
