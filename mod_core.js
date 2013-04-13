@@ -10,10 +10,13 @@ exports.mod = function(server)
 				server.send('PONG :' + params[0]);
 				break;
 			case 'PRIVMSG':
-				switch(params[1])
+				var words = params[1].split(' ');
+
+				switch(words[0])
 				{
 					case '!_load':
-						server.send('PRIVMSG ' + params[0] + ' :denied');
+						//server.send('PRIVMSG ' + params[0] + ' :denied');
+						server.reloadModule(words[1]);
 						break;
 				}
 				break;
