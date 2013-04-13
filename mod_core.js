@@ -19,6 +19,9 @@ exports.mod = function(server)
 					case '!_raw':
 						server.send(params[1].substr(6));
 						break;
+					case '!test':
+						server.send('PRIVMSG ' + params[0] + ' :test');
+						break;
 				}
 				break;
 		}
