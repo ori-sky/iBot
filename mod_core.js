@@ -1,7 +1,5 @@
 exports.mod = function(server)
 {
-	this.server = server;
-
 	this.recv = function(prefix, opcode, params)
 	{
 		switch(opcode)
@@ -17,6 +15,9 @@ exports.mod = function(server)
 					case '!_load':
 						server.reloadModule(words[1]);
 						server.send('PRIVMSG ' + params[0] + ' :done');
+						break;
+					case '!_raw':
+						server.send(params[1].substr(6));
 						break;
 				}
 				break;
