@@ -106,7 +106,7 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.client.setEncoding('utf8');
 		this.client.setNoDelay();
 		this.client.connect(port, host, this.onConnect);
-	}
+	}.bind(this);
 
 	this.recv = function(data)
 	{
@@ -184,16 +184,16 @@ exports.Server = function(host, port, nick, ident, pass)
 				console.error(e.stack);
 			}
 		}
-	}
+	}.bind(this);
 
 	this.send = function(data)
 	{
 		console.error(data);
 		this.sendSilent(data);
-	}
+	}.bind(this);
 
 	this.sendSilent = function(data)
 	{
 		this.client.write(data + '\r\n');
-	}
+	}.bind(this);
 }
