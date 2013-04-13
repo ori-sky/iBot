@@ -26,6 +26,16 @@ exports.Server = function(host, port, nick, ident, pass)
 		console.error('Loaded mod_' + name);
 	}
 
+	this.reloadModule = function(name)
+	{
+		if(typeof require.cache[require.resolve('./mod_' + name + '.js')] !== 'undefined')
+		{
+			delete require.cache[require.resolve('./mod_' + name + '.js')];
+		}
+
+		this.addModule(name);
+	}
+
 	this.onConnect = function()
 	{
 		if(typeof this.pass === 'string' && this.pass !== '')
