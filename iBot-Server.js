@@ -177,7 +177,7 @@ exports.Server = function(host, port, nick, ident, pass)
 		{
 			try
 			{
-				this.modules[mod].recv(prefix, opcode, params);
+				this.modules[mod].recv(this, prefix, opcode, params);
 			}
 			catch(e)
 			{

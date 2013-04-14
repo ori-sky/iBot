@@ -1,9 +1,9 @@
 var vm = require('vm');
 var sandbox = vm.createContext({});
 
-exports.mod = function(server)
+exports.mod = function(context)
 {
-	this.recv = function(prefix, opcode, params)
+	this.recv = function(server, prefix, opcode, params)
 	{
 		switch(opcode)
 		{
