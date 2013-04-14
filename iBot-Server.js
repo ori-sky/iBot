@@ -21,7 +21,7 @@ exports.Server = function(host, port, nick, ident, pass)
 	this.loadModule = function(name)
 	{
 		var module = require('./mod_' + name + '.js');
-		this.modules[name] = new module.mod(this);
+		this.modules[name] = new module.mod(null);
 
 		console.error('Loaded mod_' + name);
 	}

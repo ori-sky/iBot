@@ -15,10 +15,17 @@ exports.mod = function(context)
 
 				switch(words[0])
 				{
-					case '!_load':
+					case '!_loads':
 						if(server.master.test(prefix['mask']))
 						{
 							server.reloadModule(words[1]);
+							server.send('PRIVMSG ' + params[0] + ' :done');
+						}
+						break;
+					case '!_loadc':
+						if(server.master.test(prefix['mask']))
+						{
+							context.reloadModule(words[1]);
 							server.send('PRIVMSG ' + params[0] + ' :done');
 						}
 						break;
