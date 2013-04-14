@@ -25,7 +25,7 @@ exports.mod = function(context)
 					case '!_loadc':
 						if(server.master.test(prefix['mask']))
 						{
-							context.reloadModule(words[1]);
+							context.reloadModule(words[1], null);
 							server.send('PRIVMSG ' + params[0] + ' :done');
 						}
 						break;
