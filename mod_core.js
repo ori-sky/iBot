@@ -1,6 +1,9 @@
 var vm = require('vm');
 var sandbox = vm.createContext({});
 
+var User = require('./iBot-User.js').User;
+var Channel = require('./iBot-Channel.js').Channel;
+
 exports.mod = function(context)
 {
 	this.recv = function(server, prefix, opcode, params)
@@ -52,6 +55,9 @@ exports.mod = function(context)
 					case '!mods':
 						server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 						break;
+					case '!channels':
+						server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.user.channels).join(', '));
+						break;
 					case '!js':
 						if(server.master.test(prefix.mask))
 						{
@@ -91,6 +97,21 @@ exports.mod = function(context)
 						server.send('PRIVMSG ' + target + ' :hello');
 						break;
 				}
+				break;
+			case 'JOIN':
+				if(typeof server.users[prefix.nick] === 'undefined')
+				{
+					server.users[prefix.nick] = new User(prefix.nick, prefix.ident, prefix.host, null);
+				}
+
+				if(typeof server.channels[params[0]] === 'undefined')
+				{
+					server.channels[params[0]] = new Channel(params[0]);
+				}
+
+				server.users[prefix.nick].channels[params[0]] = server.channels[params[0]];
+				server.channels[params[0]].users[prefix.nick] = server.users[prefix.nick];
+
 				break;
 		}
 	}
