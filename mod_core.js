@@ -56,7 +56,14 @@ exports.mod = function(context)
 						server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 						break;
 					case '!channels':
-						server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.user.channels).join(', '));
+						if(typeof words[1] === 'undefined')
+						{
+							server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.user.channels).join(', '));
+						}
+						else
+						{
+							server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.users[words[1]].channels).join(', '));
+						}
 						break;
 					case '!js':
 						if(server.master.test(prefix.mask))
@@ -111,6 +118,28 @@ exports.mod = function(context)
 
 				server.users[prefix.nick].channels[params[0]] = server.channels[params[0]];
 				server.channels[params[0]].users[prefix.nick] = server.users[prefix.nick];
+
+				break;
+			case 'PART':
+				if(typeof server.users[prefix.nick] !== 'undefined')
+				{
+					delete server.users[prefix.nick].channels[params[0]];
+
+					if(server.users[prefix.nick] !== server.user && Object.keys(server.users[prefix.nick].channels).length === 0)
+					{
+						delete server.users[prefix.nick];
+					}
+				}
+
+				if(typeof server.channels[params[0]] !== 'undefined')
+				{
+					delete server.channels[params[0]].users[prefix.nick];
+
+					if(server.users[prefix.nick] === server.user)
+					{
+						delete server.channels[params[0]];
+					}
+				}
 
 				break;
 		}
