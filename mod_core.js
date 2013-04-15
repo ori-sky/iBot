@@ -29,6 +29,9 @@ exports.mod = function(context)
 							server.send('PRIVMSG ' + params[0] + ' :done');
 						}
 						break;
+					case '!_mods':
+						server.send('PRIVMSG ' + params[0] + ' :Modules: ' + server.getModules(', '));
+						break;
 					case '!_js':
 						if(server.master.test(prefix['mask']))
 						{

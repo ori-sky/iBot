@@ -36,7 +36,7 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.loadModule(name);
 	}
 
-	this.listModules = function(delimiter)
+	this.getModules = function(delimiter)
 	{
 		var keys = Object.keys(this.modules);
 		return keys.join(delimiter);
