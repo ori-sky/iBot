@@ -35,6 +35,20 @@ exports.mod = function(context)
 							server.send('PRIVMSG ' + target + ' :done');
 						}
 						break;
+					case '!umsrv':
+						if(server.master.test(prefix.mask))
+						{
+							context.unloadModule(words[1], server);
+							server.send('PRIVMSG ' + target + ' :done');
+						}
+						break;
+					case '!umctx':
+						if(server.master.test(prefix.mask))
+						{
+							context.unloadModule(words[1], null);
+							server.send('PRIVMSG ' + target + ' :done');
+						}
+						break;
 					case '!mods':
 						server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 						break;

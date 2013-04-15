@@ -39,4 +39,23 @@ exports.Context = function()
 
 		this.loadModule(name, server);
 	}
+
+	this.unloadModule = function(name, server)
+	{
+		if(server === null)
+		{
+			for(var kServer in this.servers)
+			{
+				this.servers[kServer].modules[name] = null;
+				delete this.servers[kServer].modules[name];
+			}
+		}
+		else
+		{
+			server.modules[name] = null;
+			delete server.modules[name];
+		}
+
+		console.error('Unloaded mod_' + name);
+	}
 }
