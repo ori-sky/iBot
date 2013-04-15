@@ -29,12 +29,6 @@ exports.mod = function(context)
 							server.send('PRIVMSG ' + params[0] + ' :done');
 						}
 						break;
-					case '!_raw':
-						if(server.master.test(prefix['mask']))
-						{
-							server.send(words.slice(1).join(' '));
-						}
-						break;
 					case '!_js':
 						if(server.master.test(prefix['mask']))
 						{
