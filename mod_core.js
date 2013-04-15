@@ -105,6 +105,8 @@ exports.mod = function(context)
 						break;
 				}
 				break;
+			case '353': // RPL_NAMREPLY
+				break;
 			case 'JOIN':
 				if(typeof server.users[prefix.nick] === 'undefined')
 				{
