@@ -6,4 +6,7 @@
     <note priority="medium" time="1366032351">
         Implement channel and user tracking into mod_core
     </note>
+    <note priority="medium" time="1366047270">
+        Move js sandbox to separate module
+    </note>
 </todo>
