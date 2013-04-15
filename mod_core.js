@@ -12,28 +12,34 @@ exports.mod = function(context)
 				break;
 			case 'PRIVMSG':
 				var words = params[1].split(' ');
+				var target = params[0];
+
+				if(target === server.user.nick)
+				{
+					target = prefix.nick;
+				}
 
 				switch(words[0])
 				{
-					case '!_loads':
-						if(server.master.test(prefix['mask']))
+					case '!lmsrv':
+						if(server.master.test(prefix.mask))
 						{
 							server.reloadModule(words[1]);
-							server.send('PRIVMSG ' + params[0] + ' :done');
+							server.send('PRIVMSG ' + target + ' :done');
 						}
 						break;
-					case '!_loadc':
-						if(server.master.test(prefix['mask']))
+					case '!lmctx':
+						if(server.master.test(prefix.mask))
 						{
 							context.reloadModule(words[1], null);
-							server.send('PRIVMSG ' + params[0] + ' :done');
+							server.send('PRIVMSG ' + target + ' :done');
 						}
 						break;
-					case '!_mods':
-						server.send('PRIVMSG ' + params[0] + ' :Modules: ' + server.getModules(', '));
+					case '!mods':
+						server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 						break;
-					case '!_js':
-						if(server.master.test(prefix['mask']))
+					case '!js':
+						if(server.master.test(prefix.mask))
 						{
 							var js = words.slice(1).join(' ');
 
@@ -52,7 +58,7 @@ exports.mod = function(context)
 
 								if(sandbox._.echoResult === true)
 								{
-									server.send('PRIVMSG ' + params[0] + ' :Result: ' + result);
+									server.send('PRIVMSG ' + target + ' :Result: ' + result);
 								}
 
 								delete sandbox._;
@@ -60,15 +66,15 @@ exports.mod = function(context)
 							catch(e)
 							{
 								console.error(e.stack);
-								server.send('PRIVMSG ' + params[0] + ' :' + e.message);
+								server.send('PRIVMSG ' + target + ' :' + e.message);
 							}
 						}
 						break;
 					case '!test':
-						server.send('PRIVMSG ' + params[0] + ' :test');
+						server.send('PRIVMSG ' + target + ' :test');
 						break;
 					case '!hello':
-						server.send('PRIVMSG ' + params[0] + ' :hello');
+						server.send('PRIVMSG ' + target + ' :hello');
 						break;
 				}
 				break;
