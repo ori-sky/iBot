@@ -36,6 +36,12 @@ exports.Server = function(host, port, nick, ident, pass)
 		this.loadModule(name);
 	}
 
+	this.listModules = function(delimiter)
+	{
+		var keys = Object.keys(this.modules);
+		return keys.join(delimiter);
+	}
+
 	this.onConnect = function()
 	{
 		if(typeof this.pass === 'string' && this.pass !== '')
