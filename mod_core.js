@@ -48,7 +48,7 @@ exports.mod = function(context)
 							server.send('PRIVMSG ' + target + ' :done');
 						}
 						break;
-					case '!mods':
+					case '!modules':
 						server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 						break;
 					case '!channels':
@@ -60,6 +60,12 @@ exports.mod = function(context)
 						{
 							server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.users[words[1]].channels).join(', '));
 						}
+						break;
+					case '!test':
+						server.send('PRIVMSG ' + target + ' :test');
+						break;
+					case '!hello':
+						server.send('PRIVMSG ' + target + ' :hello');
 						break;
 				}
 				break;
