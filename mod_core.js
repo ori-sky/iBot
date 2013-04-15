@@ -24,7 +24,7 @@ exports.mod = function(context)
 					case '!lmsrv':
 						if(server.master.test(prefix.mask))
 						{
-							server.reloadModule(words[1]);
+							context.reloadModule(words[1], server);
 							server.send('PRIVMSG ' + target + ' :done');
 						}
 						break;
