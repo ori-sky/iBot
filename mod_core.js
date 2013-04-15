@@ -70,6 +70,9 @@ exports.mod = function(context)
 					case '!test':
 						server.send('PRIVMSG ' + params[0] + ' :test');
 						break;
+					case '!hello':
+						server.send('PRIVMSG ' + params[0] + ' :hello');
+						break;
 				}
 				break;
 		}
