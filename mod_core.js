@@ -63,7 +63,22 @@ exports.mod = function(context)
 						break;
 				}
 				break;
+			case '005': // RPL_ISUPPORT
+				for(var i=1; i<params.length-1; ++i)
+				{
+					var parts = params[i].split('=');
+					server.isupport[parts[0]] = parts[1];
+				}
+				break;
 			case '353': // RPL_NAMREPLY
+				var words = params[3].split(' ');
+
+				console.log('');
+				console.log(words);
+				console.log('');
+
+				server.send('PRIVMSG #iBot :Users in ' + params[2] + ': ' + words.slice(0/*, 3*/).join(', '));
+
 				break;
 			case 'JOIN':
 				if(typeof server.users[prefix.nick] === 'undefined')

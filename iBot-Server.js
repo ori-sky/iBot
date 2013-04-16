@@ -11,6 +11,7 @@ exports.Server = function(host, port, nick, ident, pass)
 	this.ident = ident;
 	this.pass = pass;
 
+	this.isupport = {};
 	this.users = {};
 	this.channels = {};
 	this.modules = {};
