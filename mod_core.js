@@ -112,6 +112,25 @@ exports.mod = function(context)
 				server.channels[params[0]].users[prefix.nick] = server.users[prefix.nick];
 
 				break;
+			case 'NICK':
+				server.users[params[0]] = server.users[prefix.nick];
+				server.users[params[0]].nick = params[0];
+				delete server.users[prefix.nick];
+				break;
+			case 'QUIT':
+				if(typeof server.users[prefix.nick] !== 'undefined')
+				{
+					delete server.users[prefix.nick];
+				}
+
+				for(var kChannel in server.channels)
+				{
+					if(typeof server.channels[kChannel].users[prefix.nick] !== 'undefined')
+					{
+						delete server.channels[kChannel].users[prefix.nick];
+					}
+				}
+				break;
 			case 'PART':
 				if(typeof server.users[prefix.nick] !== 'undefined')
 				{

@@ -17,7 +17,6 @@ exports.Server = function(host, port, nick, ident, pass)
 	this.modules = {};
 
 	this.user = new User(nick, ident, '', 'iBot');
-	this.users[nick] = this.user;
 
 	this.loadModule = function(name)
 	{
@@ -45,6 +44,8 @@ exports.Server = function(host, port, nick, ident, pass)
 
 	this.onConnect = function()
 	{
+		this.users[nick] = this.user;
+
 		if(typeof this.pass === 'string' && this.pass !== '')
 		{
 			this.sendSilent('PASS ' + this.pass);
@@ -96,6 +97,14 @@ exports.Server = function(host, port, nick, ident, pass)
 	{
 		this.client.end();
 		this.client.destroy();
+
+		delete this.users;
+		delete this.channels;
+		delete this.user.channels;
+
+		this.users = {};
+		this.channels = {};
+		this.user.channels = {};
 
 		var timeout = setTimeout(function()
 		{
