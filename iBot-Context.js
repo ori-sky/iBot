@@ -18,6 +18,7 @@ exports.Context = function()
 
 	this.log = function(logChannel, message)
 	{
+		message = message.replace(/[\x00-\x19]/g, '[\\x]');
 		this.lc[logChannel].write(message + '\n');
 	}
 
