@@ -3,7 +3,7 @@ var readline = require('readline');
 
 var User = require('./iBot-User.js').User;
 
-exports.Server = function(host, port, nick, ident, pass)
+exports.Server = function(context, host, port, nick, ident, pass)
 {
 	this.host = host;
 	this.port = port;

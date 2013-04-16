@@ -2,12 +2,23 @@ exports.Context = function()
 {
 	this.servers = {};
 
+	this.logChannels =
+	{
+		out: process.stdout,
+		err: process.stderr
+	};
+
 	this.start = function()
 	{
 		for(var kServer in this.servers)
 		{
 			this.servers[kServer].connect();
 		}
+	}
+
+	this.log = function(logChannel, message)
+	{
+		this.logChannels[logChannel].write(message);
 	}
 
 	this.loadModule = function(name, server)
