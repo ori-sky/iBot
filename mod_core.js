@@ -1,6 +1,3 @@
-var vm = require('vm');
-var sandbox = vm.createContext({});
-
 var User = require('./iBot-User.js').User;
 var Channel = require('./iBot-Channel.js').Channel;
 
