@@ -153,6 +153,28 @@ exports.mod = function(context)
 				}
 
 				break;
+			case 'KICK':
+				if(typeof server.users[params[1]] !== 'undefined')
+				{
+					delete server.users[params[1]].channels[params[0]];
+
+					if(server.users[params[1]] !== server.user && Object.keys(server.users[params[1]].channels).length === 0)
+					{
+						delete server.users[params[1]];
+					}
+				}
+
+				if(typeof server.channels[params[0]] !== 'undefined')
+				{
+					delete server.channels[params[0]].users[params[1]];
+
+					if(server.users[params[1]] === server.user)
+					{
+						delete server.channels[params[0]];
+					}
+				}
+
+				break;
 		}
 	}
 }
