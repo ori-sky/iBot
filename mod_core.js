@@ -64,6 +64,12 @@ exports.mod = function(context)
 					case '!isupport':
 						server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + words[1] + ' = ' + server.isupport[words[1]]);
 						break;
+					case '!identof':
+						server.send('PRIVMSG ' + target + ' :Ident of ' + words[1] + ' = ' + server.users[words[1]].ident);
+						break;
+					case '!hostof':
+						server.send('PRIVMSG ' + target + ' :Host of ' + words[1] + ' = ' + server.users[words[1]].host);
+						break;
 				}
 				break;
 			case '005': // RPL_ISUPPORT
@@ -76,10 +82,6 @@ exports.mod = function(context)
 				break;
 			case '353': // RPL_NAMREPLY
 				var words = params[3].split(' ');
-
-				console.log('');
-				console.log(words);
-				console.log('');
 
 				var split1 = server.isupport.PREFIX.split(')');
 				var split2 = split1[0].split('(');
