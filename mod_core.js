@@ -81,7 +81,18 @@ exports.mod = function(context)
 				console.log(words);
 				console.log('');
 
-				server.send('PRIVMSG #iBot :Users in ' + params[2] + ': ' + words.slice(0/*, 3*/).join(', '));
+				var split1 = server.isupport.PREFIX.split(')');
+				var split2 = split1[0].split('(');
+
+				for(var i=0; i<words.length; ++i)
+				{
+					if(split1[1].indexOf(words[i][0]) !== -1)
+					{
+						words[i] = words[i].substr(1);
+					}
+				}
+
+				server.send('PRIVMSG Shockk :Users in ' + params[2] + ': ' + words.slice(0/*, 3*/).join(', '));
 
 				break;
 			case 'JOIN':
