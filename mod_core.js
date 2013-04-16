@@ -61,12 +61,6 @@ exports.mod = function(context)
 							server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.users[words[1]].channels).join(', '));
 						}
 						break;
-					case '!test':
-						server.send('PRIVMSG ' + target + ' :test');
-						break;
-					case '!hello':
-						server.send('PRIVMSG ' + target + ' :hello');
-						break;
 				}
 				break;
 			case '353': // RPL_NAMREPLY
