@@ -61,12 +61,16 @@ exports.mod = function(context)
 							server.send('PRIVMSG ' + target + ' :Channels: ' + Object.keys(server.users[words[1]].channels).join(', '));
 						}
 						break;
+					case '!isupport':
+						server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + words[1] + ' = ' + server.isupport[words[1]]);
+						break;
 				}
 				break;
 			case '005': // RPL_ISUPPORT
 				for(var i=1; i<params.length-1; ++i)
 				{
 					var parts = params[i].split('=');
+					if(typeof parts[1] === 'undefined') parts[1] = '';
 					server.isupport[parts[0]] = parts[1];
 				}
 				break;
