@@ -2,7 +2,7 @@ exports.Context = function()
 {
 	this.servers = {};
 
-	this.logChannels =
+	this.lc =
 	{
 		out: process.stdout,
 		err: process.stderr
@@ -18,7 +18,12 @@ exports.Context = function()
 
 	this.log = function(logChannel, message)
 	{
-		this.logChannels[logChannel].write(message);
+		this.lc[logChannel].write(message + '\n');
+	}
+
+	this.logUnsafe = function(logChannel, message)
+	{
+		this.lc[logChannel].write(message + '\n');
 	}
 
 	this.loadModule = function(name, server)

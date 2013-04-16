@@ -23,7 +23,7 @@ exports.Server = function(context, host, port, nick, ident, pass)
 		var module = require('./mod_' + name + '.js');
 		this.modules[name] = new module.mod(null);
 
-		console.error('Loaded mod_' + name);
+		context.log('err', 'Loaded mod_' + name);
 	}
 
 	this.reloadModule = function(name)
@@ -59,10 +59,10 @@ exports.Server = function(context, host, port, nick, ident, pass)
 			}
 			);
 
-			console.log('Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
+			context.log('out', 'Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
 			rl.question('', function(pass)
 			{
-				console.log('\x1b[1A\x1b[2K');
+				context.logUnsafe('out', '\x1b[1A\x1b[2K');
 
 				this.pass = pass;
 				this.onConnect();
@@ -126,7 +126,7 @@ exports.Server = function(context, host, port, nick, ident, pass)
 
 	this.recv = function(data)
 	{
-		console.error('r> ' + data);
+		context.log('err', 'R> ' + data);
 		var words = data.split(' ');
 
 		var prefix = null;
@@ -197,14 +197,14 @@ exports.Server = function(context, host, port, nick, ident, pass)
 			}
 			catch(e)
 			{
-				console.error(e.stack);
+				context.log('err', e.stack);
 			}
 		}
 	}.bind(this);
 
 	this.send = function(data)
 	{
-		console.error(data);
+		context.log('err', 'S> ' + data);
 		this.sendSilent(data);
 	}.bind(this);
 
