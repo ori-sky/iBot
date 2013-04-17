@@ -15,14 +15,17 @@
     <note priority="medium" time="1366047270" done="1366069765">
         Move js sandbox to separate module
     </note>
+    <note priority="medium" time="1366095898" done="1366175134">
+        Move !identof and !hostof to their own userinfo module
+    </note>
+    <note priority="veryhigh" time="1366178542">
+        Fix TypeError with NICK handling
+    </note>
     <note priority="medium" time="1366094065">
         Finish implementing RPL_NAMREPLY handling
     </note>
     <note priority="medium" time="1366095782">
         Add support for single-configurable command prefix
-    </note>
-    <note priority="medium" time="1366095898" done="1366175134">
-        Move !identof and !hostof to their own userinfo module
     </note>
     <note priority="low" time="1366160834">
         Add SSL support
