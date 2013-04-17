@@ -6,14 +6,14 @@
     <note priority="high" time="1366089840" done="1366101201">
         Implement QUIT, NICK and KICK handlers
     </note>
+    <note priority="high" time="1366099390" done="1366105874">
+        Escape outputted control codes to prevent exploits.
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
     <note priority="medium" time="1366047270" done="1366069765">
         Move js sandbox to separate module
-    </note>
-    <note priority="high" time="1366099390" done="1366105874">
-        Escape outputted control codes to prevent exploits.
     </note>
     <note priority="medium" time="1366094065">
         Finish implementing RPL_NAMREPLY handling
@@ -23,5 +23,8 @@
     </note>
     <note priority="medium" time="1366095898">
         Move !identof and !hostof to their own userinfo module
+    </note>
+    <note priority="low" time="1366160834">
+        Add SSL support
     </note>
 </todo>
