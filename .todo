@@ -21,7 +21,7 @@
     <note priority="medium" time="1366095782">
         Add support for single-configurable command prefix
     </note>
-    <note priority="medium" time="1366095898">
+    <note priority="medium" time="1366095898" done="1366175134">
         Move !identof and !hostof to their own userinfo module
     </note>
     <note priority="low" time="1366160834">
