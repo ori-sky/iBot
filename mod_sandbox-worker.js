@@ -10,11 +10,20 @@ fs.readFile('./mod_sandbox-sandbox.json', function(err, data)
 	}
 	else
 	{
-		JSON.parse(data, function(key, value)
+		JSON.parse(data, function(key, val)
 		{
 			try
 			{
-				vm.runInContext(key + '=' + value, sandbox);
+				var js;
+
+				if(typeof val === 'string' && val[0] === '\\')
+				{
+					js = key + '=\'' + val + '\'';
+				}
+				else js = key + '=' + val;
+
+				console.log(js);
+				vm.runInContext(js, sandbox);
 			}
 			catch(e)
 			{
@@ -58,6 +67,7 @@ process.on('message', function(m)
 		var jsonString = JSON.stringify(sandbox, function(key, val)
 		{
 			if(typeof val === 'function') return val.toString();
+			else if(typeof val === 'string') return '\\' + val.toString();
 			else return val;
 		}, 2);
 
