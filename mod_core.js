@@ -70,9 +70,17 @@ exports.mod = function(context)
 					{
 						words[i] = words[i].substr(1);
 					}
+
+					if(typeof server.users[words[i]] === 'undefined')
+					{
+						server.users[words[i]] = new User(words[i], null, null, null);
+					}
+
+					server.users[words[i]].channels[params[2]] = server.channels[params[2]];
+					server.channels[params[2]].users[words[i]] = server.users[words[i]];
 				}
 
-				server.send('PRIVMSG Shockk :Users in ' + params[2] + ': ' + words.slice(0/*, 3*/).join(', '));
+				server.send('WHO ' + params[2]);
 
 				break;
 			case 'JOIN':
