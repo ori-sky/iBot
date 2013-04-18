@@ -1,5 +1,28 @@
+var fs = require('fs');
 var vm = require('vm');
 var sandbox = vm.createContext({});
+
+fs.readFile('./mod_sandbox-sandbox.json', function(err, data)
+{
+	if(err)
+	{
+		console.error(err);
+	}
+	else
+	{
+		JSON.parse(data, function(key, value)
+		{
+			try
+			{
+				vm.runInContext(key + '=' + value, sandbox);
+			}
+			catch(e)
+			{
+				console.log(e);
+			}
+		});
+	}
+});
 
 process.on('message', function(m)
 {
@@ -29,6 +52,19 @@ process.on('message', function(m)
 			result: result,
 			output: sandbox._.output
 		}
+
+		delete sandbox._;
+
+		var jsonString = JSON.stringify(sandbox, function(key, val)
+		{
+			if(typeof val === 'function') return val.toString();
+			else return val;
+		}, 2);
+
+		fs.writeFile('./mod_sandbox-sandbox.json', jsonString, function(err)
+		{
+			console.log('Write error: ' + err);
+		});
 	}
 	catch(e)
 	{

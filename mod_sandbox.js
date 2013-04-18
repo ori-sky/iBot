@@ -5,19 +5,24 @@ exports.mod = function(context)
 {
 	this.running = false;
 
-	worker.on('message', function(m)
+	this.reconnectWorker = function(worker)
 	{
-		this.server.send(m.output);
-
-		// todo: parse out \r and \n
-		if(m.echoResult)
+		worker.on('message', function(m)
 		{
-			this.server.send('PRIVMSG ' + this.target + ' :Result: ' + m.result);
-		}
+			this.server.send(m.output);
 
-		this.running = false;
-		clearTimeout(this.timeout);
-	}.bind(this));
+			// todo: parse out \r and \n
+			if(m.echoResult)
+			{
+				this.server.send('PRIVMSG ' + this.target + ' :Result: ' + m.result);
+			}
+
+			this.running = false;
+			clearTimeout(this.timeout);
+		}.bind(this));
+	}.bind(this);
+
+	this.reconnectWorker(worker);
 
 	this.recv = function(server, prefix, opcode, params)
 	{
@@ -48,37 +53,10 @@ exports.mod = function(context)
 
 								worker.kill();
 								worker = child_process.fork('./mod_sandbox-worker.js');
+								this.reconnectWorker(worker);
 
 								this.running = false;
 							}.bind(this), 2000);
-
-							/*
-							sandbox._ =
-							{
-								root: sandbox,
-								echoResult: false,
-								send: server.send,
-								params: params,
-								words: words
-							};
-
-							try
-							{
-								var result = vm.runInContext(js, sandbox);
-
-								if(sandbox._.echoResult === true)
-								{
-									server.send('PRIVMSG ' + target + ' :Result: ' + result);
-								}
-
-								delete sandbox._;
-							}
-							catch(e)
-							{
-								console.error(e.stack);
-								server.send('PRIVMSG ' + target + ' :' + e.message);
-							}
-							*/
 						}
 						break;
 				}
