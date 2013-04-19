@@ -1,4 +1,4 @@
-exports =
+module.exports =
 {
 	Context:	require('./iBot-Context'),
 	Server:		require('./iBot-Server'),

@@ -1,10 +1,13 @@
-exports = function(options)
+var util = require('util');
+
+module.exports = function(options)
 {
 	this.options = options;
 	this.servers = {};
 
 	this.lc =
 	{
+		urgent: process.stdout,
 		out: process.stdout,
 		err: process.stderr
 	};
@@ -19,40 +22,50 @@ exports = function(options)
 
 	this.log = function(logChannel, message)
 	{
-		message = util.inspect(message).replace(/[\x00-\x19]/g, '[\\x]');
+		message = util.inspect(message);
 		this.logUnsafe(logChannel, message);
 	}
 
 	this.logUnsafe = function(logChannel, message)
 	{
-		this.lc[logChannel].write(util.inspect(message) + '\n');
+		this.lc[logChannel].write(message + '\n');
 	}
 
 	this.loadModule = function(name, server)
 	{
-		var path = this.options.modulesPath + '/' + name;
-
-		if(typeof require.cache[require.resolve(path)] !== 'undefined')
+		try
 		{
-			delete require.cache[require.resolve(path)];
-		}
+			var path = this.options.modulesPath + '/' + name;
 
-		var module = require(path);
-		var mod = new module.mod(this);
-
-		if(typeof server === 'undefined' || server === null)
-		{
-			for(var kServer in this.servers)
+			if(typeof require.cache[require.resolve(path)] !== 'undefined')
 			{
-				this.servers[kServer].modules[name] = mod;
+				delete require.cache[require.resolve(path)];
 			}
-		}
-		else
-		{
-			server.modules[name] = mod;
-		}
 
-		console.error('Loaded module: ' + name);
+			var module = require(path);
+			var mod = new module.mod(this);
+
+			if(typeof server === 'undefined' || server === null)
+			{
+				for(var kServer in this.servers)
+				{
+					this.servers[kServer].modules[name] = mod;
+				}
+			}
+			else
+			{
+				server.modules[name] = mod;
+			}
+
+			this.log('out', 'Loaded module: ' + name);
+			return 0;
+		}
+		catch(e)
+		{
+			this.log('out', 'Failed to load module: ' + name);
+			this.logUnsafe('urgent', e.stack);
+			return e.message;
+		}
 	}
 
 	this.unloadModule = function(name, server)
@@ -71,6 +84,6 @@ exports = function(options)
 			delete server.modules[name];
 		}
 
-		console.error('Unloaded module: ' + name);
+		this.log('out', 'Unloaded module: ' + name);
 	}
 }

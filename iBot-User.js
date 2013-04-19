@@ -1,4 +1,4 @@
-exports = function(nick, ident, host, realname)
+module.exports = function(nick, ident, host, realname)
 {
 	this.nick = nick;
 	this.ident = ident;

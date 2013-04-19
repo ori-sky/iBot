@@ -1,4 +1,4 @@
-exports = function(name)
+module.exports = function(name)
 {
 	this.name = name;
 	this.topic = '';

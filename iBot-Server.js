@@ -3,7 +3,7 @@ var readline = require('readline');
 
 var User = require('./iBot-User.js');
 
-exports = function(context, host, port, nick, ident, pass)
+module.exports = function(context, host, port, nick, ident, pass)
 {
 	this.host = host;
 	this.port = port;
@@ -17,24 +17,6 @@ exports = function(context, host, port, nick, ident, pass)
 	this.modules = {};
 
 	this.user = new User(nick, ident, '', 'iBot');
-
-	this.loadModule = function(name)
-	{
-		var module = require('./mod_' + name + '.js');
-		this.modules[name] = new module.mod(null);
-
-		context.log('err', 'Loaded mod_' + name);
-	}
-
-	this.reloadModule = function(name)
-	{
-		if(typeof require.cache[require.resolve('./mod_' + name + '.js')] !== 'undefined')
-		{
-			delete require.cache[require.resolve('./mod_' + name + '.js')];
-		}
-
-		this.loadModule(name);
-	}
 
 	this.getModules = function(delimiter)
 	{
@@ -56,8 +38,7 @@ exports = function(context, host, port, nick, ident, pass)
 			{
 				input: process.stdin,
 				output: process.stdout
-			}
-			);
+			});
 
 			context.log('out', 'Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
 			rl.question('', function(pass)
@@ -68,8 +49,7 @@ exports = function(context, host, port, nick, ident, pass)
 				this.onConnect();
 
 				rl.close();
-			}.bind(this)
-			);
+			}.bind(this));
 
 			return;
 		}
@@ -197,7 +177,7 @@ exports = function(context, host, port, nick, ident, pass)
 			}
 			catch(e)
 			{
-				context.log('err', e.stack);
+				context.logUnsafe('urgent', e.stack);
 			}
 		}
 	}.bind(this);
