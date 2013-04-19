@@ -1,9 +1,10 @@
 var net = require('net');
+var tls = require('tls');
 var readline = require('readline');
 
 var User = require('./iBot-User.js');
 
-module.exports = function(context, host, port, nick, ident, pass)
+module.exports = function(context, host, port, nick, ident, pass, ssl)
 {
 	this.host = host;
 	this.port = port;
@@ -26,6 +27,11 @@ module.exports = function(context, host, port, nick, ident, pass)
 
 	this.onConnect = function()
 	{
+		if(ssl)
+		{
+			console.log('TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized');
+		}
+
 		this.users[nick] = this.user;
 
 		if(typeof this.pass === 'string' && this.pass !== '')
@@ -99,15 +105,24 @@ module.exports = function(context, host, port, nick, ident, pass)
 
 	this.connect = function()
 	{
-		this.client = new net.Socket();
+		if(ssl)
+		{
+			context.log('err', 'Negotiating connection over TLS');
+			this.client = tls.connect(port, host, {}, this.onConnect);
+		}
+		else
+		{
+			this.client = new net.Socket();
+			this.client.setNoDelay();
+
+			this.client.connect(port, host, this.onConnect);
+		}
+
+		this.client.setEncoding('utf8');
 
 		this.client.on('data', this.onData);
 		this.client.on('close', this.onClose);
 		this.client.on('error', this.onError);
-
-		this.client.setEncoding('utf8');
-		this.client.setNoDelay();
-		this.client.connect(port, host, this.onConnect);
 	}.bind(this);
 
 	this.recv = function(data)
