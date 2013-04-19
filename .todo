@@ -36,7 +36,7 @@
             Tested and working
         </comment>
     </note>
-    <note priority="low" time="1366160834">
+    <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
 </todo>
