@@ -1,4 +1,4 @@
-exports.Context = function(options)
+exports = function(options)
 {
 	this.options = options;
 	this.servers = {};

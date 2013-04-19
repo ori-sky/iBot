@@ -1,4 +1,4 @@
-exports.Mode = function(mode, param)
+exports = function(mode, param)
 {
 	this.mode = mode;
 	this.param = param;

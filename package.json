@@ -1,5 +1,5 @@
 {
-  "name": "iBot-node",
+  "name": "iBot",
   "version": "0.0.1",
   "description": "iBot IRC client framework implemented in Node.js",
   "keywords": [
@@ -17,17 +17,14 @@
   "contributors": [
     {
       "name": "Shockk",
-      "email", "shockk@green.shockk.co.uk",
+      "email": "shockk@green.shockk.co.uk",
       "url": "https://github.com/ShockkPony/"
     }
   ],
-  "version": "1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ShockkPony/iBot-node.git"
+    "url": "https://github.com/ShockkPony/iBot.git"
   },
   "main": "index",
-  "directories": {
-    "lib": "./lib"
-  }
+  "readmeFilename": "README.md"
 }

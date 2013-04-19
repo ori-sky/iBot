@@ -1,4 +1,4 @@
-exports.User = function(nick, ident, host, realname)
+exports = function(nick, ident, host, realname)
 {
 	this.nick = nick;
 	this.ident = ident;

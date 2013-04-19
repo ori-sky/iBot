@@ -1,4 +1,4 @@
-exports.Channel = function(name)
+exports = function(name)
 {
 	this.name = name;
 	this.topic = '';

@@ -1,9 +1,9 @@
 var net = require('net');
 var readline = require('readline');
 
-var User = require('./iBot-User.js').User;
+var User = require('./iBot-User.js');
 
-exports.Server = function(context, host, port, nick, ident, pass)
+exports = function(context, host, port, nick, ident, pass)
 {
 	this.host = host;
 	this.port = port;
