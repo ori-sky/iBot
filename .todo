@@ -30,25 +30,10 @@
     <note priority="medium" time="1366095898" done="1366175134">
         Move !identof and !hostof to their own userinfo module
     </note>
-    <note priority="high" time="1366269826">
-        Implement max size of sandbox JSON file
-    </note>
-    <note priority="high" time="1366271013">
-        Make JSON sandbox work correctly or remove
-    </note>
-    <note priority="medium" time="1366095782">
-        Add support for single-configurable command prefix
-    </note>
-    <note priority="medium" time="1366260503">
-        Implement WHO handling
-    </note>
     <note priority="medium" time="1366264512">
         Handle socket errors which occur from Excess Flood etc
     </note>
     <note priority="low" time="1366160834">
         Add SSL support
-    </note>
-    <note priority="low" time="1366260527">
-        Implement entire MODE tracking system
     </note>
 </todo>
