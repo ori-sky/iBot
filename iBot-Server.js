@@ -92,12 +92,18 @@ module.exports = function(context, host, port, nick, ident, pass)
 		}.bind(this), 5000);
 	}.bind(this);
 
+	this.onError = function(err)
+	{
+		context.log('urgent', err);
+	}.bind(this);
+
 	this.connect = function()
 	{
 		this.client = new net.Socket();
 
 		this.client.on('data', this.onData);
 		this.client.on('close', this.onClose);
+		this.client.on('error', this.onError);
 
 		this.client.setEncoding('utf8');
 		this.client.setNoDelay();
