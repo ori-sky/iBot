@@ -36,7 +36,7 @@ The IRC commands available through core are as follows:
 
 ### Modules
 
-iBot has a robust module system. Some modules, like core, at bundled with the package and can be loaded with no configuration. If you want to include other modules and, more than likely, write your own, there's a bit more setup involved but it's still fairly simple.
+iBot has a robust module system. Some modules, like core, are bundled with the package and can be loaded with no configuration. If you want to include other modules and, more than likely, write your own, there's a bit more setup involved but it's still fairly simple.
 
 ```javascript
 // Filename: index.js
