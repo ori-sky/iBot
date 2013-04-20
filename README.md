@@ -65,7 +65,7 @@ exports.mod = function(ctx)
 {
 	this.recv = function(server, prefix, opcode, params)
 	{
-		if(opcode === 'PRIVMSG")
+		if(opcode === 'PRIVMSG')
 		{
 			var words = params[1].split(' ');
 			var target = params[0];
