@@ -38,6 +38,7 @@ module.exports = function(options)
 		try
 		{
 			path = this.options.modulesPath + '/' + name;
+			if(typeof require.cache[path] !== 'undefined') delete require.cache[path];
 			require.resolve(path);
 		}
 		catch(e)
