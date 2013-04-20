@@ -18,6 +18,9 @@
     <note priority="high" time="1366099390" done="1366105874">
         Escape outputted control codes to prevent exploits.
     </note>
+    <note priority="high" time="1366405777" done="1366437921">
+        Add modules/ dir and include critical modules in the iBot package (like 'core')
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
@@ -39,10 +42,7 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1366405777" done="1366437921">
-        Add modules/ dir and include critical modules in the iBot package (like 'core')
-    </note>
-    <note priority="medium" time="1366405588">
+    <note priority="medium" time="1366405588" done="1366460064">
         Write a basic README file for connecting and loading modules
     </note>
 </todo>
