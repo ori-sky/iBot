@@ -10,20 +10,17 @@ npm install ibot
 
 ### Getting Started
 
-It's very easy to get a connection up using iBot.
+It's very easy to create a connection using iBot.
 
 ```javascript
 var Context = require('ibot').Context;
 var Server = require('ibot').Server
 
 var ctx = new Context();
-ctx.servers.test = new Server(ctx, 'irc.example.com', 6667, 'MyNick', 'myident',
-	false, // use server password? if true, you will be prompted on run
-	false  // use ssl? if true, a TLS connection will be negotiated
-);
+ctx.servers.test = new Server(ctx, 'irc.example.com', 6667, 'MyNick', 'myident', false, false);
 
-ctx.loadModule('core'); // this loads the core module into all servers
-ctx.run(); // this enters the main loop
+ctx.loadModule('core');
+ctx.run();
 ```
 
 ## License
