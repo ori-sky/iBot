@@ -39,7 +39,7 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1366405777">
+    <note priority="high" time="1366405777" done="1366437921">
         Add modules/ dir and include critical modules in the iBot package (like 'core')
     </note>
     <note priority="medium" time="1366405588">
