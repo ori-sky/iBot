@@ -33,10 +33,30 @@ module.exports = function(options)
 
 	this.loadModule = function(name, server)
 	{
+		var path;
+
 		try
 		{
-			var path = this.options.modulesPath + '/' + name;
+			path = this.options.modulesPath + '/' + name;
+			require.resolve(path);
+		}
+		catch(e)
+		{
+			try
+			{
+				path = './modules/' + name;
+				require.resolve(path);
+			}
+			catch(e2)
+			{
+				this.log('urgent', e.message);
+				this.log('urgent', e2.message);
+				return e.message + ' | ' + e2.message;
+			}
+		}
 
+		try
+		{
 			if(typeof require.cache[require.resolve(path)] !== 'undefined')
 			{
 				delete require.cache[require.resolve(path)];
@@ -58,7 +78,7 @@ module.exports = function(options)
 			}
 
 			this.log('out', 'Loaded module: ' + name);
-			return 0;
+			return '';
 		}
 		catch(e)
 		{
