@@ -18,6 +18,8 @@ exports.mod = function(context)
 				var target = params[0];
 				if(target === server.user.nick) target = prefix.nick;
 
+				server.fire('privmsg', server, prefix, target, params[1], words);
+
 				switch(words[0])
 				{
 					case '!lmsrv':

@@ -25,6 +25,21 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		return keys.join(delimiter);
 	}
 
+	this.fire = function()
+	{
+		for(var kModule in this.modules)
+		{
+			try
+			{
+				this.modules[kModule][this.activeModule + '$' + arguments[0]].apply(undefined, Array.prototype.slice.call(arguments, 1));
+			}
+			catch(e)
+			{
+				context.logUnsafe('urgent', '(' + kModule + ') No callback for ' + this.activeModule + '$' + arguments[0] + ' defined');
+			}
+		}
+	}
+
 	this.onConnect = function()
 	{
 		if(ssl)
@@ -213,13 +228,15 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		for(var mod in this.modules)
 		{
+			this.activeModule = mod;
+
 			try
 			{
 				this.modules[mod].recv(this, prefix, opcode, params);
 			}
 			catch(e)
 			{
-				context.logUnsafe('urgent', e.stack);
+				context.logUnsafe('urgent', '(' + mod + ') No callback for recv defined');
 			}
 		}
 	}.bind(this);
