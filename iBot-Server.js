@@ -129,7 +129,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		if(ssl)
 		{
 			context.log('err', 'Negotiating connection over TLS');
-			this.client = tls.connect(port, host, {}, this.onConnect);
+			this.client = tls.connect(port, host, {rejectUnauthorized:false}, this.onConnect);
 		}
 		else
 		{
