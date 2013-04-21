@@ -39,10 +39,13 @@
             Tested and working
         </comment>
     </note>
+    <note priority="medium" time="1366405588" done="1366460064">
+        Write a basic README file for connecting and loading modules
+    </note>
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="medium" time="1366405588" done="1366460064">
-        Write a basic README file for connecting and loading modules
+    <note priority="veryhigh" time="1366516547">
+        Issue PING every t seconds and timeout if PONG not received within t seconds
     </note>
 </todo>
