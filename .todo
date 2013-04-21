@@ -9,6 +9,9 @@
     <note priority="veryhigh" time="1366258762" done="1366266459">
         Fix execution time out bug in mod_sandbox
     </note>
+    <note priority="veryhigh" time="1366516547" done="1366537223">
+        Issue PING every t seconds and timeout if PONG not received within t seconds
+    </note>
     <note priority="veryhigh" time="1366519730" done="1366521913">
         Fix leaking readline interfaces
     </note>
@@ -45,13 +48,16 @@
     <note priority="medium" time="1366405588" done="1366460064">
         Write a basic README file for connecting and loading modules
     </note>
+    <note priority="medium" time="1366517754" done="1366567298">
+        Add hooking system to allow modules to register callbacks that are dispatched to modules - e.g. exports.mod.core.myCallback()
+    </note>
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1366516547" done="1366537223">
-        Issue PING every t seconds and timeout if PONG not received within t seconds
+    <note priority="veryhigh" time="1366573990" done="1366577746">
+        Rewrite mod raw in hook format and commit all hook changes
     </note>
-    <note priority="medium" time="1366517754">
-        Add hooking system to allow modules to register callbacks that are dispatched to modules - e.g. exports.mod.core.myCallback()
+    <note priority="high" time="1366568857">
+        Change activeModule to a stack to support recursive fires across multiple modules
     </note>
 </todo>
