@@ -28,7 +28,9 @@ module.exports = function(options)
 
 	this.logUnsafe = function(logChannel, message)
 	{
-		this.lc[logChannel].write(message + '\n');
+		var d = new Date();
+		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
+		this.lc[logChannel].write(t + ' ' + message + '\n');
 	}
 
 	this.loadModule = function(name, server)

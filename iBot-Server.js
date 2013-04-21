@@ -70,11 +70,13 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		{
 			if(this.ponged)
 			{
+				this.ponged = false;
 				this.send('PING :keepalive');
 			}
 			else
 			{
-				this.onClose();
+				this.client.end();
+				this.client.destroy();
 			}
 		}.bind(this), 120000);
 	}.bind(this);
