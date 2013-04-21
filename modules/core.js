@@ -10,6 +10,9 @@ exports.mod = function(context)
 			case 'PING':
 				server.send('PONG :' + params[0]);
 				break;
+			case 'PONG':
+				server.ponged = true;
+				break;
 			case 'PRIVMSG':
 				var words = params[1].split(' ');
 				var target = params[0];

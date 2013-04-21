@@ -29,7 +29,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		if(ssl)
 		{
-			console.log('TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized');
+			context.log('err', 'TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized');
 		}
 
 		this.users[nick] = this.user;
@@ -64,6 +64,19 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		this.send('NICK ' + this.nick);
 		this.send('USER ' + this.ident + ' 0 * :' + this.user.realname);
+
+		this.ponged = true;
+		this.pingInterval = setInterval(function()
+		{
+			if(this.ponged)
+			{
+				this.send('PING :keepalive');
+			}
+			else
+			{
+				this.onClose();
+			}
+		}.bind(this), 120000);
 	}.bind(this);
 
 	this.accumulator = '';
@@ -83,6 +96,10 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.onClose = function()
 	{
+		context.log('err', 'Connection closed');
+
+		clearInterval(this.pingInterval);
+
 		this.client.end();
 		this.client.destroy();
 
