@@ -48,4 +48,10 @@
     <note priority="veryhigh" time="1366516547">
         Issue PING every t seconds and timeout if PONG not received within t seconds
     </note>
+    <note priority="veryhigh" time="1366519730" done="1366521913">
+        Fix leaking readline interfaces
+    </note>
+    <note priority="medium" time="1366517754">
+        Add hooking system to allow modules to register callbacks that are dispatched to modules - e.g. exports.mod.core.myCallback()
+    </note>
 </todo>

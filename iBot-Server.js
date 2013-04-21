@@ -40,21 +40,23 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		}
 		else if(typeof this.pass === 'boolean' && this.pass !== false)
 		{
-			var rl = readline.createInterface(
+			if(typeof this.rl !== 'undefined') this.rl.close();
+
+			this.rl = readline.createInterface(
 			{
 				input: process.stdin,
 				output: process.stdout
 			});
 
 			context.log('out', 'Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
-			rl.question('', function(pass)
+			this.rl.question('', function(pass)
 			{
 				context.logUnsafe('out', '\x1b[1A\x1b[2K');
 
 				this.pass = pass;
 				this.onConnect();
 
-				rl.close();
+				this.rl.close();
 			}.bind(this));
 
 			return;
