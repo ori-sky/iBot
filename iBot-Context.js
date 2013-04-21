@@ -20,6 +20,8 @@ module.exports = function(options)
 		}
 	}
 
+	this.run = this.start;
+
 	this.log = function(logChannel, message)
 	{
 		message = util.inspect(message);
