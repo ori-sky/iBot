@@ -9,7 +9,8 @@ module.exports = function(options)
 	{
 		urgent: process.stdout,
 		out: process.stdout,
-		err: process.stderr
+		err: process.stderr,
+		verbose: null,
 	};
 
 	this.start = function()
@@ -32,7 +33,11 @@ module.exports = function(options)
 	{
 		var d = new Date();
 		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
-		this.lc[logChannel].write(t + ' ' + message + '\n');
+
+		if(typeof this.lc[logChannel] !== 'undefined' && this.lc[logChannel] !== null)
+		{
+			this.lc[logChannel].write(t + ' ' + message + '\n');
+		}
 	}
 
 	this.loadModule = function(name, server)

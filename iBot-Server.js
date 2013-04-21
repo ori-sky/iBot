@@ -35,7 +35,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 			catch(e)
 			{
-				context.logUnsafe('urgent', '(' + kModule + ') No callback for ' + this.activeModule + '$' + arguments[0] + ' defined');
+				context.logUnsafe('verbose', '(' + kModule + ') No callback for ' + this.activeModule + '$' + arguments[0] + ' defined');
 			}
 		}
 	}
@@ -236,7 +236,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 			catch(e)
 			{
-				context.logUnsafe('urgent', '(' + mod + ') No callback for recv defined');
+				context.logUnsafe('verbose', '(' + mod + ') No callback for recv defined');
 			}
 		}
 	}.bind(this);
