@@ -2,6 +2,29 @@
 
 iBot is an IRC client-side framework designed to be extensible and easy to use.
 
+### Recent Changes
+
+* Wrote a module hooks system for event exposing
+* To fire an event, from a module call `server.fire('eventname', param1, param2, ...)`
+* To hook into an event, from a module use `this.modulename$eventname = function(param1, param2, ...)`
+
+For example, to hook into the `privmsg` event from mod core:
+
+```javascript
+exports.mod = function(ctx)
+{
+	this.core$privmsg = function(server, prefix, target, message, words)
+	{
+		if(words[0] === '!hello')
+		{
+			server.send('PRIVMSG ' + target + '  :world!');
+		}
+	}
+}
+```
+
+More documentation to follow later.
+
 ### Installation
 
 ```
