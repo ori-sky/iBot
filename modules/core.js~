@@ -44,7 +44,6 @@ exports.mod = function(context)
 				server.fire('kick', server, prefix, params[0], params[1], params[2]);
 				break;
 			case 'MODE':
-				//XXX: This needs to be broken into functions - Quora
 				//Variables for placeholding and such. Default ircd behaviour is to have + be implied, but this should never matter
 				var plus = true;
 				var index = 2;
