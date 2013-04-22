@@ -25,6 +25,11 @@ exports.mod = function(context)
 			case '005': // RPL_ISUPPORT
 				server.fire('005', server, prefix, params.slice(1, params.length - 1), params[params.length - 1]);
 				break;
+			case '352': // RPL_WHOREPLY
+	//this.core$352 = function(server, prefix, channel, ident, host, serverhost, nick, extrainfo, hopcount, realname)
+				var split = params[7].split(' ');
+				server.fire('352', server, prefix, params[1], params[2], params[3], params[4], params[5], params[6], split[0], split[1]);
+				break;
 			case '353': // RPL_NAMREPLY
 				server.fire('353', server, prefix, params[1], params[2], params[3].split(' '));
 				break;
@@ -159,6 +164,16 @@ exports.mod = function(context)
 			var parts = options[i].split('=');
 			if(typeof parts[1] === 'undefined') parts[1] = '';
 			server.isupport[parts[0]] = parts[1];
+		}
+	}
+
+	this.core$352 = function(server, prefix, channel, ident, host, serverhost, nick, extrainfo, hopcount, realname)
+	{
+		if(server.channels[channel] !== 'undefined')
+		{
+			server.users[nick].ident = ident;
+			server.users[nick].host = host;
+			server.users[nick].realname = realname;
 		}
 	}
 
