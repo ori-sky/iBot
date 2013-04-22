@@ -7,4 +7,6 @@ module.exports = function(nick, ident, host, realname)
 
 	this.channels = {};
 	this.modes = [];
+	
+	this.data = {};
 }
