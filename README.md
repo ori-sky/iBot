@@ -6,6 +6,14 @@ iBot is an IRC client-side framework designed to be extensible and easy to use.
 
 Here you will find the most recent changes in iBot.
 
+### `recv` changed to `$recv`
+
+* Global events will be added soon.
+* These will use the module hooks system without a module name.
+* These will be fireable from any module and hookable from any module.
+* The existing event `recv` has been changed to `$recv` to prepare for this.
+* This will avoid any potential function name clashes (unless you use $ in your function names).
+
 ### Mode Changes
 
 * Mod `core` now fires the event `mode` for every mode change.
