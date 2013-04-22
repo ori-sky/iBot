@@ -2,7 +2,17 @@
 
 iBot is an IRC client-side framework designed to be extensible and easy to use.
 
-### Recent Changes
+## Recent Changes
+
+Here you will find the most recent changes in iBot.
+
+### Mode Changes
+
+* Mod `core` now fires the event `mode` for every mode change.
+* The event is fired for each parsed mode (splits up complex changes such as +vv-o+h).
+* More info can be found in `doc/events`.
+
+### Module Hooks
 
 * Wrote a module hooks system for event exposing
 * To fire an event, from a module call `server.fire('eventname', param1, param2, ...)`
