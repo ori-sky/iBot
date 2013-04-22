@@ -58,13 +58,13 @@ exports.mod = function(context)
 					{
 						plus = true;
 					} 
-					else if (modestring === "-")
+					else if (modestring[i] === "-")
 					{
 						plus = false;
 					}
 					else 
 					{
-						//We certianly have a mode change now
+						//We certainly have a mode change now
 						//Construct an event for each mode change
 						
 						/*
@@ -85,22 +85,18 @@ exports.mod = function(context)
 								break;
 							}
 						}
-						
-						if(section == 0 || section == 1) 
+
+						if(section === -1)
 						{
-							//Mode will always require a paramater
+							// mode is either broken at server or is a prefix mode
+							section = 1;
+						}
+						
+						if(section === 0 || section === 1 || (section === 2 && plus)) 
+						{
 							server.fire('mode', server, prefix, params[0], plus, modestring[i], params[index]);
 							index++;
 						} 
-						else if (section == 2) {
-							//Section 2 modes only have a parameter when set
-							if (plus) {
-							server.fire('mode', server, prefix, params[0], plus, modestring[i], params[index]);
-							index++;
-							} else {
-								server.fire('mode', server, prefix, params[0], plus, modestring[i], null);
-							}
-						}
 						else 
 						{
 							server.fire('mode', server, prefix, params[0], plus, modestring[i], null);
