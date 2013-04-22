@@ -41,6 +41,8 @@ exports.mod = function(ctx)
 }
 ```
 
+## Usage
+
 More documentation to follow later.
 
 ### Installation
