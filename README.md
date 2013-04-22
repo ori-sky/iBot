@@ -96,7 +96,7 @@ ctx.run();
 
 exports.mod = function(ctx)
 {
-	this.recv = function(server, prefix, opcode, params)
+	this.$recv = function(server, prefix, opcode, params)
 	{
 		if(opcode === 'PRIVMSG')
 		{

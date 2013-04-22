@@ -1,14 +1,21 @@
-Core events:
+## Global events:
+
+$recv:
+	Data was received (most basic event)
+	
+	params: server, prefix, opcode, params array
+
+## Core events:
 
 core$ping:
 	A PING message was recieved and replied to
 	
-	params: server, the message the server pinged with
+	params: server, prefix, the message the server pinged with
 	
 core$pong:
 	A PONG message was sent from the server
 	
-	params: server, message
+	params: server, prefix, message
 	
 core$privmsg:
 	A PRIVMSG was recieved to the bot

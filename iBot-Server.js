@@ -232,7 +232,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 			try
 			{
-				this.modules[mod].recv(this, prefix, opcode, params);
+				this.modules[mod].$recv(this, prefix, opcode, params);
 			}
 			catch(e)
 			{
