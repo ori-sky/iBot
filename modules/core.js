@@ -53,15 +53,8 @@ exports.mod = function(context)
 				
 				for (var i=0; i < modestring.length; i++) 
 				{
-					
-					if(modestring[i] === "+") 
-					{
-						plus = true;
-					} 
-					else if (modestring[i] === "-")
-					{
-						plus = false;
-					}
+					if(modestring[i] === '+') plus = true;
+					else if(modestring[i] === '-') plus = false;
 					else 
 					{
 						//We certainly have a mode change now
