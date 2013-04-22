@@ -1,6 +1,6 @@
 {
   "name": "ibot",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "iBot IRC client framework implemented in Node.js",
   "keywords": [
     "ibot",
