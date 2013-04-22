@@ -43,6 +43,71 @@ exports.mod = function(context)
 			case 'KICK':
 				server.fire('kick', server, prefix, params[0], params[1], params[2]);
 				break;
+			case 'MODE':
+				//XXX: This needs to be broken into functions - Quora
+				//Variables for placeholding and such. Default ircd behaviour is to have + be implied, but this should never matter
+				var plus = true;
+				var index = 2;
+				var modestring = params[1];
+				var parts = server.isupport.CHANMODES.split(',');
+				
+				for (var i=0; i < modestring.length; i++) 
+				{
+					
+					if(modestring[i] === "+") 
+					{
+						plus = true;
+					} 
+					else if (modestring === "-")
+					{
+						plus = false;
+					}
+					else 
+					{
+						//We certianly have a mode change now
+						//Construct an event for each mode change
+						
+						/*
+						 * # 0 = Mode that adds or removes a nick or address to a list. Always has a parameter.
+						 * # 1 = Mode that changes a setting and always has a parameter.
+						 * # 2 = Mode that changes a setting and only has a parameter when set.
+						 * # 3 = Mode that changes a setting and never has a parameter.
+						 */
+						
+						// check which section the mode char is in
+     						var section = -1;
+						
+						for(var p=0; p<parts.length; ++p)
+						{
+							if(parts[p].indexOf(modestring[i]) !== -1)
+							{
+								section = p;
+								break;
+							}
+						}
+						
+						if(section == 0 || section == 1) 
+						{
+							//Mode will always require a paramater
+							server.fire('mode', server, prefix, params[0], plus, modestring[i], params[index]);
+							index++;
+						} 
+						else if (section == 2) {
+							//Section 2 modes only have a parameter when set
+							if (plus) {
+							server.fire('mode', server, prefix, params[0], plus, modestring[i], params[index]);
+							index++;
+							} else {
+								server.fire('mode', server, prefix, params[0], plus, modestring[i], null);
+							}
+						}
+						else 
+						{
+							server.fire('mode', server, prefix, params[0], plus, modestring[i], null);
+						}
+					}
+				}
+				break;
 		}
 	}
 
