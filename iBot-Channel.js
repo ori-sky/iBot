@@ -4,4 +4,6 @@ module.exports = function(name)
 	this.topic = '';
 	this.users = {};
 	this.modes = [];
+	
+	this.data = {};
 }
