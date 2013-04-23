@@ -29,13 +29,20 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		for(var kModule in this.modules)
 		{
-			try
+			if(typeof this.modules[kModule][this.activeModule + '$' + arguments[0]] !== 'undefined')
 			{
-				this.modules[kModule][this.activeModule + '$' + arguments[0]].apply(undefined, Array.prototype.slice.call(arguments, 1));
+				try
+				{
+					this.modules[kModule][this.activeModule + '$' + arguments[0]].apply(this.modules[kModule], Array.prototype.slice.call(arguments, 1));
+				}
+				catch(e)
+				{
+					context.logUnsafe('err', e.stack);
+				}
 			}
-			catch(e)
+			else
 			{
-				context.logUnsafe('verbose', '(' + kModule + ') No callback for ' + this.activeModule + '$' + arguments[0] + ' defined');
+				context.log('verbose', '(' + kModule + ') No callback for ' + this.activeModule + '$' + arguments[0] + ' defined');
 			}
 		}
 	}
@@ -230,13 +237,20 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		{
 			this.activeModule = mod;
 
-			try
+			if(typeof this.modules[mod].$recv !== 'undefined')
 			{
-				this.modules[mod].$recv(this, prefix, opcode, params);
+				try
+				{
+					this.modules[mod].$recv(this, prefix, opcode, params);
+				}
+				catch(e)
+				{
+					context.logUnsafe('err', e.stack);
+				}
 			}
-			catch(e)
+			else
 			{
-				context.logUnsafe('verbose', '(' + mod + ') No callback for recv defined');
+				context.log('verbose', '(' + mod + ') No callback for recv defined');
 			}
 		}
 	}.bind(this);
