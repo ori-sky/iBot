@@ -60,19 +60,19 @@
     <note priority="medium" time="1366517754" done="1366567298">
         Add hooking system to allow modules to register callbacks that are dispatched to modules - e.g. exports.mod.core.myCallback()
     </note>
+    <note priority="medium" time="1366704092" done="1366724055">
+        [README.md] Move Recent Changes to Change Log at bottom, above License
+    </note>
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
     <note priority="high" time="1366706474">
         Add optional time interval param to Server.fire for timed events, and ability to change time interval after initial scheduling
     </note>
-    <note priority="high" time="1366720485">
+    <note priority="high" time="1366720485" done="1366730749">
         Write an `auto` module which can be used to autojoin channels and do other actions on connect
     </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
-    </note>
-    <note priority="medium" time="1366704092" done="1366724055">
-        [README.md] Move Recent Changes to Change Log at bottom, above License
     </note>
 </todo>
