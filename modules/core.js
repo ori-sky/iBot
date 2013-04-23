@@ -39,7 +39,7 @@ exports.mod = function(context)
 				server.fire('join', server, prefix, params[0]);
 				break;
 			case 'NICK':
-				server.fire('nick', server, prefix, nick);
+				server.fire('nick', server, prefix, params[0]);
 				break;
 			case 'QUIT':
 				server.fire('quit', server, prefix, params[0]);
