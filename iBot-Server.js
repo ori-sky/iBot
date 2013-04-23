@@ -15,7 +15,9 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.isupport = {};
 	this.users = {};
 	this.channels = {};
+	
 	this.modules = {};
+	this.activeModuleStack = [];
 
 	this.user = new User(nick, ident, '', 'iBot');
 
@@ -29,16 +31,22 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		for(var kModule in this.modules)
 		{
-			if(typeof this.modules[kModule][this.activeModule + '$' + arguments[0]] !== 'undefined')
+			var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
+
+			if(typeof this.modules[kModule][activeModule + '$' + arguments[0]] !== 'undefined')
 			{
+				this.activeModuleStack.push(kModule);
+
 				try
 				{
-					this.modules[kModule][this.activeModule + '$' + arguments[0]].apply(this.modules[kModule], Array.prototype.slice.call(arguments, 1));
+					this.modules[kModule][activeModule + '$' + arguments[0]].apply(this.modules[kModule], Array.prototype.slice.call(arguments, 1));
 				}
 				catch(e)
 				{
 					context.logUnsafe('err', e.stack);
 				}
+
+				this.activeModuleStack.pop();
 			}
 			else
 			{
@@ -235,7 +243,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		for(var mod in this.modules)
 		{
-			this.activeModule = mod;
+			this.activeModuleStack.push(mod);
 
 			if(typeof this.modules[mod].$recv !== 'undefined')
 			{
