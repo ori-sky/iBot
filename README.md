@@ -6,6 +6,11 @@ iBot is an IRC client-side framework designed to be extensible and easy to use.
 
 Here you will find the most recent changes in iBot.
 
+### Bug Fixes
+
+* Fixed module exceptions not being logged.
+* Fixed modules being unable to access their own members.
+
 ### `recv` changed to `$recv`
 
 * Global events will be added soon.
