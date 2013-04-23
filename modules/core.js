@@ -7,6 +7,19 @@ exports.mod = function(context)
 	{
 		switch(opcode)
 		{
+			case '005': // RPL_ISUPPORT
+				server.fire('005', server, prefix, params.slice(1, params.length - 1), params[params.length - 1]);
+				break;
+			case '352': // RPL_WHOREPLY
+				var split = params[7].split(' ');
+				server.fire('352', server, prefix, params[1], params[2], params[3], params[4], params[5], params[6], split[0], split[1]);
+				break;
+			case '353': // RPL_NAMREPLY
+				server.fire('353', server, prefix, params[1], params[2], params[3].split(' '));
+				break;
+			case '376': // RPL_ENDOFMOTD
+				server.fire('376', server, prefix, params[1]);
+				break;
 			case 'PING':
 				server.fire('ping', server, prefix, params[0]);
 				server.send('PONG :' + params[0]);
@@ -21,19 +34,6 @@ exports.mod = function(context)
 				if(target === server.user.nick) target = prefix.nick;
 
 				server.fire('privmsg', server, prefix, target, params[1], words);
-				break;
-			case '005': // RPL_ISUPPORT
-				server.fire('005', server, prefix, params.slice(1, params.length - 1), params[params.length - 1]);
-				break;
-			case '352': // RPL_WHOREPLY
-				var split = params[7].split(' ');
-				server.fire('352', server, prefix, params[1], params[2], params[3], params[4], params[5], params[6], split[0], split[1]);
-				break;
-			case '353': // RPL_NAMREPLY
-				server.fire('353', server, prefix, params[1], params[2], params[3].split(' '));
-				break;
-			case '376': // RPL_ENDOFMOTD
-				server.fire('376', server, prefix, params[1]);
 				break;
 			case 'JOIN':
 				server.fire('join', server, prefix, params[0]);
@@ -51,60 +51,53 @@ exports.mod = function(context)
 				server.fire('kick', server, prefix, params[0], params[1], params[2]);
 				break;
 			case 'MODE':
-				//XXX: This needs to be broken into functions - Quora
-				//Variables for placeholding and such. Default ircd behaviour is to have + be implied, but this should never matter
-				var plus = true;
-				var index = 2;
-				var modestring = params[1];
-				var parts = server.isupport.CHANMODES.split(',');
-				
-				for (var i=0; i < modestring.length; i++) 
-				{
-					if(modestring[i] === '+') plus = true;
-					else if(modestring[i] === '-') plus = false;
-					else 
-					{
-						//We certainly have a mode change now
-						//Construct an event for each mode change
-						
-						/*
-						 * # 0 = Mode that adds or removes a nick or address to a list. Always has a parameter.
-						 * # 1 = Mode that changes a setting and always has a parameter.
-						 * # 2 = Mode that changes a setting and only has a parameter when set.
-						 * # 3 = Mode that changes a setting and never has a parameter.
-						 */
-						
-						// check which section the mode char is in
-     						var section = -1;
-						
-						for(var p=0; p<parts.length; ++p)
-						{
-							if(parts[p].indexOf(modestring[i]) !== -1)
-							{
-								section = p;
-								break;
-							}
-						}
-
-						if(section === -1)
-						{
-							// mode is either broken at server or is a prefix mode
-							section = 1;
-						}
-						
-						if(section === 0 || section === 1 || (section === 2 && plus)) 
-						{
-							server.fire('mode', server, prefix, params[0], plus, modestring[i], params[index]);
-							index++;
-						} 
-						else 
-						{
-							server.fire('mode', server, prefix, params[0], plus, modestring[i], null);
-						}
-					}
-				}
+				server.fire('mode_raw', server, prefix, params[0], params[1], params.slice(2));
 				break;
 		}
+	}
+
+	this.core$005 = function(server, prefix, options, message)
+	{
+		for(var i=0; i<options.length; ++i)
+		{
+			var parts = options[i].split('=');
+			if(typeof parts[1] === 'undefined') parts[1] = '';
+			server.isupport[parts[0]] = parts[1];
+		}
+	}
+
+	this.core$352 = function(server, prefix, channel, ident, host, serverhost, nick, extrainfo, hopcount, realname)
+	{
+		if(server.channels[channel] !== 'undefined')
+		{
+			server.users[nick].ident = ident;
+			server.users[nick].host = host;
+			server.users[nick].realname = realname;
+		}
+	}
+
+	this.core$353 = function(server, prefix, channelPrefix, channel, names)
+	{
+		var split1 = server.isupport.PREFIX.split(')');
+		var split2 = split1[0].split('(');
+
+		for(var i=0; i<names.length; ++i)
+		{
+			if(split1[1].indexOf(names[i][0]) !== -1)
+			{
+				names[i] = names[i].substr(1);
+			}
+
+			if(typeof server.users[names[i]] === 'undefined')
+			{
+				server.users[names[i]] = new User(names[i], null, null, null);
+			}
+
+			server.users[names[i]].channels[channel] = server.channels[channel];
+			server.channels[channel].users[names[i]] = server.users[names[i]];
+		}
+
+		server.send('WHO ' + channel);
 	}
 
 	this.core$privmsg = function(server, prefix, target, message, words)
@@ -157,50 +150,6 @@ exports.mod = function(context)
 				server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 				break;
 		}
-	}
-
-	this.core$005 = function(server, prefix, options, message)
-	{
-		for(var i=0; i<options.length; ++i)
-		{
-			var parts = options[i].split('=');
-			if(typeof parts[1] === 'undefined') parts[1] = '';
-			server.isupport[parts[0]] = parts[1];
-		}
-	}
-
-	this.core$352 = function(server, prefix, channel, ident, host, serverhost, nick, extrainfo, hopcount, realname)
-	{
-		if(server.channels[channel] !== 'undefined')
-		{
-			server.users[nick].ident = ident;
-			server.users[nick].host = host;
-			server.users[nick].realname = realname;
-		}
-	}
-
-	this.core$353 = function(server, prefix, channelPrefix, channel, names)
-	{
-		var split1 = server.isupport.PREFIX.split(')');
-		var split2 = split1[0].split('(');
-
-		for(var i=0; i<names.length; ++i)
-		{
-			if(split1[1].indexOf(names[i][0]) !== -1)
-			{
-				names[i] = names[i].substr(1);
-			}
-
-			if(typeof server.users[names[i]] === 'undefined')
-			{
-				server.users[names[i]] = new User(names[i], null, null, null);
-			}
-
-			server.users[names[i]].channels[channel] = server.channels[channel];
-			server.channels[channel].users[names[i]] = server.users[names[i]];
-		}
-
-		server.send('WHO ' + channel);
 	}
 
 	this.core$join = function(server, prefix, channel)
@@ -285,6 +234,49 @@ exports.mod = function(context)
 			if(server.users[target] === server.user)
 			{
 				delete server.channels[channel];
+			}
+		}
+	}
+
+	this.core$mode_raw = function(server, prefix, channel, modestring, params)
+	{
+		var plus = true;
+		var index = 0;
+		var parts = server.isupport.CHANMODES.split(',');
+
+		for(var i=0; i<modestring.length; ++i)
+		{
+			if(modestring[i] === '+') plus = true;
+			else if(modestring[i] === '-') plus = false;
+			else
+			{
+				/*
+				 * # 0 = Mode that adds or removes a nick or address to a list. Always has a parameter.
+				 * # 1 = Mode that changes a setting and always has a parameter.
+				 * # 2 = Mode that changes a setting and only has a parameter when set.
+				 * # 3 = Mode that changes a setting and never has a parameter.
+				 */
+				
+				var section = -1;
+				for(var p=0; p<parts.length; ++p)
+				{
+					if(parts[p].indexOf(modestring[i]) !== -1)
+					{
+						section = p;
+						break;
+					}
+				}
+				if(section === -1) section = 1; // mode is either broken or a prefix mode
+				
+				if(section === 0 || section === 1 || (section === 2 && plus)) 
+				{
+					server.fire('mode', server, prefix, channel, plus, modestring[i], params[index]);
+					++index;
+				} 
+				else 
+				{
+					server.fire('mode', server, prefix, channel, plus, modestring[i], null);
+				}
 			}
 		}
 	}
