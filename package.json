@@ -1,7 +1,7 @@
 {
   "name": "ibot",
   "version": "0.2.7",
-  "description": "iBot IRC client framework implemented in Node.js",
+  "description": "iBot is an IRC client-side framework designed to be extensible and easy to use",
   "keywords": [
     "ibot",
     "irc",
