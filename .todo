@@ -30,6 +30,9 @@
     <note priority="high" time="1366405777" done="1366437921">
         Add modules/ dir and include critical modules in the iBot package (like 'core')
     </note>
+    <note priority="high" time="1366568857" done="1366710721">
+        Change activeModule to a stack to support recursive fires across multiple modules
+    </note>
     <note priority="high" time="1366619295" done="1366640438">
         [mod core] WHO handling
     </note>
@@ -60,16 +63,16 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1366568857" done="1366710721">
-        Change activeModule to a stack to support recursive fires across multiple modules
-    </note>
     <note priority="high" time="1366706474">
         Add optional time interval param to Server.fire for timed events, and ability to change time interval after initial scheduling
+    </note>
+    <note priority="high" time="1366720485">
+        Write an `auto` module which can be used to autojoin channels and do other actions on connect
     </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
     </note>
-    <note priority="medium" time="1366704092">
+    <note priority="medium" time="1366704092" done="1366724055">
         [README.md] Move Recent Changes to Change Log at bottom, above License
     </note>
 </todo>
