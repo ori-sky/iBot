@@ -2,53 +2,7 @@
 
 iBot is an IRC client-side framework designed to be extensible and easy to use.
 
-## Recent Changes
-
-Here you will find the most recent changes in iBot.
-
-### Bug Fixes
-
-* Fixed module exceptions not being logged.
-* Fixed modules being unable to access their own members.
-
-### `recv` changed to `$recv`
-
-* Global events will be added soon.
-* These will use the module hooks system without a module name.
-* These will be fireable from any module and hookable from any module.
-* The existing event `recv` has been changed to `$recv` to prepare for this.
-* This will avoid any potential function name clashes (unless you use $ in your function names).
-
-### Mode Changes
-
-* Mod `core` now fires the event `mode` for every mode change.
-* The event is fired for each parsed mode (splits up complex changes such as +vv-o+h).
-* More info can be found in `doc/events`.
-
-### Module Hooks
-
-* Wrote a module hooks system for event exposing
-* To fire an event, from a module call `server.fire('eventname', param1, param2, ...)`
-* To hook into an event, from a module use `this.modulename$eventname = function(param1, param2, ...)`
-
-For example, to hook into the `privmsg` event from mod core:
-
-```javascript
-exports.mod = function(ctx)
-{
-	this.core$privmsg = function(server, prefix, target, message, words)
-	{
-		if(words[0] === '!hello')
-		{
-			server.send('PRIVMSG ' + target + '  :world!');
-		}
-	}
-}
-```
-
 ## Usage
-
-More documentation to follow later.
 
 ### Installation
 
@@ -125,6 +79,50 @@ exports.mod = function(ctx)
 			{
 				server.send('PRIVMSG ' + target + ' :world!');
 			}
+		}
+	}
+}
+```
+
+## Changelog
+
+Here you will find the list of changes in iBot.
+
+#### Bug Fixes
+
+* Fixed module exceptions not being logged.
+* Fixed modules being unable to access their own members.
+
+#### `recv` changed to `$recv`
+
+* Global events will be added soon.
+* These will use the module hooks system without a module name.
+* These will be fireable from any module and hookable from any module.
+* The existing event `recv` has been changed to `$recv` to prepare for this.
+* This will avoid any potential function name clashes (unless you use $ in your function names).
+
+#### Mode Changes
+
+* Mod `core` now fires the event `mode` for every mode change.
+* The event is fired for each parsed mode (splits up complex changes such as +vv-o+h).
+* More info can be found in `doc/events`.
+
+#### Module Hooks
+
+* Wrote a module hooks system for event exposing
+* To fire an event, from a module call `server.fire('eventname', param1, param2, ...)`
+* To hook into an event, from a module use `this.modulename$eventname = function(param1, param2, ...)`
+
+For example, to hook into the `privmsg` event from mod core:
+
+```javascript
+exports.mod = function(ctx)
+{
+	this.core$privmsg = function(server, prefix, target, message, words)
+	{
+		if(words[0] === '!hello')
+		{
+			server.send('PRIVMSG ' + target + '  :world!');
 		}
 	}
 }
