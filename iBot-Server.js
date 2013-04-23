@@ -50,7 +50,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 			else
 			{
-				context.log('out', '(' + kModule + ') No callback for ' + activeModule + '$' + arguments[0] + ' defined');
+				context.log('verbose', '(' + kModule + ') No callback for ' + activeModule + '$' + arguments[0] + ' defined');
 			}
 		}
 	}
