@@ -32,6 +32,9 @@ exports.mod = function(context)
 			case '353': // RPL_NAMREPLY
 				server.fire('353', server, prefix, params[1], params[2], params[3].split(' '));
 				break;
+			case '376': // RPL_ENDOFMOTD
+				server.fire('376', server, prefix, params[1]);
+				break;
 			case 'JOIN':
 				server.fire('join', server, prefix, params[0]);
 				break;
