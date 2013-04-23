@@ -50,9 +50,23 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 			else
 			{
-				context.log('verbose', '(' + kModule + ') No callback for ' + this.activeModule + '$' + arguments[0] + ' defined');
+				context.log('out', '(' + kModule + ') No callback for ' + activeModule + '$' + arguments[0] + ' defined');
 			}
 		}
+	}
+
+	this.scheduleFire = function()
+	{
+		var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
+		var args = Array.prototype.slice.call(arguments, 0);
+		// todo: FIX THIS!
+
+		var timeout = setTimeout(function()
+		{
+			this.activeModuleStack.push(activeModule);
+			this.fire.apply(this, args.slice(1));
+			this.activeModuleStack.pop();
+		}.bind(this), args[0]);
 	}
 
 	this.onConnect = function()
