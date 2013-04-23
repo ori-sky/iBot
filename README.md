@@ -88,6 +88,24 @@ exports.mod = function(ctx)
 
 Here you will find the list of changes in iBot.
 
+#### Recursive Hooks
+
+* Hooks now work recursively across mutliple modules.
+* A stack is used to keep track of the calls in the module system.
+* This allows for call structures like the one seen below (located in experimental branch).
+
+```
+iBot
+-> core
+-> -> test_hookstack
+-> -> -> test_hookstack2
+-> -> -> -> test_hookstack
+-> -> -> test_hookstack2
+-> -> test_hookstack
+-> core
+iBot
+```
+
 #### Bug Fixes
 
 * Fixed module exceptions not being logged.
