@@ -106,6 +106,20 @@ iBot
 iBot
 ```
 
+#### Scheduled Fires
+
+* Same syntax as Server.fire('event', param1, param2, ...)
+* Syntax is Server.scheduleFire(numMilliseconds, 'event', param1, param2, ...)
+* Works exactly the same way as fire except scheduled.
+* Cancellation and duration changing coming soon.
+
+#### `auto`
+
+* `auto` currently autojoining of channels.
+* `!auto join +` - adds a channel to autojoin
+* `!auto join -` - removes a channel from autojoin
+* `!auto join ?` - lists channels in autojoin
+
 #### Bug Fixes
 
 * Fixed module exceptions not being logged.
