@@ -2,12 +2,26 @@ exports.mod = function(context)
 {
 	this.core$privmsg = function(server, prefix, target, message, words)
 	{
-		if(words[0] === '!raw')
+		switch(words[0])
 		{
-			if(server.master.test(prefix.mask))
-			{
-				server.send(words.slice(1).join(' '));
-			}
+			case '!raw':
+				if(server.master.test(prefix.mask))
+				{
+					server.fire('raw', server, words.slice(1).join(' '));
+				}
+				break;
+			case '!rawtimed':
+				if(server.master.test(prefix.mask))
+				{
+					server.fireTimed(words[1], undefined, 'raw', server, words.slice(2).join(' '));
+				}
+				break;
 		}
+
+	}
+
+	this.raw$raw = function(server, data)
+	{
+		server.send(data);
 	}
 }
