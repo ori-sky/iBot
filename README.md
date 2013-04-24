@@ -88,6 +88,14 @@ exports.mod = function(ctx)
 
 Here you will find the list of changes in iBot.
 
+#### Scheduled Fires (updated)
+
+* Syntax is now `Server.fireTimed(numMilliseconds, 'timeoutName', 'eventName', param1, param2, ...)`
+* Fire can be cancelled with `Server.fireCancel('timeoutName')`
+* Duration can be changed based on the original time with `Server.fireChange(newMilliseconds, 'timeoutName')`
+* Fire can be overwriten (changes duration based on the current time effectively) by calling `fireTimed` again.
+* `timeoutName` in all functions defaults to 'default' if undefined.
+
 #### Recursive Hooks
 
 * Hooks now work recursively across mutliple modules.
@@ -108,8 +116,8 @@ iBot
 
 #### Scheduled Fires
 
-* Same syntax as Server.fire('event', param1, param2, ...)
-* Syntax is Server.scheduleFire(numMilliseconds, 'event', param1, param2, ...)
+* Same syntax as `Server.fire('event', param1, param2, ...)`
+* Syntax is `Server.scheduleFire(numMilliseconds, 'event', param1, param2, ...)`
 * Works exactly the same way as fire except scheduled.
 * Cancellation and duration changing coming soon.
 
