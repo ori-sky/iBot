@@ -1,6 +1,6 @@
 {
   "name": "ibot",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "iBot is an IRC client-side framework designed to be extensible and easy to use",
   "keywords": [
     "ibot",
