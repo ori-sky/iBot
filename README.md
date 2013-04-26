@@ -88,6 +88,24 @@ exports.mod = function(ctx)
 
 Here you will find the list of changes in iBot.
 
+#### `cmd` & `cmdraw`
+
+* Two new convenience events have been added in mod core. Parameters are outlined in `doc/events`.
+* These events are fired if the first word of a PRIVMSG begins with `!` or if the first word is the bot's current nick.
+* `cmd` params comprise only of non-empty elements from the message words array.
+* `cmdraw` params are unfiltered and contain all elements (useful for mod raw).
+
+Example usage of commands:
+
+```
+<user> !lmsrv module
+<user> iBot: lmsrv module
+<user> ibot, lmsrv module
+<user> ibot lmsrv module
+<user> ibot      lmsrv                module
+<user> ibot   raw PRIVMSG #channel :these two spaces will send correctly ->  <-
+```
+
 #### Global Events
 
 * Events can now be fired without a sender by prefixing the event name with $
