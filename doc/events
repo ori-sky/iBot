@@ -7,6 +7,16 @@ $recv:
 
 ## Core events:
 
+core$cmd:
+	A command-like message was received
+
+	params: server, prefix, target, command, params
+
+core$cmdraw
+	Same as core$cmd except unfiltered params
+
+	params: server, prefix, target, command, params
+
 core$ping:
 	A PING message was recieved and replied to
 	
