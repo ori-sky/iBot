@@ -33,14 +33,20 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		for(var kModule in this.modules)
 		{
 			var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
+			var eventName = arguments[0];
+			if(eventName[0] === '$')
+			{
+				activeModule = '';
+				eventName = eventName.substr(1);
+			}
 
-			if(typeof this.modules[kModule][activeModule + '$' + arguments[0]] !== 'undefined')
+			if(typeof this.modules[kModule][activeModule + '$' + eventName] !== 'undefined')
 			{
 				this.activeModuleStack.push(kModule);
 
 				try
 				{
-					this.modules[kModule][activeModule + '$' + arguments[0]].apply(this.modules[kModule], Array.prototype.slice.call(arguments, 1));
+					this.modules[kModule][activeModule + '$' + eventName].apply(this.modules[kModule], Array.prototype.slice.call(arguments, 1));
 				}
 				catch(e)
 				{
@@ -290,26 +296,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 		}
 
-		for(var mod in this.modules)
-		{
-			this.activeModuleStack.push(mod);
-
-			if(typeof this.modules[mod].$recv !== 'undefined')
-			{
-				try
-				{
-					this.modules[mod].$recv(this, prefix, opcode, params);
-				}
-				catch(e)
-				{
-					context.logUnsafe('err', e.stack);
-				}
-			}
-			else
-			{
-				context.log('verbose', '(' + mod + ') No callback for recv defined');
-			}
-		}
+		this.fire('$recv', this, prefix, opcode, params);
 	}.bind(this);
 
 	this.send = function(data)
