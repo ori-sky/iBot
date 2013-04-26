@@ -102,6 +102,18 @@ exports.mod = function(context)
 
 	this.core$privmsg = function(server, prefix, target, message, words)
 	{
+		if(words[0][0] === '!' || new RegExp(server.user.nick + '[\,\:]?').test(words[0]))
+		{
+			var params = words.slice(1);
+			var paramsFiltered = params.filter(function(element, i, arr)
+			{
+				return (element !== '');
+			});
+
+			server.fire('cmdraw', server, prefix, target, words[0], params);
+			server.fire('cmd', server, prefix, target, words[0], paramsFiltered);
+		}
+
 		switch(words[0])
 		{
 			case '!lmsrv':
