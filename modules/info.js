@@ -1,30 +1,30 @@
 exports.mod = function(context)
 {
-	this.core$privmsg = function(server, prefix, target, message, words)
+	this.core$cmd = function(server, prefix, target, cmd, params)
 	{
-		switch(words[0])
+		switch(cmd)
 		{
-			case '!channels':
+			case 'channels':
 				var k;
-				if(typeof words[1] === 'undefined')
+				if(typeof params[0] === 'undefined')
 				{
 					k = Object.keys(server.user.channels);
 				}
 				else
 				{
-					k = Object.keys(server.users[words[1]].channels);
+					k = Object.keys(server.users[params[0]].channels);
 				}
 
 				server.send('PRIVMSG ' + target + ' :Channels: ' + k.join(', '));
 				break;
-			case '!isupport':
-				server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + words[1] + ' = ' + server.isupport[words[1]]);
+			case 'isupport':
+				server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + params[0] + ' = ' + server.isupport[params[0]]);
 				break;
-			case '!identof':
-				server.send('PRIVMSG ' + target + ' :Ident of ' + words[1] + ' = ' + server.users[words[1]].ident);
+			case 'identof':
+				server.send('PRIVMSG ' + target + ' :Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
 				break;
-			case '!hostof':
-				server.send('PRIVMSG ' + target + ' :Host of ' + words[1] + ' = ' + server.users[words[1]].host);
+			case 'hostof':
+				server.send('PRIVMSG ' + target + ' :Host of ' + params[0] + ' = ' + server.users[params[0]].host);
 				break;
 
 		}
