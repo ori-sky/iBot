@@ -36,6 +36,9 @@
     <note priority="high" time="1366619295" done="1366640438">
         [mod core] WHO handling
     </note>
+    <note priority="high" time="1366706474" done="1366759028">
+        Add optional time interval param to Server.fire for timed events, and ability to change time interval after initial scheduling
+    </note>
     <note priority="high" time="1366720485" done="1366730749">
         Write an `auto` module which can be used to autojoin channels and do other actions on connect
     </note>
@@ -69,8 +72,8 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1366706474" done="1366759028">
-        Add optional time interval param to Server.fire for timed events, and ability to change time interval after initial scheduling
+    <note priority="high" time="1366961626">
+        Implement global event fires
     </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
