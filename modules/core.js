@@ -107,8 +107,6 @@ exports.mod = function(context)
 			var cmd;
 			var params;
 
-			// todo: spaces should be filtered out if message is "iBot:     hello hook"
-
 			if(words[0][0] === '!')
 			{
 				cmd = words[0].substr(1);
@@ -134,55 +132,6 @@ exports.mod = function(context)
 
 			server.fire('cmdraw', server, prefix, target, cmd, params);
 			server.fire('cmd', server, prefix, target, cmd, paramsFiltered);
-		}
-
-		switch(words[0])
-		{
-			case '!lmsrv':
-				if(server.master.test(prefix.mask))
-				{
-					var result = context.loadModule(words[1], server);
-					if(result !== '')
-					{
-						server.send('PRIVMSG ' + target + ' :' + result);
-					}
-					else
-					{
-						server.send('PRIVMSG ' + target + ' :done');
-					}
-				}
-				break;
-			case '!lmctx':
-				if(server.master.test(prefix.mask))
-				{
-					var result = context.loadModule(words[1]);
-					if(result !== '')
-					{
-						server.send('PRIVMSG ' + target + ' :' + result);
-					}
-					else
-					{
-						server.send('PRIVMSG ' + target + ' :done');
-					}
-				}
-				break;
-			case '!umsrv':
-				if(server.master.test(prefix.mask))
-				{
-					context.unloadModule(words[1], server);
-					server.send('PRIVMSG ' + target + ' :done');
-				}
-				break;
-			case '!umctx':
-				if(server.master.test(prefix.mask))
-				{
-					context.unloadModule(words[1], null);
-					server.send('PRIVMSG ' + target + ' :done');
-				}
-				break;
-			case '!modules':
-				server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
-				break;
 		}
 	}
 
@@ -312,6 +261,58 @@ exports.mod = function(context)
 					server.fire('mode', server, prefix, channel, plus, modestring[i], null);
 				}
 			}
+		}
+	}
+
+	this.core$cmd = function(server, prefix, target, cmd, params)
+	{
+		switch(cmd)
+		{
+			case 'lmsrv':
+				if(server.master.test(prefix.mask))
+				{
+					var result = context.loadModule(params[0], server);
+					if(result !== '')
+					{
+						server.send('PRIVMSG ' + target + ' :' + result);
+					}
+					else
+					{
+						server.send('PRIVMSG ' + target + ' :done');
+					}
+				}
+				break;
+			case 'lmctx':
+				if(server.master.test(prefix.mask))
+				{
+					var result = context.loadModule(params[0]);
+					if(result !== '')
+					{
+						server.send('PRIVMSG ' + target + ' :' + result);
+					}
+					else
+					{
+						server.send('PRIVMSG ' + target + ' :done');
+					}
+				}
+				break;
+			case 'umsrv':
+				if(server.master.test(prefix.mask))
+				{
+					context.unloadModule(params[0], server);
+					server.send('PRIVMSG ' + target + ' :done');
+				}
+				break;
+			case 'umctx':
+				if(server.master.test(prefix.mask))
+				{
+					context.unloadModule(params[0], null);
+					server.send('PRIVMSG ' + target + ' :done');
+				}
+				break;
+			case 'modules':
+				server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
+				break;
 		}
 	}
 }
