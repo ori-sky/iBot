@@ -1,17 +1,17 @@
 exports.mod = function(context)
 {
-	this.core$privmsg = function(server, prefix, target, message, words)
+	this.core$cmd = function(server, prefix, target, cmd, params)
 	{
-		switch(words[0])
+		switch(cmd)
 		{
-			case '!firetimed':
-				server.fireTimed(words[1], words[2], 'test', server, target);
+			case 'firetimed':
+				server.fireTimed(params[0], params[1], 'test', server, target);
 				break;
-			case '!firecancel':
-				server.fireCancel(words[1]);
+			case 'firecancel':
+				server.fireCancel(params[0]);
 				break;
-			case '!firechange':
-				server.fireChange(words[1], words[2]);
+			case 'firechange':
+				server.fireChange(params[0], params[1]);
 				break;
 		}
 	}
