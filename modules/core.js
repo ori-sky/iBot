@@ -102,16 +102,38 @@ exports.mod = function(context)
 
 	this.core$privmsg = function(server, prefix, target, message, words)
 	{
-		if(words[0][0] === '!' || new RegExp(server.user.nick + '[\,\:]?').test(words[0]))
+		if(words[0][0] === '!' || new RegExp(server.user.nick + '[\,\:]?', 'i').test(words[0]))
 		{
-			var params = words.slice(1);
+			var cmd;
+			var params;
+
+			// todo: spaces should be filtered out if message is "iBot:     hello hook"
+
+			if(words[0][0] === '!')
+			{
+				cmd = words[0].substr(1);
+				params = words.slice(1);
+			}
+			else
+			{
+				for(var i=1; i<words.length; ++i)
+				{
+					if(words[i] !== '')
+					{
+						cmd = words[i];
+						params = words.slice(i + 1);
+						break;
+					}
+				}
+			}
+
 			var paramsFiltered = params.filter(function(element, i, arr)
 			{
 				return (element !== '');
 			});
 
-			server.fire('cmdraw', server, prefix, target, words[0], params);
-			server.fire('cmd', server, prefix, target, words[0], paramsFiltered);
+			server.fire('cmdraw', server, prefix, target, cmd, params);
+			server.fire('cmd', server, prefix, target, cmd, paramsFiltered);
 		}
 
 		switch(words[0])
