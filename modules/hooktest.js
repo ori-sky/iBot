@@ -1,8 +1,8 @@
 exports.mod = function(ctx)
 {
-	this.core$privmsg = function(server, prefix, target, message, words)
+	this.core$cmd = function(server, prefix, target, cmd, params)
 	{
-		if(words[0] === '!hellohook')
+		if(cmd === '!hellohook')
 		{
 			server.send('PRIVMSG ' + target + ' :world!');
 		}
