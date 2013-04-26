@@ -2,14 +2,14 @@ exports.mod = function(context)
 {
 	this.channels = {};
 
-	this.core$privmsg = function(server, prefix, target, message, words)
+	this.core$cmd = function(server, prefix, target, cmd, params)
 	{
-		if(words[0] === '!auto')
+		if(cmd === 'auto')
 		{
-			switch(words[1])
+			switch(params[0])
 			{
 				case 'join':
-					server.fire('join', server, prefix, target, words[2], words[3]);
+					server.fire('join', server, prefix, target, params[1], params[2]);
 					break;
 			}
 		}
