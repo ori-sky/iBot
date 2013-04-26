@@ -1,19 +1,19 @@
 exports.mod = function(context)
 {
-	this.core$privmsg = function(server, prefix, target, message, words)
+	this.core$cmdraw = function(server, prefix, target, cmd, params)
 	{
-		switch(words[0])
+		switch(cmd)
 		{
-			case '!raw':
+			case 'raw':
 				if(server.master.test(prefix.mask))
 				{
-					server.fire('raw', server, words.slice(1).join(' '));
+					server.fire('raw', server, params.join(' '));
 				}
 				break;
-			case '!rawtimed':
+			case 'rawtimed':
 				if(server.master.test(prefix.mask))
 				{
-					server.fireTimed(words[1], undefined, 'raw', server, words.slice(2).join(' '));
+					server.fireTimed(params[0], undefined, 'raw', server, params.slice(1).join(' '));
 				}
 				break;
 		}
