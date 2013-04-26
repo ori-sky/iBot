@@ -88,6 +88,21 @@ exports.mod = function(ctx)
 
 Here you will find the list of changes in iBot.
 
+#### Global Events
+
+* Events can now be fired without a sender by prefixing the event name with $
+* Modules can hook into global events by not specifying the sender.
+
+For example:
+
+```javascript
+// fire an event
+server.fire('sayhello', server, target);
+
+// hook into an event
+this.$sayhello = function(server, target) { ... }
+```
+
 #### Scheduled Fires (updated)
 
 * Syntax is now `Server.fireTimed(numMilliseconds, 'timeoutName', 'eventName', param1, param2, ...)`
