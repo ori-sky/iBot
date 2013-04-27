@@ -25,7 +25,7 @@ exports.mod = function(context)
 		var d = new Date();
 		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
 
-		if(typeof this.channels[channel] === 'undefined') channel = null;
+		if(typeof this.channels[channel] === 'undefined') channel = 'out';
 
 		if(this.channels[channel] !== null)
 		{
