@@ -1,5 +1,3 @@
-var util = require('util');
-
 module.exports = function(options)
 {
 	this.options = options;
