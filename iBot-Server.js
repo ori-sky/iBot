@@ -12,11 +12,11 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.ident = ident;
 	this.pass = pass;
 
-	this.isupport = {};
 	this.users = {};
 	this.channels = {};
 	
 	this.modules = {};
+	this.moduleData = {};
 	this.activeModuleStack = [];
 	this.timeouts = {};
 
@@ -26,6 +26,13 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		var keys = Object.keys(this.modules);
 		return keys.join(delimiter);
+	}
+
+	this.get = function(moduleName)
+	{
+		if(typeof moduleName === 'undefined') moduleName = this.activeModuleStack[this.activeModuleStack.length - 1];
+		if(typeof this.moduleData[moduleName] === 'undefined') this.moduleData[moduleName] = {};
+		return this.moduleData[moduleName];
 	}
 
 	this.fire = function()

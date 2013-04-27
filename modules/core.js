@@ -7,6 +7,8 @@ exports.mod = function(context)
 	{
 		switch(opcode)
 		{
+			case '004': // RPL_MYINFO
+				server.fire('004', server, prefix, params[1], params[2], params[3], params[4], params.slice(5));
 			case '005': // RPL_ISUPPORT
 				server.fire('005', server, prefix, params.slice(1, params.length - 1), params[params.length - 1]);
 				break;
@@ -56,13 +58,27 @@ exports.mod = function(context)
 		}
 	}
 
+	this.core$004 = function(server, prefix, servername, version, usermodes, chanmodes, extra)
+	{
+		var data = server.get();
+		data.myinfo = {};
+		data.myinfo.servername = servername;
+		data.myinfo.version = version;
+		data.myinfo.usermodes = usermodes;
+		data.myinfo.chanmodes = chanmodes;
+		data.myinfo.extra = extra;
+	}
+
 	this.core$005 = function(server, prefix, options, message)
 	{
+		var data = server.get();
+		data.isupport = {};
+
 		for(var i=0; i<options.length; ++i)
 		{
 			var parts = options[i].split('=');
 			if(typeof parts[1] === 'undefined') parts[1] = '';
-			server.isupport[parts[0]] = parts[1];
+			data.isupport[parts[0]] = parts[1];
 		}
 	}
 

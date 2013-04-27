@@ -17,8 +17,11 @@ exports.mod = function(context)
 
 				server.send('PRIVMSG ' + target + ' :Channels: ' + k.join(', '));
 				break;
+			case 'myinfo':
+				server.send('PRIVMSG ' + target + ' :MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
+				break;
 			case 'isupport':
-				server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + params[0] + ' = ' + server.isupport[params[0]]);
+				server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
 				break;
 			case 'identof':
 				server.send('PRIVMSG ' + target + ' :Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);

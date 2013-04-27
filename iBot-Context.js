@@ -52,6 +52,8 @@ module.exports = function(options)
 			var module = require(path);
 			var mod = new module.mod(this);
 
+			if(typeof mod.data === 'undefined') mod.data = {};
+
 			if(typeof server === 'undefined' || server === null)
 			{
 				for(var kServer in this.servers)
