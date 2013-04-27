@@ -61,7 +61,7 @@ exports.mod = function(context)
 	this.core$004 = function(server, prefix, servername, version, usermodes, chanmodes, extra)
 	{
 		var data = server.get();
-		data.myinfo = {};
+		if(typeof data.myinfo === 'undefined') data.myinfo = {};
 		data.myinfo.servername = servername;
 		data.myinfo.version = version;
 		data.myinfo.usermodes = usermodes;
@@ -72,7 +72,7 @@ exports.mod = function(context)
 	this.core$005 = function(server, prefix, options, message)
 	{
 		var data = server.get();
-		data.isupport = {};
+		if(typeof data.isupport === 'undefined') data.isupport = {};
 
 		for(var i=0; i<options.length; ++i)
 		{
@@ -94,7 +94,7 @@ exports.mod = function(context)
 
 	this.core$353 = function(server, prefix, channelPrefix, channel, names)
 	{
-		var split1 = server.isupport.PREFIX.split(')');
+		var split1 = server.get().isupport.PREFIX.split(')');
 		var split2 = split1[0].split('(');
 
 		for(var i=0; i<names.length; ++i)
@@ -241,7 +241,7 @@ exports.mod = function(context)
 	{
 		var plus = true;
 		var index = 0;
-		var parts = server.isupport.CHANMODES.split(',');
+		var parts = server.get().isupport.CHANMODES.split(',');
 
 		for(var i=0; i<modestring.length; ++i)
 		{
