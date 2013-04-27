@@ -55,7 +55,6 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 				this.activeModuleStack.pop();
 			}
-			else
 		}
 	}
 

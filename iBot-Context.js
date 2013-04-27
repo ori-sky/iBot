@@ -5,14 +5,6 @@ module.exports = function(options)
 	this.options = options;
 	this.servers = {};
 
-	this.lc =
-	{
-		urgent: process.stdout,
-		out: process.stdout,
-		err: process.stderr,
-		verbose: null,
-	};
-
 	this.start = function()
 	{
 		for(var kServer in this.servers)
@@ -22,23 +14,6 @@ module.exports = function(options)
 	}
 
 	this.run = this.start;
-
-	this.log = function(logChannel, message)
-	{
-		message = util.inspect(message);
-		this.logUnsafe(logChannel, message);
-	}
-
-	this.logUnsafe = function(logChannel, message)
-	{
-		var d = new Date();
-		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
-
-		if(typeof this.lc[logChannel] !== 'undefined' && this.lc[logChannel] !== null)
-		{
-			this.lc[logChannel].write(t + ' ' + message + '\n');
-		}
-	}
 
 	this.loadModule = function(name, server)
 	{
@@ -61,8 +36,8 @@ module.exports = function(options)
 			}
 			catch(e2)
 			{
-				this.log('urgent', e.message);
-				this.log('urgent', e2.message);
+				console.log(e.message);
+				console.log(e2.message);
 				return e.message + ' | ' + e2.message;
 			}
 		}
@@ -89,13 +64,13 @@ module.exports = function(options)
 				server.modules[name] = mod;
 			}
 
-			this.log('out', 'Loaded module: ' + name);
+			console.log('out', 'Loaded module: ' + name);
 			return '';
 		}
 		catch(e)
 		{
-			this.log('out', 'Failed to load module: ' + name);
-			this.logUnsafe('urgent', e.stack);
+			console.log('Failed to load module: ' + name);
+			console.log(e.stack);
 			return e.message;
 		}
 	}
@@ -116,6 +91,6 @@ module.exports = function(options)
 			delete server.modules[name];
 		}
 
-		this.log('out', 'Unloaded module: ' + name);
+		console.log('Unloaded module: ' + name);
 	}
 }
