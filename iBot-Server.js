@@ -50,15 +50,12 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				}
 				catch(e)
 				{
-					context.logUnsafe('err', e.stack);
+					 console.log(e.stack);
 				}
 
 				this.activeModuleStack.pop();
 			}
 			else
-			{
-				context.log('verbose', '(' + kModule + ') No callback for ' + activeModule + '$' + arguments[0] + ' defined');
-			}
 		}
 	}
 
@@ -114,7 +111,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		if(ssl)
 		{
-			context.log('err', 'TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized');
+			this.fire('$log', 'TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized', 'err');
 		}
 
 		this.users[nick] = this.user;
@@ -133,10 +130,10 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				output: process.stdout
 			});
 
-			context.log('out', 'Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
+			console.log('out', 'Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
 			this.rl.question('', function(pass)
 			{
-				context.logUnsafe('out', '\x1b[1A\x1b[2K');
+				console.log('out', '\x1b[1A\x1b[2K');
 
 				this.pass = pass;
 				this.onConnect();
@@ -183,7 +180,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.onClose = function()
 	{
-		context.log('err', 'Connection closed');
+		this.fire('$log', 'Connection closed', 'err');
 
 		clearInterval(this.pingInterval);
 
@@ -206,14 +203,14 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.onError = function(err)
 	{
-		context.log('urgent', err);
+		this.fire('$log', err, 'urgent');
 	}.bind(this);
 
 	this.connect = function()
 	{
 		if(ssl)
 		{
-			context.log('err', 'Negotiating connection over TLS');
+			this.fire('$log', 'Negotiating connection over TLS', 'err');
 			this.client = tls.connect(port, host, {rejectUnauthorized:false}, this.onConnect);
 		}
 		else
@@ -233,7 +230,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.recv = function(data)
 	{
-		context.log('err', 'R> ' + data);
+		this.fire('$log', 'R> ' + data, 'err');
 		var words = data.split(' ');
 
 		var prefix = null;
@@ -301,7 +298,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.send = function(data)
 	{
-		context.log('err', 'S> ' + data);
+		this.fire('$log', 'S> ' + data, 'err');
 		this.sendSilent(data);
 	}.bind(this);
 
