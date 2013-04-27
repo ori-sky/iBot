@@ -46,6 +46,7 @@ module.exports = function(options)
 
 		try
 		{
+			if(typeof this.options !== 'undefined') this.options = {};
 			if(typeof this.options.modulesPath === 'undefined') this.options.modulesPath = process.cwd() + '/modules';
 			path = this.options.modulesPath + '/' + name;
 			if(typeof require.cache[path] !== 'undefined') delete require.cache[path];
