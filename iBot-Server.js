@@ -39,10 +39,11 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		try
 		{
-			var moduleName = arguments[0];
-			var methodName = arguments[1];
-			var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 2));
-			console.log(0);
+			var fullName = arguments[0];
+			var s1 = fullName.split('$');
+			var moduleName = s1[0];
+			var methodName = s1[1];
+			var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 1));
 			return ret;
 		}
 		catch(e)

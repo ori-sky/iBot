@@ -91,13 +91,13 @@ Here you will find the list of changes in iBot.
 #### Logging to channels
 
 * The `log` module now has a `logTargets` method to log data to all of its target channels or users.
-* Syntax is `server.do('log', 'logTargets', server, 'this is the data');`
+* Syntax is `server.do('log$logTargets', server, 'this is the data');`
 * Targets can be added with `!log + #target` and removed with `!log - #target`
 
 #### Method Calling
 
 * Similar to how events can be fired from one source to many destinations, methods in one destination can be called from many sources.
-* Syntax is `server.do('destinationModule', 'methodName', param1, param2, ...);`
+* Syntax is `server.do('destinationModule$methodName', param1, param2, ...);`
 * Methods can return a parameter.
 
 #### `cmd` & `cmdraw`
