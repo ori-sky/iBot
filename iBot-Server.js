@@ -35,6 +35,24 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		return this.moduleData[moduleName];
 	}
 
+	this.do = function()
+	{
+		try
+		{
+			var moduleName = arguments[0];
+			var methodName = arguments[1];
+			var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 2));
+			console.log(0);
+			return ret;
+		}
+		catch(e)
+		{
+			console.log(e.stack);
+		}
+
+		return undefined;
+	}
+
 	this.fire = function()
 	{
 		for(var kModule in this.modules)

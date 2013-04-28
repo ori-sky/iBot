@@ -5,6 +5,7 @@ exports.mod = function(ctx)
 		if(cmd === 'hellohook')
 		{
 			server.send('PRIVMSG ' + target + ' :world!');
+			server.do('log', 'logTargets', server, 'sent msg `world!`');
 		}
 	}
 }
