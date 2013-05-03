@@ -42,6 +42,12 @@
     <note priority="high" time="1366720485" done="1366730749">
         Write an `auto` module which can be used to autojoin channels and do other actions on connect
     </note>
+    <note priority="high" time="1366961626" done="1366977693">
+        Implement global event fires
+        <comment>
+            Also fixed memory leak in Server.recv from activeModuleStack never being popped
+        </comment>
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
@@ -72,11 +78,8 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1366961626" done="1366977693">
-        Implement global event fires
-        <comment>
-            Also fixed memory leak in Server.recv from activeModuleStack never being popped
-        </comment>
+    <note priority="veryhigh" time="1367589183">
+        Fix nick changes not resetting on reconnect
     </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
