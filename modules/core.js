@@ -141,13 +141,37 @@ exports.mod = function(context)
 				}
 			}
 
-			var paramsFiltered = params.filter(function(element, i, arr)
-			{
-				return (element !== '');
-			});
-
 			server.fire('cmdraw', server, prefix, target, cmd, params);
-			server.fire('cmd', server, prefix, target, cmd, paramsFiltered);
+		}
+	}
+
+	this.core$cmdraw = function(server, prefix, target, cmd, params)
+	{
+		var paramsFiltered = params.filter(function(element, i, arr)
+		{
+			return (element !== '');
+		});
+
+		server.fire('cmd', server, prefix, target, cmd, paramsFiltered);
+
+		switch(cmd)
+		{
+			case 'do': // novelty
+				if(server.master.test(prefix.mask))
+				{
+					server.send('PRIVMSG ' + target + ' :/' + params.join(' '));
+					server.fire('cmdraw', server, prefix, target, params[0], params.slice(1));
+				}
+				break;
+			case 'do-r':
+				if(server.master.test(prefix.mask))
+				{
+					var p = []
+					for(var i=0; i<params[0]; ++i) p.push('do');
+					for(var i=1; i<params.length; ++i) p.push(params[i]);
+					server.fire('cmdraw', server, prefix, target, 'do', p);
+				}
+				break;
 		}
 	}
 
