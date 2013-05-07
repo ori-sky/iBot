@@ -338,7 +338,12 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.quit = function()
 	{
-		this.willQuit = false;
+		this.willQuit = true;
 		this.client.end();
-	}
+
+		for(var kServer in context.servers)
+		{
+			if(context.servers[kServer] === this) delete context.servers[kServer];
+		}
+	}.bind(this);
 }
