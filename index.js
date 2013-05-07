@@ -4,5 +4,9 @@ module.exports =
 	Server:		require('./iBot-Server'),
 	User:		require('./iBot-User'),
 	Channel:	require('./iBot-Channel'),
-	Mode:		require('./iBot-Mode')
+	Mode:		require('./iBot-Mode'),
+	start: function()
+	{
+		
+	}
 };
