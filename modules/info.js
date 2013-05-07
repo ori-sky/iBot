@@ -23,6 +23,9 @@ exports.mod = function(context)
 			case 'isupport':
 				server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
 				break;
+			case 'mynick':
+				server.send('PRIVMSG ' + target + ' :My nick is ' + server.user.nick);
+				break;
 			case 'identof':
 				server.send('PRIVMSG ' + target + ' :Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
 				break;
