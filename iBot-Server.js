@@ -20,6 +20,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.activeModuleStack = [];
 	this.timeouts = {};
 
+	this.willQuit = false;
 
 	this.getModules = function(delimiter)
 	{
@@ -220,10 +221,13 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		this.channels = {};
 		this.user.channels = {};
 
-		var timeout = setTimeout(function()
+		if(!this.willQuit)
 		{
-			this.connect();
-		}.bind(this), 5000);
+			var timeout = setTimeout(function()
+			{
+				this.connect();
+			}.bind(this), 5000);
+		}
 	}.bind(this);
 
 	this.onError = function(err)
@@ -331,4 +335,10 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		this.client.write(data + '\r\n');
 	}.bind(this);
+
+	this.quit = function()
+	{
+		this.willQuit = false;
+		this.client.end();
+	}
 }
