@@ -87,6 +87,12 @@
     <note priority="high" time="1367926604">
         Add daily scheduled timer for scheduled events longer than a day (or week?)
     </note>
+    <note priority="high" time="1367927512">
+        Remove server reference from context when quitting
+    </note>
+    <note priority="high" time="1367927614">
+        Implement ability to add new servers while running
+    </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
     </note>
