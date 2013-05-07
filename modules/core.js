@@ -353,6 +353,12 @@ exports.mod = function(context)
 			case 'modules':
 				server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
 				break;
+			case 'quit':
+				if(server.master.test(prefix.mask))
+				{
+					server.quit();
+				}
+				break;
 		}
 	}
 }
