@@ -20,7 +20,6 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.activeModuleStack = [];
 	this.timeouts = {};
 
-	this.user = new User(nick, ident, '', 'iBot');
 
 	this.getModules = function(delimiter)
 	{
@@ -139,6 +138,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			this.fire('$log', 'TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized', 'err');
 		}
 
+		this.user = new User(this.nick, this.ident, '', 'iBot');
 		this.users[nick] = this.user;
 
 		if(typeof this.pass === 'string' && this.pass !== '')
