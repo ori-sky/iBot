@@ -51,6 +51,9 @@
             Also fixed memory leak in Server.recv from activeModuleStack never being popped
         </comment>
     </note>
+    <note priority="high" time="1367927512" done="1367928685">
+        Remove server reference from context when quitting
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
@@ -87,10 +90,7 @@
     <note priority="high" time="1367926604">
         Add daily scheduled timer for scheduled events longer than a day (or week?)
     </note>
-    <note priority="high" time="1367927512" done="1367928685">
-        Remove server reference from context when quitting
-    </note>
-    <note priority="high" time="1367927614">
+    <note priority="high" time="1367927614" done="1367941042">
         Implement ability to add new servers while running
     </note>
     <note priority="medium" time="1366619222">
