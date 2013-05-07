@@ -35,6 +35,7 @@ The IRC commands available through core are as follows:
 * `!umsrv <module>`       - unloads a module from the current server
 * `!umctx <module>`       - unloads a module from all servers
 * `!modules`              - lists the loaded modules for the current server
+* `!quit`                 - disconnects from the current server and removes it completely from the context
 
 ### Modules
 
