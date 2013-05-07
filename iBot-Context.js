@@ -48,20 +48,30 @@ module.exports = function(options)
 			}
 
 			var module = require(path);
-			var mod = new module.mod(this);
 
-			if(typeof mod.data === 'undefined') mod.data = {};
+			// TODO: find a better way to do this
+			//var mod = new module.mod(this);
 
 			if(typeof server === 'undefined' || server === null)
 			{
 				for(var kServer in this.servers)
 				{
+					// TODO: find a better way to do this
+					var mod = new module.mod(this);
+					if(typeof mod.data === 'undefined') mod.data = {};
+
 					this.servers[kServer].modules[name] = mod;
+					this.servers[kServer].do(name + '$loaded', this.servers[kServer]);
 				}
 			}
 			else
 			{
-				server.modules[name] = mod;
+				// TODO: find a better way to do this
+				var mod = new module.mod(this);
+				if(typeof mod.data === 'undefined') mod.data = {};
+
+				server.modules[name] = new module.mod(this);
+				server.do(name + '$loaded', server);
 			}
 
 			console.log('out', 'Loaded module: ' + name);
@@ -77,7 +87,7 @@ module.exports = function(options)
 
 	this.unloadModule = function(name, server)
 	{
-		if(server === null)
+		if(server === undefined)
 		{
 			for(var kServer in this.servers)
 			{
