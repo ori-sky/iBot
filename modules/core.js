@@ -1,8 +1,14 @@
+var Server = require('../iBot-Server');
 var User = require('../iBot-User');
 var Channel = require('../iBot-Channel');
 
 exports.mod = function(context)
 {
+	this._loaded = function(server)
+	{
+		server.send('VERSION');
+	}
+
 	this.$recv = function(server, prefix, opcode, params)
 	{
 		switch(opcode)
@@ -311,47 +317,130 @@ exports.mod = function(context)
 			case 'lmsrv':
 				if(server.master.test(prefix.mask))
 				{
-					var result = context.loadModule(params[0], server);
-					if(result !== '')
+					var modules = params[0];
+					var name = params[1];
+					var srv = server;
+					if(name !== undefined) srv = context.servers[name];
+
+					if(modules === undefined) modules = [];
+					else modules = modules.split(',');
+
+					for(var i=0; i<modules.length; ++i)
 					{
-						server.send('PRIVMSG ' + target + ' :' + result);
-					}
-					else
-					{
-						server.send('PRIVMSG ' + target + ' :done');
+						var result = context.loadModule(modules[i], srv);
+						if(result !== '') server.send('PRIVMSG ' + target + ' :' + result);
+						else server.send('PRIVMSG ' + target + ' :Loaded module: ' + modules[i]);
 					}
 				}
 				break;
 			case 'lmctx':
 				if(server.master.test(prefix.mask))
 				{
-					var result = context.loadModule(params[0]);
-					if(result !== '')
+					var modules = params[0];
+
+					if(modules === undefined) modules = [];
+					else modules = modules.split(',');
+
+					for(var i=0; i<modules.length; ++i)
 					{
-						server.send('PRIVMSG ' + target + ' :' + result);
-					}
-					else
-					{
-						server.send('PRIVMSG ' + target + ' :done');
+						var result = context.loadModule(modules[i]);
+						if(result !== '') server.send('PRIVMSG ' + target + ' :' + result);
+						else server.send('PRIVMSG ' + target + ' :Loaded module: ' + modules[i]);
 					}
 				}
 				break;
 			case 'umsrv':
 				if(server.master.test(prefix.mask))
 				{
-					context.unloadModule(params[0], server);
-					server.send('PRIVMSG ' + target + ' :done');
+					var modules = params[0];
+					var name = params[1];
+					var srv = server;
+					if(name !== undefined) srv = context.servers[name];
+
+					if(modules === undefined) modules = [];
+					else modules = modules.split(',');
+
+					for(var i=0; i<modules.length; ++i)
+					{
+						context.unloadModule(modules[i], srv);
+						server.send('PRIVMSG ' + target + ' :Unloaded module: ' + modules[i]);
+					}
 				}
 				break;
 			case 'umctx':
 				if(server.master.test(prefix.mask))
 				{
-					context.unloadModule(params[0], null);
+					var modules = params[0];
+
+					if(modules === undefined) modules = [];
+					else modules = modules.split(',');
+
+					for(var i=0; i<modules.length; ++i)
+					{
+						context.unloadModule(modules[i]);
+						server.send('PRIVMSG ' + target + ' :Unloaded module: ' + modules[i]);
+					}
+				}
+				break;
+			case 'addsrv':
+				if(server.master.test(prefix.mask))
+				{
+					var syntax = 'Syntax: addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master regular!exp@ression] [modules one,two,etc]';
+					var name = params[0];
+					var host = params[1];
+					var nick = params[2];
+					var ident = params[3];
+					var port = parseInt(params[4]);
+					var ssl = params[5];
+					var master = params[6]
+					var modules = params[7];
+
+					if(nick === undefined) { server.send('PRIVMSG ' + target + ' :' + syntax); break; }
+					if(ident === undefined) ident = 'ibot';
+					if(isNaN(port)) port = 6667;
+					ssl = ssl === 'true';
+
+					if(master === undefined) master = /./;
+					else master = new RegExp(master); // TODO: case insensitive?
+
+					if(modules === undefined) modules = [];
+					else modules = modules.split(',');
+
+					if(context.servers[name] !== undefined) context.servers[name].quit();
+
+					context.servers[name] = new Server(context, host, port, nick, ident, false, ssl);
+					context.servers[name].master = master;
+
+					for(var i=0; i<modules.length; ++i)
+					{
+						context.loadModule(modules[i], context.servers[name]);
+					}
+
+					context.servers[name].connect();
+					server.send('PRIVMSG ' + target + ' :done');
+				}
+				break;
+			case 'rmsrv':
+				if(server.master.test(prefix.mask))
+				{
+					var syntax = 'Syntax: rmsrv <name>';
+					var name = params[0];
+
+					if(name === undefined) { server.send('PRIVMSG ' + target + ' :' + syntax); break; }
+
+					context.servers[name].quit();
 					server.send('PRIVMSG ' + target + ' :done');
 				}
 				break;
 			case 'modules':
-				server.send('PRIVMSG ' + target + ' :Modules: ' + server.getModules(', '));
+				var name = params[0];
+				var srv = server;
+				if(server.master.test(prefix.mask) && name !== undefined) srv = context.servers[name];
+
+				server.send('PRIVMSG ' + target + ' :Modules: ' + srv.getModules(', '));
+				break;
+			case 'servers':
+				server.send('PRIVMSG ' + target + ' :Servers: ' + Object.keys(context.servers).join(', '));
 				break;
 			case 'quit':
 				if(server.master.test(prefix.mask))
