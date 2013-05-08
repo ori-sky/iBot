@@ -15,11 +15,15 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		this.ssl = config.ssl;
 		this.nick = config.nick;
 		this.ident = config.ident;
+		this.master = config.master
 
 		if(this.port === undefined) this.port = 6667;
 		if(this.pass === undefined) this.pass = false;
 		if(this.ssl === undefined) this.ssl = false;
 		if(this.ident === undefined) this.ident = 'ibot';
+
+		if(this.master === undefined) this.master = /./;
+		else this.master = new RegExp(this.master);
 	}
 	else
 	{
