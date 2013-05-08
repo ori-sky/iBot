@@ -42,7 +42,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		}
 		catch(e)
 		{
-			console.log(e.stack);
+			console.log(e.message);
 		}
 
 		return undefined;
@@ -365,6 +365,15 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			for(var kModule in config.modules)
 			{
 				context.loadModule(config.modules[kModule], this);
+			}
+
+			// using a second loop eliminates race conditions
+			if(config.data !== undefined)
+			{
+				for(var kData in config.data)
+				{
+					this.do(kData + '$data', config.data[kData]);
+				}
 			}
 		}
 	}
