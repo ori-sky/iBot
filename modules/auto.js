@@ -1,6 +1,17 @@
 exports.mod = function(context)
 {
-	this.channels = {};
+	this.join = {};
+
+	this._data = function(data)
+	{
+		if(data.join !== undefined)
+		{
+			for(var kJoin in data.join)
+			{
+				this.join[data.join[kJoin]] = true;
+			}
+		}
+	}
 
 	this.core$cmd = function(server, prefix, target, cmd, params)
 	{
@@ -17,7 +28,7 @@ exports.mod = function(context)
 
 	this.core$376 = function(server, prefix, message)
 	{
-		for(var kChannel in this.channels)
+		for(var kChannel in this.join)
 		{
 			server.send('JOIN ' + kChannel);
 		}
@@ -30,23 +41,23 @@ exports.mod = function(context)
 			switch(opcode)
 			{
 				case '+':
-					if(typeof this.channels[channel] === 'undefined')
+					if(typeof this.join[channel] === 'undefined')
 					{
-						this.channels[channel] = true;
+						this.join[channel] = true;
 					}
 
 					server.send('PRIVMSG ' + target + ' :done');
 					break;
 				case '-':
-					if(typeof this.channels[channel] !== 'undefined')
+					if(typeof this.join[channel] !== 'undefined')
 					{
-						delete this.channels[channel];
+						delete this.join[channel];
 					}
 
 					server.send('PRIVMSG ' + target + ' :done');
 					break;
 				case '?':
-					server.send('PRIVMSG ' + target + ' :Auto channels: ' + Object.keys(this.channels).join(', '));
+					server.send('PRIVMSG ' + target + ' :Auto channels: ' + Object.keys(this.join).join(', '));
 					break;
 			}
 		}
