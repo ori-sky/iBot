@@ -22,6 +22,7 @@ module.exports =
 				{
 					var config = JSON.parse(data);
 					ctx = new module.exports.Context(config);
+					ctx.start();
 				}
 				catch(e)
 				{
