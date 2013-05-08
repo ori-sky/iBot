@@ -6,11 +6,29 @@ var User = require('./iBot-User.js');
 
 module.exports = function(context, host, port, nick, ident, pass, ssl)
 {
-	this.host = host;
-	this.port = port;
-	this.nick = nick;
-	this.ident = ident;
-	this.pass = pass;
+	if(typeof host === 'object')
+	{
+		var config = host;
+		this.host = config.host;
+		this.port = config.port;
+		this.pass = config.pass;
+		this.ssl = config.ssl;
+		this.nick = config.nick;
+		this.ident = config.ident;
+
+		if(this.port === undefined) this.port = 6667;
+		if(this.pass === undefined) this.pass = false;
+		if(this.ssl === undefined) this.ssl = false;
+		if(this.ident === undefined) this.ident = 'ibot';
+	}
+	else
+	{
+		this.host = host;
+		this.port = port;
+		this.nick = nick;
+		this.ident = ident;
+		this.pass = pass;
+	}
 
 	this.users = {};
 	this.channels = {};
@@ -134,13 +152,13 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.onConnect = function()
 	{
-		if(ssl)
+		if(this.ssl)
 		{
 			this.fire('$log', 'TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized', 'err');
 		}
 
 		this.user = new User(this.nick, this.ident, '', 'iBot');
-		this.users[nick] = this.user;
+		this.users[this.nick] = this.user;
 
 		if(typeof this.pass === 'string' && this.pass !== '')
 		{
@@ -156,7 +174,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				output: process.stdout
 			});
 
-			console.log('out', 'Enter PASS for ' + host + ':' + port + ' ' + this.nick + '!' + this.ident + ': ');
+			console.log('out', 'Enter PASS for ' + this.host + ':' + this.port + ' ' + this.nick + '!' + this.ident + ': ');
 			this.rl.question('', function(pass)
 			{
 				console.log('out', '\x1b[1A\x1b[2K');
@@ -237,17 +255,17 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.connect = function()
 	{
-		if(ssl)
+		if(this.ssl)
 		{
 			this.fire('$log', 'Negotiating connection over TLS', 'err');
-			this.client = tls.connect(port, host, {rejectUnauthorized:false}, this.onConnect);
+			this.client = tls.connect(this.port, this.host, {rejectUnauthorized:false}, this.onConnect);
 		}
 		else
 		{
 			this.client = new net.Socket();
 			this.client.setNoDelay();
 
-			this.client.connect(port, host, this.onConnect);
+			this.client.connect(this.port, this.host, this.onConnect);
 		}
 
 		this.client.setEncoding('utf8');
