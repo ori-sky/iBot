@@ -21,6 +21,9 @@
     <note priority="veryhigh" time="1367589183" done="1367925795">
         Fix nick changes not resetting on reconnect
     </note>
+    <note priority="veryhigh" time="1367941107" done="1367984587">
+        Implement JSON config
+    </note>
     <note priority="high" time="1366031670" done="1366033877">
         Implement module unloading
     </note>
@@ -93,10 +96,10 @@
     <note priority="high" time="1367926604">
         Add daily scheduled timer for scheduled events longer than a day (or week?)
     </note>
+    <note priority="high" time="1367984619">
+        Implement JSON data for modules
+    </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
-    </note>
-    <note priority="veryhigh" time="1367941107">
-        Implement JSON config
     </note>
 </todo>
