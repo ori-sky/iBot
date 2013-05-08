@@ -1,6 +1,7 @@
-module.exports = function(options)
+var Server = require('./iBot-Server');
+
+module.exports = function(config)
 {
-	this.options = options;
 	this.servers = {};
 
 	this.start = function()
@@ -19,9 +20,7 @@ module.exports = function(options)
 
 		try
 		{
-			if(typeof this.options === 'undefined') this.options = {};
-			if(typeof this.options.modulesPath === 'undefined') this.options.modulesPath = process.cwd() + '/modules';
-			path = this.options.modulesPath + '/' + name;
+			path = process.cwd() + '/modules/' + name;
 			if(typeof require.cache[path] !== 'undefined') delete require.cache[path];
 			require.resolve(path);
 		}
@@ -102,5 +101,25 @@ module.exports = function(options)
 		}
 
 		console.log('Unloaded module: ' + name);
+	}
+
+	// JSON config
+	if(config !== undefined)
+	{
+		if(config.servers !== undefined)
+		{
+			for(var kServer in config.servers)
+			{
+				this.servers[kServer] = new Server(true, config.server[kServer]);
+			}
+		}
+
+		if(config.modules !== undefined)
+		{
+			for(var kModule in config.modules)
+			{
+				this.loadModule(config.modules[kModule]);
+			}
+		}
 	}
 }
