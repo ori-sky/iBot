@@ -110,7 +110,7 @@ module.exports = function(config)
 		{
 			for(var kServer in config.servers)
 			{
-				this.servers[kServer] = new Server(true, config.servers[kServer]);
+				this.servers[kServer] = new Server(this, config.servers[kServer]);
 			}
 		}
 
