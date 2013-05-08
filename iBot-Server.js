@@ -6,34 +6,6 @@ var User = require('./iBot-User.js');
 
 module.exports = function(context, host, port, nick, ident, pass, ssl)
 {
-	if(typeof host === 'object')
-	{
-		var config = host;
-		this.host = config.host;
-		this.port = config.port;
-		this.pass = config.pass;
-		this.ssl = config.ssl;
-		this.nick = config.nick;
-		this.ident = config.ident;
-		this.master = config.master
-
-		if(this.port === undefined) this.port = 6667;
-		if(this.pass === undefined) this.pass = false;
-		if(this.ssl === undefined) this.ssl = false;
-		if(this.ident === undefined) this.ident = 'ibot';
-
-		if(this.master === undefined) this.master = /./;
-		else this.master = new RegExp(this.master);
-	}
-	else
-	{
-		this.host = host;
-		this.port = port;
-		this.nick = nick;
-		this.ident = ident;
-		this.pass = pass;
-	}
-
 	this.users = {};
 	this.channels = {};
 	
@@ -368,4 +340,40 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			if(context.servers[kServer] === this) delete context.servers[kServer];
 		}
 	}.bind(this);
+
+	if(typeof host === 'object')
+	{
+		var config = host;
+		this.host = config.host;
+		this.port = config.port;
+		this.pass = config.pass;
+		this.ssl = config.ssl;
+		this.nick = config.nick;
+		this.ident = config.ident;
+		this.master = config.master
+
+		if(this.port === undefined) this.port = 6667;
+		if(this.pass === undefined) this.pass = false;
+		if(this.ssl === undefined) this.ssl = false;
+		if(this.ident === undefined) this.ident = 'ibot';
+
+		if(this.master === undefined) this.master = /./;
+		else this.master = new RegExp(this.master);
+
+		if(config.modules !== undefined)
+		{
+			for(var kModule in config.modules)
+			{
+				context.loadModule(config.modules[kModule], this);
+			}
+		}
+	}
+	else
+	{
+		this.host = host;
+		this.port = port;
+		this.nick = nick;
+		this.ident = ident;
+		this.pass = pass;
+	}
 }
