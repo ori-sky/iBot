@@ -102,4 +102,7 @@
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
     </note>
+    <note priority="medium" time="1367984670">
+        Update README with new JSON stuff
+    </note>
 </todo>
