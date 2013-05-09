@@ -63,6 +63,9 @@
     <note priority="high" time="1367927614" done="1367941042">
         Implement ability to add new servers while running
     </note>
+    <note priority="high" time="1367984619" done="1368015264">
+        Implement JSON data for modules
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
@@ -93,14 +96,20 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
+    <note priority="veryhigh" time="1368129330">
+        Fix log output not being passed through util.inspect
+    </note>
+    <note priority="veryhigh" time="1368129423">
+        Fix default master regexp matching everyone (^ and $)
+    </note>
+    <note priority="veryhigh" time="1368129482">
+        Move ping timeout code out of Server all into mod core
+    </note>
     <note priority="high" time="1367894305">
         Fix remind module with any time period above 2 weeks (number too big) or remove
     </note>
     <note priority="high" time="1367926604">
         Add daily scheduled timer for scheduled events longer than a day (or week?)
-    </note>
-    <note priority="high" time="1367984619" done="1368015264">
-        Implement JSON data for modules
     </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
