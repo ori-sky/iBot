@@ -12,74 +12,85 @@ npm install ibot
 
 ### Quick Start
 
-It's very easy to create a connection using iBot.
+It's very easy to connect to an IRC server using iBot.
 
+#### index.js
 ```javascript
-var Context = require('ibot').Context;
-var Server = require('ibot').Server;
-
-var ctx = new Context();
-ctx.servers.test = new Server(ctx, 'irc.example.com', 6667, 'MyNick', 'myident', false, false);
-ctx.servers.test.master = /nick!ident@host/;
-
-ctx.loadModule('core');
-ctx.run();
+require('ibot').start();
 ```
 
-`Server.master` determines which users can use the admin commands such as for loading and unloading modules. It takes a JavaScript regular expression so it can be configured for partial matches or for more complex expressions.
+#### config.json
+```json
+{
+  "servers": {
+    "example": {
+      "host": "irc.example.com",
+      "nick": "MyNick"
+      "master": "^.+!.+@resident\.isp\.net$" // this is a regular expression
+    }
+  },
+  "modules": [
+    "core",  // if not loaded, no commands will be handled including PING and PONG
+    "log"    // if not loaded, only the bare minimum will be output to stdout/stderr
+  ]
+}
+```
 
-The IRC commands available through core are as follows:
+`Server.master` is a regular expression which is used for permission checking. This may be changed to an authentication system at a later stage.
 
-* `!lmsrv <module>`       - loads a module instance into the current server
-* `!lmctx <module>`       - loads a module instance into all servers
-* `!umsrv <module>`       - unloads a module from the current server
-* `!umctx <module>`       - unloads a module from all servers
-* `!modules`              - lists the loaded modules for the current server
-* `!quit`                 - disconnects from the current server and removes it completely from the context
+The IRC commands available through core are as follows. Angle bracket parameters are required, square bracket parameters are optional.
+
+* `!lmctx <module>`                    - load a module instance into all servers
+* `!umctx <module>`                    - unload a module from all servers
+* `!lmsrv <module> [name]`             - load a module instance into the current server or the server specified by name
+* `!umsrv <module> [name]`             - unload a module from the current server or the server specified by name
+* `!modules [name]`                    - list the loaded modules for the current server or the server specified by name
+* `!addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master reg!ex@p] [modules one,two,etc]` - connects to a new server with the specified options
+* `!rmsrv <name>`                      - disconnects from and removes the server specified by name
+* `!quit`                              - disconnect from the current server and remove it
 
 ### Modules
 
-iBot has a robust module system. Some modules, like core, are bundled with the package and can be loaded with no configuration. If you want to include other modules and, more than likely, write your own, there's a bit more setup involved but it's still fairly simple.
+iBot has an extensible and robust module system. A number of modules are bundled with the package, such as `core` and `log`. If you want to include other modules or write your own, this section explains how to do so. Modules should go inside a directory called `modules` in the project's root directory. They can be loaded by adding them to the `modules` section in config.json or by loading them through `core` at runtime.
 
+#### `helloworld` - a simple 'hello world' module which relies on `core`
 ```javascript
-// Filename: index.js
-
-var path = require('path');
-
-var Context = require('ibot').Context;
-var Server = require('ibot').Server;
-
-var ctx = new Context({modulesPath: path.resolve('./path/to/modules/')});
-ctx.servers.test = new Server(ctx, 'irc.example.com', 6667, 'MyNick', 'myident', false, false);
-ctx.servers.test.master = /nick!ident@host/;
-
-ctx.loadModule('core');
-
-// you don't need this line, you can load the module via !lmsrv or !lmctx
-ctx.loadModule('hello');
-
-ctx.run();
+exports.mod = function(context)
+{
+	// hook into cmd event from core
+	this.core$cmd = function(server, prefix, target, command, params)
+	{
+		if(command === 'helloworld')
+		{
+			// will output "Hello, <nick>!"
+			server.send('PRIVMSG ' + target + ' :Hello, ' + prefix.nick + '!');
+		}
+	}
+}
 ```
 
+#### `actiondetector` -  detects CTCP requests and replies
 ```javascript
-// Filename: ./path/to/modules/hello.js
-
-exports.mod = function(ctx)
+exports.mod = function(context)
 {
+	// hook into global recv event
 	this.$recv = function(server, prefix, opcode, params)
 	{
-		if(opcode === 'PRIVMSG')
+		// params[0] is target, params[1] is message
+		switch(opcode)
 		{
-			var words = params[1].split(' ');
-			var target = params[0];
-
-			// get the correct target in case it's a private message
-			if(target === server.user.nick) target = prefix.nick;
-
-			if(words[0] === '!hello')
-			{
-				server.send('PRIVMSG ' + target + ' :world!');
-			}
+			case 'PRIVMSG':
+				if(params[1][0] === '\001' && params[1][params[1].length - 1] === '\001')
+				{
+					console.log('detected CTCP request!');
+				}
+				break;
+			case 'NOTICE':
+				if(params[1][0] === '\001' && params[1][params[1].length - 1] === '\001')
+				{
+					console.log('detected CTCP reply!');
+				}
+				break;
 		}
 	}
 }
@@ -88,6 +99,12 @@ exports.mod = function(ctx)
 ## Changelog
 
 Here you will find the list of changes in iBot.
+
+#### JSON config
+
+* iBot now supports JSON config files.
+* Backwards compatibility exists for programmatic creation.
+* Read the Quick Start section for more details.
 
 #### Logging to channels
 
