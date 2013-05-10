@@ -372,7 +372,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			{
 				for(var kData in config.data)
 				{
-					this.do(kData + '$data', config.data[kData]);
+					this.do(kData + '$load', config.data[kData]);
 				}
 			}
 		}

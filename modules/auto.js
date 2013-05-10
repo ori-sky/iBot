@@ -5,10 +5,18 @@ exports.mod = function(context)
 	this.join = [];
 	this.perform = [];
 
-	this._data = function(data)
+	this._load = function(data)
 	{
-		if(data.join !== undefined) this.join = data.join;
-		if(data.perform !== undefined) this.perform = data.perform;
+		if(typeof data.join !== 'undefined') this.join = data.join;
+		if(typeof data.perform !== 'undefined') this.perform = data.perform;
+	}
+
+	this._save = function()
+	{
+		return {
+			join: this.join,
+			perform: this.perform
+		};
 	}
 
 	this.core$376 = function(server, prefix, message)
