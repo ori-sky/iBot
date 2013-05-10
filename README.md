@@ -53,7 +53,7 @@ The IRC commands available through core are as follows. Angle bracket parameters
 
 iBot has an extensible and robust module system. A number of modules are bundled with the package, such as `core` and `log`. If you want to include other modules or write your own, this section explains how to do so. Modules should go inside a directory called `modules` in the project's root directory. They can be loaded by adding them to the `modules` section in config.json or by loading them through `core` at runtime.
 
-##### Simple 'hello world' module which relies on `core`
+##### Outputs 'Hello, <nick>!'
 ```javascript
 exports.mod = function(context)
 {
@@ -64,6 +64,36 @@ exports.mod = function(context)
 		{
 			// will output "Hello, <nick>!"
 			server.send('PRIVMSG ' + target + ' :Hello, ' + prefix.nick + '!');
+		}
+	}
+}
+```
+##### Increments a counter which saves and loads when reloaded
+
+```javascript
+exports.mod = function(context)
+{
+	this.counter = 0;
+
+	// load data
+	this._load = function(data)
+	{
+		if(typeof data === 'number') this.counter = data;
+	}
+
+	// save data
+	this._save = function()
+	{
+		return this.counter;
+	}
+
+	// hook into cmd event from core
+	this.core$cmd = function(server, prefix, target, command, params)
+	{
+		if(command === 'counter')
+		{
+			++this.counter;
+			server.send('PRIVMSG ' + target + ' :Counter is now: ' + this.counter);
 		}
 	}
 }
