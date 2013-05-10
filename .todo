@@ -30,6 +30,9 @@
     <note priority="veryhigh" time="1368129330" done="1368148812">
         Fix log output not being passed through util.inspect
     </note>
+    <note priority="veryhigh" time="1368129423" done="1368149110">
+        Fix default master regexp matching everyone (^ and $)
+    </note>
     <note priority="high" time="1366031670" done="1366033877">
         Implement module unloading
     </note>
@@ -99,9 +102,6 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1368129423" done="1368149110">
-        Fix default master regexp matching everyone (^ and $)
-    </note>
     <note priority="veryhigh" time="1368129482">
         Move ping timeout code out of Server all into mod core
     </note>
@@ -110,6 +110,9 @@
     </note>
     <note priority="high" time="1367926604">
         Add daily scheduled timer for scheduled events longer than a day (or week?)
+    </note>
+    <note priority="high" time="1368192099">
+        Add ability to wait for a duration in auto performs
     </note>
     <note priority="medium" time="1366619222">
         ban list synching with the bot and the channel
