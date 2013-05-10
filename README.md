@@ -26,12 +26,12 @@ require('ibot').start();
     "example": {
       "host": "irc.example.com",
       "nick": "MyNick"
-      "master": "^.+!.+@resident\.isp\.net$" // this is a regular expression
+      "master": "^.+!.+@isp\.com$"
     }
   },
   "modules": [
-    "core",  // if not loaded, no commands will be handled including PING and PONG
-    "log"    // if not loaded, only the bare minimum will be output to stdout/stderr
+    "core",
+    "log"
   ]
 }
 ```
