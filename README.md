@@ -130,6 +130,12 @@ exports.mod = function(context)
 
 Here you will find the list of changes in iBot.
 
+#### State loading and saving
+
+* Modules can now save their state before being reloaded and restore the state after being reloaded.
+* Check the example modules (example_counter) for a simple incrementing counter.
+* Currently only works when reloading a module - unloading and loading will wipe all module data.
+
 #### JSON config
 
 * iBot now supports JSON config files.

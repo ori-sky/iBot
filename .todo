@@ -120,4 +120,7 @@
     <note priority="medium" time="1367984670">
         Update README with new JSON stuff
     </note>
+    <note priority="medium" time="1368209568">
+        Implement JSON config saving/updating
+    </note>
 </todo>
