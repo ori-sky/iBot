@@ -1,14 +1,41 @@
+var util = require('util');
+
 exports.mod = function(context)
 {
-	this.join = {};
+	this.join = [];
+	this.perform = [];
 
 	this._data = function(data)
 	{
-		if(data.join !== undefined)
+		if(data.join !== undefined) this.join = data.join;
+		if(data.perform !== undefined) this.perform = data.perform;
+	}
+
+	this.core$376 = function(server, prefix, message)
+	{
+		for(var i in this.join)
 		{
-			for(var kJoin in data.join)
+			server.send('JOIN ' + this.join[i]);
+		}
+
+		for(var i in this.perform)
+		{
+			server.send(this.perform[i]);
+		}
+	}
+
+	this.core$cmdraw = function(server, prefix, target, cmd, params)
+	{
+		if(cmd === 'auto')
+		{
+			if(server.master.test(prefix.mask))
 			{
-				this.join[data.join[kJoin]] = true;
+				switch(params[0])
+				{
+					case 'perform':
+						server.do('auto$perform', server, prefix, target, params[1], params.slice(2).join(' '));
+						break;
+				}
 			}
 		}
 	}
@@ -17,49 +44,58 @@ exports.mod = function(context)
 	{
 		if(cmd === 'auto')
 		{
-			switch(params[0])
+			if(server.master.test(prefix.mask))
 			{
-				case 'join':
-					server.fire('join', server, prefix, target, params[1], params[2]);
-					break;
+				switch(params[0])
+				{
+					case 'join':
+						server.do('auto$join', server, prefix, target, params[1], params[2]);
+						break;
+				}
 			}
 		}
 	}
 
-	this.core$376 = function(server, prefix, message)
+	this._join = function(server, prefix, target, opcode, channel)
 	{
-		for(var kChannel in this.join)
+		switch(opcode)
 		{
-			server.send('JOIN ' + kChannel);
+			case '+':
+				if(typeof this.join.indexOf(channel === -1)) this.join.push(channel);
+				server.send('PRIVMSG ' + target + ' :done');
+				break;
+			case '-':
+				var i = this.join.indexOf(channel);
+				if(i !== -1) this.join.splice(i, 1);
+				server.send('PRIVMSG ' + target + ' :done');
+				break;
+			case '?':
+				server.send('PRIVMSG ' + target + ' :Auto join: ' + this.join.join(', '));
+				break;
 		}
 	}
 
-	this.auto$join = function(server, prefix, target, opcode, channel)
+	this._perform = function(server, prefix, target, opcode, param)
 	{
-		if(server.master.test(prefix.mask))
+		switch(opcode)
 		{
-			switch(opcode)
-			{
-				case '+':
-					if(typeof this.join[channel] === 'undefined')
-					{
-						this.join[channel] = true;
-					}
+			case '+':
+				this.perform.push(param);
+				server.send('PRIVMSG ' + target + ' :done');
+				break;
+			case '-':
+				if(param >= 0 && param < this.perform.length) this.perform.splice(param, 1);
+				server.send('PRIVMSG ' + target + ' :done');
+				break;
+			case '?':
+				var a = [];
+				for(var i in this.perform)
+				{
+					a.push(i + '[' + util.inspect(this.perform[i]) + ']');
+				}
 
-					server.send('PRIVMSG ' + target + ' :done');
-					break;
-				case '-':
-					if(typeof this.join[channel] !== 'undefined')
-					{
-						delete this.join[channel];
-					}
-
-					server.send('PRIVMSG ' + target + ' :done');
-					break;
-				case '?':
-					server.send('PRIVMSG ' + target + ' :Auto channels: ' + Object.keys(this.join).join(', '));
-					break;
-			}
+				server.send('PRIVMSG ' + target + ' :Auto perform: ' + a.join(', '));
+				break;
 		}
 	}
 }
