@@ -96,7 +96,7 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1368129330">
+    <note priority="veryhigh" time="1368129330" done="1368148812">
         Fix log output not being passed through util.inspect
     </note>
     <note priority="veryhigh" time="1368129423">

@@ -37,6 +37,24 @@ exports.mod = function(context)
 		this.log(data, stream)
 	}
 
+	this.log = function(data, stream)
+	{
+		this.logUnsafe(util.inspect(data), stream);
+	}
+
+	this.logUnsafe = function(data, stream)
+	{
+		var d = new Date();
+		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
+
+		if(typeof this.streams[stream] === 'undefined') stream = 'out';
+
+		if(this.streams[stream] !== null)
+		{
+			this.streams[stream].write(t + ' ' + data + '\n');
+		}
+	}
+
 	this._logTargets = function(server, data)
 	{
 		var dataSafe = util.inspect(data);
@@ -50,24 +68,6 @@ exports.mod = function(context)
 					server.send('PRIVMSG ' + kTarget + ' :' + dataSafe);
 				}
 			}
-		}
-	}
-
-	this.log = function(data, stream)
-	{
-		this.logUnsafe(data, util.inspect(stream));
-	}
-
-	this.logUnsafe = function(data, stream)
-	{
-		var d = new Date();
-		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
-
-		if(typeof this.streams[stream] === 'undefined') stream = 'out';
-
-		if(this.streams[stream] !== null)
-		{
-			this.streams[stream].write(t + ' ' + data + '\n');
 		}
 	}
 }
