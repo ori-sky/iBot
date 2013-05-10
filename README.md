@@ -14,12 +14,12 @@ npm install ibot
 
 It's very easy to connect to an IRC server using iBot.
 
-##### `index.js`
+##### index.js
 ```javascript
 require('ibot').start();
 ```
 
-##### `config.json`
+##### config.json
 ```json
 {
   "servers": {
@@ -53,7 +53,7 @@ The IRC commands available through core are as follows. Angle bracket parameters
 
 iBot has an extensible and robust module system. A number of modules are bundled with the package, such as `core` and `log`. If you want to include other modules or write your own, this section explains how to do so. Modules should go inside a directory called `modules` in the project's root directory. They can be loaded by adding them to the `modules` section in config.json or by loading them through `core` at runtime.
 
-##### `helloworld.js` - a simple 'hello world' module which relies on `core`
+##### a simple 'hello world' module which relies on `core`
 ```javascript
 exports.mod = function(context)
 {
@@ -69,7 +69,7 @@ exports.mod = function(context)
 }
 ```
 
-##### `actiondetector.js` -  detects CTCP requests and replies
+##### detects CTCP requests and replies
 ```javascript
 exports.mod = function(context)
 {
