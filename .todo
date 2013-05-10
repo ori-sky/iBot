@@ -114,13 +114,13 @@
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
     </note>
-    <note priority="medium" time="1366619222">
-        ban list synching with the bot and the channel
-    </note>
     <note priority="medium" time="1367984670">
         Update README with new JSON stuff
     </note>
     <note priority="medium" time="1368209568">
         Implement JSON config saving/updating
+    </note>
+    <note priority="low" time="1366619222">
+        [core] Sync channel ban and invite exception lists
     </note>
 </todo>
