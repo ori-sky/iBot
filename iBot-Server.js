@@ -357,7 +357,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		if(this.ssl === undefined) this.ssl = false;
 		if(this.ident === undefined) this.ident = 'ibot';
 
-		if(this.master === undefined) this.master = /./;
+		if(this.master === undefined) this.master = /^$/;
 		else this.master = new RegExp(this.master);
 
 		if(config.modules !== undefined)
