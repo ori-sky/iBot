@@ -19,8 +19,7 @@ exports.mod = function(context)
 	{
 		if(command === 'counter')
 		{
-			++this.counter;
-			server.send('PRIVMSG ' + target + ' :Counter is now: ' + this.counter);
+			server.send('PRIVMSG ' + target + ' :Counter is now: ' + ++this.counter);
 		}
 	}
 }
