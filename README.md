@@ -75,14 +75,14 @@ exports.mod = function(context)
 {
 	this.counter = 0;
 
-	// load data
-	this._load = function(data)
+	// resume
+	this._resume = function(data)
 	{
 		if(typeof data === 'number') this.counter = data;
 	}
 
-	// save data
-	this._save = function()
+	// suspend
+	this._suspend = function()
 	{
 		return this.counter;
 	}
