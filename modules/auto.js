@@ -11,7 +11,13 @@ exports.mod = function(context)
 		if(typeof data.perform !== 'undefined') this.perform = data.perform;
 	}
 
-	this._save = function()
+	this._resume = function(data)
+	{
+		if(typeof data.join !== 'undefined') this.join = data.join;
+		if(typeof data.perform !== 'undefined') this.perform = data.perform;
+	}
+
+	this._suspend = function()
 	{
 		return {
 			join: this.join,

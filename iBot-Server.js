@@ -16,6 +16,26 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.willQuit = false;
 
+	this.addModule = function(name, mod)
+	{
+		var tmp = this.do(name + '$suspend');
+		this.modules[name] = mod;
+
+		if(mod.data === undefined) mod.data = {};
+
+		if(this.config !== undefined)
+		{
+			if(this.config.data !== undefined)
+			{
+				if(this.config.data[name] !== undefined) this.do(name + '$load', JSON.parse(JSON.stringify(this.config.data[name])));
+			}
+		}
+
+		if(tmp !== undefined) this.do(name + '$resume', tmp);
+
+		this.do(name + '$loaded', this);
+	}
+
 	this.getModules = function(delimiter)
 	{
 		var keys = Object.keys(this.modules);
@@ -31,18 +51,22 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.do = function()
 	{
+		var moduleName = undefined;
+
 		try
 		{
 			var fullName = arguments[0];
 			var s1 = fullName.split('$');
-			var moduleName = s1[0];
+			moduleName = s1[0];
 			var methodName = s1[1];
+
 			var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 1));
 			return ret;
 		}
 		catch(e)
 		{
-			console.log(e.message);
+			if(moduleName === undefined) console.log(e.message);
+			else console.log('[' + moduleName + '] ' + e.message);
 		}
 
 		return undefined;
@@ -344,6 +368,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	if(typeof host === 'object')
 	{
 		var config = host;
+		this.config = config;
 		this.host = config.host;
 		this.port = config.port;
 		this.pass = config.pass;
@@ -365,15 +390,6 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			for(var kModule in config.modules)
 			{
 				context.loadModule(config.modules[kModule], this);
-			}
-
-			// using a second loop eliminates race conditions
-			if(config.data !== undefined)
-			{
-				for(var kData in config.data)
-				{
-					this.do(kData + '$load', config.data[kData]);
-				}
 			}
 		}
 	}

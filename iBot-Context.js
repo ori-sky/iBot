@@ -48,36 +48,18 @@ module.exports = function(config)
 
 			var module = require(path);
 
-			// TODO: find a better way to do this
-
-			//var mod = new module.mod(this);
-
 			if(typeof server === 'undefined' || server === null)
 			{
 				for(var kServer in this.servers)
 				{
-					// TODO: find a better way to do this
-
 					var mod = new module.mod(this);
-					if(typeof mod.data === 'undefined') mod.data = {};
-
-					var data = this.servers[kServer].do(name + '$save');
-					this.servers[kServer].modules[name] = mod;
-					if(data !== undefined) this.servers[kServer].do(name + '$load', data);
-					this.servers[kServer].do(name + '$loaded', this.servers[kServer]);
+					this.servers[kServer].addModule(name, mod);
 				}
 			}
 			else
 			{
-				// TODO: find a better way to do this
-
 				var mod = new module.mod(this);
-				if(typeof mod.data === 'undefined') mod.data = {};
-
-				var data = server.do(name + '$save');
-				server.modules[name] = new module.mod(this);
-				if(data !== undefined) server.do(name + '$load', data);
-				server.do(name + '$loaded', server);
+				server.addModule(name, mod);
 			}
 
 			console.log('out', 'Loaded module: ' + name);
