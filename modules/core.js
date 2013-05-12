@@ -448,6 +448,14 @@ exports.mod = function(context)
 					server.quit();
 				}
 				break;
+			case 'save':
+				context.save();
+				server.send('PRIVMSG ' + target + ' :Config saved to disk.');
+				break;
+			case 'rehash':
+				context.load();
+				server.send('PRIVMSG ' + target + ' :Config rehashed from disk.');
+				break;
 		}
 	}
 }

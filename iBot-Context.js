@@ -65,10 +65,10 @@ module.exports = function(configPath)
 
 		if(s !== undefined)
 		{
-			fs.writeFile(configPath + '.new', s, function(err)
+			fs.writeFile(configPath, s, function(err)
 			{
 				if(err) console.log(err);
-				else console.log('Saved config to ' + util.inspect(configPath + '.new'));
+				else console.log('Saved config to ' + util.inspect(configPath));
 			}.bind(this));
 		}
 	}
