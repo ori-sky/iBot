@@ -1,6 +1,9 @@
+var util = require('util');
+var fs = require('fs');
+
 var Server = require('./iBot-Server');
 
-module.exports = function(config)
+module.exports = function(configPath)
 {
 	this.servers = {};
 
@@ -13,6 +16,62 @@ module.exports = function(config)
 	}
 
 	this.run = this.start;
+
+	this.load = function(all)
+	{
+		fs.readFile(configPath, function(err, data)
+		{
+			if(err) console.log(err);
+			else
+			{
+				try
+				{
+					this.config = JSON.parse(data);
+
+					if(all === true)
+					{
+						if(this.config.servers !== undefined)
+						{
+							for(var kServer in this.config.servers)
+							{
+								this.servers[kServer] = new Server(this, this.config.servers[kServer]);
+							}
+						}
+
+						if(this.config.modules !== undefined)
+						{
+							for(var kModule in this.config.modules)
+							{
+								this.loadModule(this.config.modules[kModule]);
+							}
+						}
+
+						this.start();
+						this.save();
+					}
+				}
+				catch(e)
+				{
+					console.log('Errors parsing config file:');
+					console.log(e.stack);
+				}
+			}
+		}.bind(this));
+	}
+
+	this.save = function()
+	{
+		var s = JSON.stringify(this.config, null, 2);
+
+		if(s !== undefined)
+		{
+			fs.writeFile(configPath + '.new', s, function(err)
+			{
+				if(err) console.log(err);
+				else console.log('Saved config to ' + util.inspect(configPath + '.new'));
+			}.bind(this));
+		}
+	}
 
 	this.loadModule = function(name, server)
 	{
@@ -62,7 +121,7 @@ module.exports = function(config)
 				server.addModule(name, mod);
 			}
 
-			console.log('out', 'Loaded module: ' + name);
+			console.log('Loaded module: ' + name);
 			return '';
 		}
 		catch(e)
@@ -80,37 +139,17 @@ module.exports = function(config)
 			for(var kServer in this.servers)
 			{
 				this.servers[kServer].rmModule(name);
-				//this.servers[kServer].modules[name] = null;
-				//delete this.servers[kServer].modules[name];
 			}
 		}
 		else
 		{
 			server.rmModule(name);
-			//server.modules[name] = null;
-			//delete server.modules[name];
 		}
 
 		console.log('Unloaded module: ' + name);
 	}
 
 	// JSON config
-	if(config !== undefined)
-	{
-		if(config.servers !== undefined)
-		{
-			for(var kServer in config.servers)
-			{
-				this.servers[kServer] = new Server(this, config.servers[kServer]);
-			}
-		}
 
-		if(config.modules !== undefined)
-		{
-			for(var kModule in config.modules)
-			{
-				this.loadModule(config.modules[kModule]);
-			}
-		}
-	}
+	this.load(true);
 }
