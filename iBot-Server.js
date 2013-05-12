@@ -36,6 +36,24 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		this.do(name + '$loaded', this);
 	}
 
+	this.rmModule = function(name)
+	{
+		if(this.config !== undefined)
+		{
+			var tmp = this.do(name + '$save');
+
+			if(tmp !== undefined)
+			{
+				if(this.config.data === undefined) this.config.data = {};
+				this.config.data[name] = tmp;
+			}
+		}
+
+		this.do(name + '$unloaded');
+		this.modules[name] = undefined;
+		delete this.modules[name];
+	}
+
 	this.getModules = function(delimiter)
 	{
 		var keys = Object.keys(this.modules);

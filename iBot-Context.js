@@ -79,14 +79,16 @@ module.exports = function(config)
 		{
 			for(var kServer in this.servers)
 			{
-				this.servers[kServer].modules[name] = null;
-				delete this.servers[kServer].modules[name];
+				this.servers[kServer].rmModule(name);
+				//this.servers[kServer].modules[name] = null;
+				//delete this.servers[kServer].modules[name];
 			}
 		}
 		else
 		{
-			server.modules[name] = null;
-			delete server.modules[name];
+			server.rmModule(name);
+			//server.modules[name] = null;
+			//delete server.modules[name];
 		}
 
 		console.log('Unloaded module: ' + name);
