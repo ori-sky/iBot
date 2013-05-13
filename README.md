@@ -156,9 +156,10 @@ The ideal module should suspend and resume data which should only exist while th
 * create
   * `load` - message
   * ...
-  * reload
-    * `suspend` - message, counter
-    * `resume` - message, counter
+  * reload begin
+  * `suspend` - message, counter
+  * `resume` - message, counter
+  * reload end
   * ...
   * `save` - message
 * destroy
