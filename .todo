@@ -33,6 +33,9 @@
     <note priority="veryhigh" time="1368129423" done="1368149110">
         Fix default master regexp matching everyone (^ and $)
     </note>
+    <note priority="veryhigh" time="1368209568" done="1368440203">
+        Implement JSON config saving/updating
+    </note>
     <note priority="high" time="1366031670" done="1366033877">
         Implement module unloading
     </note>
@@ -102,9 +105,6 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1368209568">
-        Implement JSON config saving/updating
-    </note>
     <note priority="high" time="1367894305">
         Fix remind module with any time period above 2 weeks (number too big) or remove
     </note>
@@ -117,7 +117,7 @@
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
     </note>
-    <note priority="medium" time="1367984670">
+    <note priority="medium" time="1367984670" done="1368440216">
         Update README with new JSON stuff
     </note>
     <note priority="low" time="1366619222">
