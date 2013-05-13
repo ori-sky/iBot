@@ -102,8 +102,14 @@
     <note priority="medium" time="1366704092" done="1366724055">
         [README.md] Move Recent Changes to Change Log at bottom, above License
     </note>
+    <note priority="medium" time="1367984670" done="1368440216">
+        Update README with new JSON stuff
+    </note>
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
+    </note>
+    <note priority="veryhigh" time="1368471528">
+        Clear timeouts on Server.quit
     </note>
     <note priority="high" time="1367894305">
         Fix remind module with any time period above 2 weeks (number too big) or remove
@@ -116,9 +122,6 @@
     </note>
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
-    </note>
-    <note priority="medium" time="1367984670" done="1368440216">
-        Update README with new JSON stuff
     </note>
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
