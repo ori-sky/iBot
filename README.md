@@ -68,23 +68,36 @@ exports.mod = function(context)
 	}
 }
 ```
-##### Increments a counter which saves and loads when reloaded
+
+##### Increments a counter and saves back to the config
 
 ```javascript
 exports.mod = function(context)
 {
 	this.counter = 0;
 
-	// resume
-	this._resume = function(data)
+	// load
+	this._load = function(data)
 	{
 		if(typeof data === 'number') this.counter = data;
+	}
+
+	// save
+	this._save = function()
+	{
+		return this.counter;
 	}
 
 	// suspend
 	this._suspend = function()
 	{
 		return this.counter;
+	}
+
+	// resume
+	this._resume = function(data)
+	{
+		if(typeof data === 'number') this.counter = data;
 	}
 
 	// hook into cmd event from core
@@ -128,6 +141,27 @@ exports.mod = function(context)
 ## Changelog
 
 Here you will find the list of changes in iBot.
+
+#### Load & Save & Suspend & Resume
+
+Module data storage is now complete.
+
+* `load(data)`      - loads config data into module
+* `save`            - saves module data into config
+* `suspend`         - suspends module data before reload
+* `resume(data)`    - resumes module data after reload
+
+The ideal module should suspend and resume data which should only exist while the module is running, and save and load data which it considers to be more permanent. For example, a module which displays a custom message and keeps track of how many times it has been displayed while loaded should follow this life cycle.
+
+* create
+  * `load` - message
+  * ...
+  * reload
+    * `suspend` - message, counter
+    * `resume` - message, counter
+  * ...
+  * `save` - message
+* destroy
 
 #### State loading and saving
 
