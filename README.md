@@ -142,6 +142,11 @@ exports.mod = function(context)
 
 Here you will find the list of changes in iBot.
 
+#### Module `scraper`
+
+* The scraper module provides a way to scrape data from a web page using a regexp.
+* Config option `active` enables or disables usage of the `scrape` command.
+
 #### Load & Save & Suspend & Resume
 
 Module data storage is now complete.
