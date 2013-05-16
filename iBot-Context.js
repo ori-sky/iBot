@@ -82,7 +82,7 @@ module.exports = function(configPath)
 					}
 					else
 					{
-						if(thie.config.servers !== undefined)
+						if(this.config.servers !== undefined)
 						{
 							for(var kServer in this.config.servers)
 							{
