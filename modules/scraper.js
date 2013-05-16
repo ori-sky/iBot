@@ -116,17 +116,17 @@ exports.mod = function(context)
 			response.on('error', function(err)
 			{
 				console.log(err);
-				callback(undefined);
+				callback();
 			});
 
 			switch(response.statusCode)
 			{
 				case 301:
-					// TODO: recursion protection (max 5 including initial request)
-					this.get(response.headers.location, callback, ++depth);
+					this.get(host, response.headers.location, callback, ++depth);
 					break;
 				case 200:
 					var data = '';
+
 					response.on('data', function(chunk)
 					{
 						data += chunk;
@@ -136,6 +136,7 @@ exports.mod = function(context)
 					break;
 				default:
 					console.log(response.statusCode);
+					callback();
 					break;
 			}
 		}.bind(this));
@@ -143,9 +144,10 @@ exports.mod = function(context)
 		req.on('error', function(err)
 		{
 			console.log(err);
-			callback(undefined);
+			callback();
 		});
 
+		setTimeout(function() { req.abort(); }, 10000);
 		req.end();
 	}
 }
