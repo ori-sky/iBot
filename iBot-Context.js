@@ -116,24 +116,24 @@ module.exports = function(configPath)
 
 	this.loadModule = function(name, server)
 	{
-		var path;
+		var path = undefined;
 
 		try
 		{
 			path = process.cwd() + '/modules/' + name;
-			if(typeof require.cache[path] !== 'undefined') delete require.cache[path];
 			require.resolve(path);
+			if(!fs.existsSync(require.resolve(path))) throw new Error('Local module does not exist');
 		}
-		catch(e)
+		catch(e1)
 		{
 			try
 			{
 				path = './modules/' + name;
-				require.resolve(path);
+				if(!fs.existsSync(require.resolve(path))) throw new Error('iBot module does not exist');
 			}
 			catch(e2)
 			{
-				console.log(e.message);
+				console.log(e1.message);
 				console.log(e2.message);
 				return e.message + ' | ' + e2.message;
 			}
@@ -141,11 +141,7 @@ module.exports = function(configPath)
 
 		try
 		{
-			if(typeof require.cache[require.resolve(path)] !== 'undefined')
-			{
-				delete require.cache[require.resolve(path)];
-			}
-
+			if(typeof require.cache[require.resolve(path)] !== 'undefined') delete require.cache[require.resolve(path)];
 			var module = require(path);
 
 			if(typeof server === 'undefined' || server === null)
