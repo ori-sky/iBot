@@ -135,7 +135,7 @@ module.exports = function(configPath)
 			{
 				console.log(e1.message);
 				console.log(e2.message);
-				return e.message + ' | ' + e2.message;
+				return e1.message + ' | ' + e2.message;
 			}
 		}
 
