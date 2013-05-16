@@ -80,6 +80,16 @@ module.exports = function(configPath)
 						this.start();
 						this.save();
 					}
+					else
+					{
+						if(thie.config.servers !== undefined)
+						{
+							for(var kServer in this.config.servers)
+							{
+								this.servers[kServer].config = this.config.servers[kServer];
+							}
+						}
+					}
 				}
 				catch(e)
 				{
