@@ -92,7 +92,7 @@ module.exports = function(configPath)
 
 	this.save = function()
 	{
-		var s = JSON.stringify(this.config, null, 2);
+		var s = JSON.stringify(this.config, null, 2) + '\n';
 
 		if(s !== undefined)
 		{
