@@ -117,6 +117,9 @@
     <note priority="veryhigh" time="1368716690">
         Invoke _save in all modules when Context.save is called
     </note>
+    <note priority="veryhigh" time="1368716832">
+        [scraper] Fix issue where servers can keep a connection open indefinitely
+    </note>
     <note priority="high" time="1367894305">
         Fix remind module with any time period above 2 weeks (number too big) or remove
     </note>
