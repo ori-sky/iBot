@@ -127,7 +127,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		{
 			var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
 			var eventName = arguments[0];
-			if(eventName[0] === '$')
+			if(eventName !== undefined && eventName[0] === '$')
 			{
 				activeModule = '';
 				eventName = eventName.substr(1);
@@ -177,7 +177,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			delete this.timeouts[id];
 		}.bind(this);
 		this.timeouts[id].timeout = setTimeout(this.timeouts[id].fn, duration);
-	}
+	}.bind(this);
 
 	this.fireChange = function(newDuration, id)
 	{
