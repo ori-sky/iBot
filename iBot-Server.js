@@ -449,5 +449,6 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		this.nick = nick;
 		this.ident = ident;
 		this.pass = pass;
+		this.ssl = ssl;
 	}
 }
