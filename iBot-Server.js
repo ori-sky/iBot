@@ -426,6 +426,12 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.quit = function()
 	{
 		this.willQuit = true;
+
+		for(var kModule in this.modules)
+		{
+			this.rmModule(kModule);
+		}
+
 		if(this.client !== undefined) this.client.end();
 
 		for(var kServer in context.servers)
