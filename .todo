@@ -36,6 +36,9 @@
     <note priority="veryhigh" time="1368209568" done="1368440203">
         Implement JSON config saving/updating
     </note>
+    <note priority="veryhigh" time="1368716690" done="1368899888">
+        Invoke _save in all modules when Context.save is called
+    </note>
     <note priority="veryhigh" time="1368716832" done="1368724030">
         [scraper] Fix issue where servers can keep a connection open indefinitely
     </note>
@@ -132,9 +135,6 @@
     <note priority="veryhigh" time="1368628201">
         Rewrite scheduler system to be better
     </note>
-    <note priority="veryhigh" time="1368716690" done="1368899888">
-        Invoke _save in all modules when Context.save is called
-    </note>
     <note priority="high" time="1367894305">
         Fix remind module with any time period above 2 weeks (number too big) or remove
     </note>
@@ -152,6 +152,9 @@
     </note>
     <note priority="high" time="1368839979">
         [core] Implement ability to change server master
+    </note>
+    <note priority="high" time="1368911541">
+        [core] Implement _privmsg and other functions, and use these in other modules
     </note>
     <note priority="medium" time="1368826802">
         Add SSL client cert support
