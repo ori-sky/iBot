@@ -144,10 +144,22 @@
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
     </note>
+    <note priority="high" time="1368839943">
+        Implement server config saving
+    </note>
+    <note priority="high" time="1368839979">
+        [core] Implement ability to change server master
+    </note>
     <note priority="medium" time="1368826802">
         Add SSL client cert support
     </note>
+    <note priority="medium" time="1368837621">
+        [auto] Implement save handler
+    </note>
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
+    </note>
+    <note priority="low" time="1368840098">
+        Implement data.json for instance-specific data which should be separate from config
     </note>
 </todo>
