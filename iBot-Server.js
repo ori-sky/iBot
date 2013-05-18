@@ -109,8 +109,11 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			moduleName = s1[0];
 			var methodName = s1[1];
 
-			var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 1));
-			return ret;
+			if(this.modules[moduleName] !== undefined && this.modules[moduleName]['_' + methodName] !== undefined)
+			{
+				var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 1));
+				return ret;
+			}
 		}
 		catch(e)
 		{
@@ -133,7 +136,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				eventName = eventName.substr(1);
 			}
 
-			if(typeof this.modules[kModule][activeModule + '$' + eventName] !== 'undefined')
+			if(this.modules[kModule][activeModule + '$' + eventName] !== undefined)
 			{
 				this.activeModuleStack.push(kModule);
 
@@ -223,10 +226,10 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				output: process.stdout
 			});
 
-			console.log('out', 'Enter PASS for ' + this.host + ':' + this.port + ' ' + this.nick + '!' + this.ident + ': ');
+			console.log('Enter PASS for ' + this.host + ':' + this.port + ' ' + this.nick + '!' + this.ident + ': ');
 			this.rl.question('', function(pass)
 			{
-				console.log('out', '\x1b[1A\x1b[2K');
+				console.log('\x1b[1A\x1b[2K');
 
 				this.pass = pass;
 				this.onConnect();
