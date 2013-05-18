@@ -162,10 +162,16 @@
     <note priority="medium" time="1368837621">
         [auto] Implement save handler
     </note>
+    <note priority="medium" time="1368917947">
+        [core] Implement register event for modules to register for commands
+    </note>
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
     </note>
     <note priority="low" time="1368840098">
         Implement data.json for instance-specific data which should be separate from config
+    </note>
+    <note priority="low" time="1368918269">
+        Account system
     </note>
 </todo>
