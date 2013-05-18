@@ -42,6 +42,9 @@
     <note priority="veryhigh" time="1368826463" done="1368892691">
         [core] Fix command detection being greedy (works if nick is part of another word)
     </note>
+    <note priority="veryhigh" time="1368826785" done="1368892718">
+        [core] Fix TypeError on command with no params given
+    </note>
     <note priority="high" time="1366031670" done="1366033877">
         Implement module unloading
     </note>
@@ -123,11 +126,11 @@
     <note priority="veryhigh" time="1368716690">
         Invoke _save in all modules when Context.save is called
     </note>
-    <note priority="veryhigh" time="1368825128">
+    <note priority="veryhigh" time="1368825128" done="1368895779">
         Fix SSL problem connecting to freenode (happens with addsrv command)
-    </note>
-    <note priority="veryhigh" time="1368826785" done="1368892718">
-        [core] Fix TypeError on command with no params given
+        <comment>
+            Bug was actually in programmatic server creation as `this.ssl = ssl` was missing
+        </comment>
     </note>
     <note priority="veryhigh" time="1368833919">
         Avoid attempting to fire or do if function does not exist
