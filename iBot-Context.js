@@ -102,6 +102,11 @@ module.exports = function(configPath)
 
 	this.save = function()
 	{
+		for(var kServer in this.servers)
+		{
+			this.servers[kServer].save();
+		}
+
 		var s = JSON.stringify(this.config, null, 2) + '\n';
 
 		if(s !== undefined)

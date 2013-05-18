@@ -47,6 +47,23 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.willQuit = false;
 
+	this.save = function()
+	{
+		for(var kModule in this.modules)
+		{
+			if(this.config !== undefined)
+			{
+				var tmp = this.do(kModule + '$save');
+
+				if(tmp !== undefined)
+				{
+					if(this.config.data === undefined) this.config.data = {};
+					this.config.data[kModule] = tmp;
+				}
+			}
+		}
+	}
+
 	this.addModule = function(name, mod)
 	{
 		var tmp = this.do(name + '$suspend');
