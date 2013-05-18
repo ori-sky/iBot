@@ -155,31 +155,28 @@ exports.mod = function(context)
 
 	this.core$privmsg = function(server, prefix, target, message, words)
 	{
-		if(words[0][0] === '!' || new RegExp(server.user.nick + '[\,\:]?', 'i').test(words[0]))
-		{
-			var cmd;
-			var params;
+		var cmd = undefined;
+		var params = undefined;
 
-			if(words[0][0] === '!')
+		if(words[0][0] === '!')
+		{
+			cmd = words[0].substr(1);
+			params = words.slice(1);
+		}
+		else if(new RegExp('^' + server.user.nick + '[\,\:]?$', 'i').test(words[0]))
+		{
+			for(var i=1; i<words.length; ++i)
 			{
-				cmd = words[0].substr(1);
-				params = words.slice(1);
-			}
-			else
-			{
-				for(var i=1; i<words.length; ++i)
+				if(words[i] !== '')
 				{
-					if(words[i] !== '')
-					{
-						cmd = words[i];
-						params = words.slice(i + 1);
-						break;
-					}
+					cmd = words[i];
+					params = words.slice(i + 1);
+					break;
 				}
 			}
-
-			server.fire('cmdraw', server, prefix, target, cmd, params);
 		}
+
+		if(cmd !== undefined) server.fire('cmdraw', server, prefix, target, cmd, params);
 	}
 
 	this.core$cmdraw = function(server, prefix, target, cmd, params)
