@@ -25,7 +25,7 @@ require('ibot').start();
   "servers": {
     "example": {
       "host": "irc.example.com",
-      "nick": "MyNick"
+      "nick": "MyNick",
       "master": "^.+!.+@isp\.com$"
     }
   },
