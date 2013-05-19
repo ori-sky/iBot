@@ -31,6 +31,8 @@
 
 exports.mod = function(context)
 {
+	this.segmentDuration = 10000;
+
 	this._load = function(data)
 	{
 
@@ -58,7 +60,7 @@ exports.mod = function(context)
 			switch(params[0])
 			{
 				case '+':
-					server.do('scheduler$fire', server, [5000], undefined, 'test', server, target);
+					server.do('scheduler$fire', server, [parseInt(params[1]), parseInt(params[2])], undefined, 'test', server, target);
 					break;
 			}
 		}
@@ -77,7 +79,8 @@ exports.mod = function(context)
 
 		if(typeof timespan === 'object')
 		{
-			if(typeof timespan[0] === 'number') ms = timespan[0];
+			if(typeof timespan[0] === 'number' && !isNaN(timespan[0])) ms += timespan[0];
+			if(typeof timespan[1] === 'number' && !isNaN(timespan[1])) ms += timespan[1] * this.segmentDuration;
 		}
 		else if(typeof timespan === 'number')
 		{
@@ -85,8 +88,6 @@ exports.mod = function(context)
 		}
 
 		var a = [ms, name].concat(args.slice(3));
-
-		//concat(args.slice(3));
 		server.fireTimed.apply(server, a);
 	}
 
