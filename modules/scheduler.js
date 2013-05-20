@@ -131,6 +131,11 @@ exports.mod = function(context)
 		this.schedules.push({offset:newOffset, segments:segments});
 	}
 
+	this._unschedule = function(index)
+	{
+		// TODO
+	}
+
 	this.cbInterval = function(server)
 	{
 		this.lastCbInterval = process.hrtime();
