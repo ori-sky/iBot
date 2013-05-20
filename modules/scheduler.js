@@ -32,6 +32,8 @@
 exports.mod = function(context)
 {
 	this.segmentDuration = 10000;
+	this.segmentInterval = undefined;
+	this.schedules = [];
 
 	this._load = function(data)
 	{
@@ -45,22 +47,55 @@ exports.mod = function(context)
 
 	this._suspend = function()
 	{
-
+		var data =
+		{
+			lastCbInterval: this.lastCbInterval,
+			segmentInterval: this.segmentInterval,
+			schedules: this.schedules
+		};
+		return data;
 	}
 
 	this._resume = function(data)
 	{
-
+		if(data.lastCbInterval !== undefined) this.lastCbInterval = data.lastCbInterval;
+		if(data.segmentInterval !== undefined) this.segmentInterval = data.segmentInterval;
+		if(data.schedules !== undefined) this.schedules = data.schedules;
 	}
 
 	this._loaded = function(server)
 	{
+		var ms = 0;
 
+		if(this.segmentInterval !== undefined)
+		{
+			clearInterval(this.segmentInterval);
+
+			if(this.lastCbInterval !== undefined)
+			{
+				var diff = process.hrtime(this.lastCbInterval);
+				ms = this.segmentDuration - (diff[0] * 1000 + diff[1] / 1000000);
+			}
+		}
+		else
+		{
+			ms = this.segmentDuration;
+		}
+
+		setTimeout(function()
+		{
+			this.cbInterval(server);
+			this.segmentInterval = setInterval(function()
+			{
+				this.cbInterval(server);
+			}.bind(this), this.segmentDuration);
+		}.bind(this), ms);
 	}
 
 	this._unloaded = function(server)
 	{
-
+		clearInterval(this.segmentInterval);
+		this.segmentInterval = undefined;
 	}
 
 	this.core$cmd = function(server, prefix, target, cmd, params)
@@ -70,39 +105,50 @@ exports.mod = function(context)
 			switch(params[0])
 			{
 				case '+':
-					server.do('scheduler$fire', server, [parseInt(params[1]), parseInt(params[2])], undefined, 'test', server, target);
+					var offset = parseInt(params[1]);
+					var segments = parseInt(params[2]);
+					if(isNaN(offset)) offset = 0;
+					if(isNaN(segments)) segments = 0;
+
+					server.do('scheduler$schedule', server, offset, segments);
+					break;
+				case '?':
+					server.send('PRIVMSG ' + target + ' :Number of schedules: ' + this.schedules.length);
 					break;
 			}
 		}
 	}
 
-	this._fire = function()
+	this._schedule = function(server, offset, segments)
 	{
-		var args = Array.prototype.slice.call(arguments, 0);
-		var server = args[0];
-		var timespan = args[1];
-		var name = args[2];
+		var newOffset = offset;
 
-		if(server === undefined) throw new Error('Server undefined');
-
-		var ms = 0;
-
-		if(typeof timespan === 'object')
+		if(this.lastCbInterval !== undefined)
 		{
-			if(typeof timespan[0] === 'number' && !isNaN(timespan[0])) ms += timespan[0];
-			if(typeof timespan[1] === 'number' && !isNaN(timespan[1])) ms += timespan[1] * this.segmentDuration;
+			var diff = process.hrtime(this.lastCbInterval);
+			newOffset += Math.floor(diff[0] * 1000 + diff[1] / 1000000);
 		}
-		else if(typeof timespan === 'number')
-		{
-			ms = timespan;
-		}
-
-		var a = [ms, name].concat(args.slice(3));
-		server.fireTimed.apply(server, a);
+		this.schedules.push({offset:newOffset, segments:segments});
 	}
 
-	this.scheduler$test = function(server, target)
+	this.cbInterval = function(server)
 	{
-		server.send('PRIVMSG ' + target + ' :fired');
-	}
+		this.lastCbInterval = process.hrtime();
+
+		for(var iSchedule in this.schedules)
+		{
+			--this.schedules[iSchedule].segments;
+
+			server.do('log$logTargets', server, iSchedule + ': ' + this.schedules[iSchedule].offset + ',' + this.schedules[iSchedule].segments);
+
+			if(this.schedules[iSchedule].segments <= 0)
+			{
+				setTimeout(function()
+				{
+					server.do('log$logTargets', server, iSchedule + ': fired!');
+				}.bind(this), this.schedules[iSchedule].offset);
+				this.schedules.splice(iSchedule, 1);
+			}
+		}
+	}.bind(this);
 }
