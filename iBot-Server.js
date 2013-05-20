@@ -97,7 +97,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 		}
 
-		this.do(name + '$unloaded');
+		this.do(name + '$unloaded', server);
 		this.modules[name] = undefined;
 		delete this.modules[name];
 	}
