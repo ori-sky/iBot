@@ -53,6 +53,16 @@ exports.mod = function(context)
 
 	}
 
+	this._loaded = function(server)
+	{
+
+	}
+
+	this._unloaded = function(server)
+	{
+
+	}
+
 	this.core$cmd = function(server, prefix, target, cmd, params)
 	{
 		if(cmd === 'scheduler')
