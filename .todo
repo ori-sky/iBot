@@ -87,6 +87,9 @@
             Also fixed memory leak in Server.recv from activeModuleStack never being popped
         </comment>
     </note>
+    <note priority="high" time="1367894305" done="1369074314">
+        Fix remind module with any time period above 2 weeks (number too big) or remove
+    </note>
     <note priority="high" time="1367927512" done="1367928685">
         Remove server reference from context when quitting
     </note>
@@ -135,10 +138,7 @@
     <note priority="veryhigh" time="1368628201">
         Rewrite scheduler system to be better
     </note>
-    <note priority="high" time="1367894305">
-        Fix remind module with any time period above 2 weeks (number too big) or remove
-    </note>
-    <note priority="high" time="1367926604">
+    <note priority="high" time="1367926604" done="1369074329">
         Add daily scheduled timer for scheduled events longer than a day (or week?)
     </note>
     <note priority="high" time="1368129482">
