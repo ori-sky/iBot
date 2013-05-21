@@ -37,7 +37,7 @@ exports.mod = function(context)
 		if(command === 'helloworld')
 		{
 			// will output "Hello, <nick>!"
-			server.send('PRIVMSG ' + target + ' :Hello, ' + prefix.nick + '!');
+			server.do('core$privmsg', server, target, 'Hello, ' + prefix.nick + '!');
 		}
 	}
 }

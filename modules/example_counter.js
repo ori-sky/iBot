@@ -62,7 +62,7 @@ exports.mod = function(context)
 	{
 		if(command === 'counter')
 		{
-			server.send('PRIVMSG ' + target + ' :Counter is now: ' + ++this.counter);
+			server.do('core$privmsg', server, target, 'Counter is now: ' + ++this.counter);
 		}
 	}
 }

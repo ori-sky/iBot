@@ -63,7 +63,7 @@ exports.mod = function(context)
 		if(command === 'helloworld')
 		{
 			// will output "Hello, <nick>!"
-			server.send('PRIVMSG ' + target + ' :Hello, ' + prefix.nick + '!');
+			server.do('core$privmsg', server, target, 'Hello, ' + prefix.nick + '!');
 		}
 	}
 }
@@ -105,7 +105,7 @@ exports.mod = function(context)
 	{
 		if(command === 'counter')
 		{
-			server.send('PRIVMSG ' + target + ' :Counter is now: ' + ++this.counter);
+			server.do('core$privmsg', server, target, 'Counter is now: ' + ++this.counter);
 		}
 	}
 }
@@ -311,7 +311,7 @@ exports.mod = function(ctx)
 	{
 		if(words[0] === '!hello')
 		{
-			server.send('PRIVMSG ' + target + '  :world!');
+			server.do('core$privmsg', server, target, 'world!');
 		}
 	}
 }
