@@ -486,4 +486,12 @@ exports.mod = function(context)
 				break;
 		}
 	}
+
+	this._cmd = function(server, prefix, target, cmd, params)
+	{
+		console.log(target);
+		console.log(cmd);
+		console.log(params);
+		server.fire('cmdraw', server, prefix, target, cmd, params);
+	}
 }
