@@ -123,7 +123,7 @@ exports.mod = function(context)
 					});
 					break;
 				case '?':
-					server.send('PRIVMSG ' + target + ' :Number of schedules: ' + this.schedules.length);
+					server.do('core$privmsg', server, target, 'Number of schedules: ' + this.schedules.length);
 					break;
 			}
 		}
