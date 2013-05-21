@@ -119,6 +119,14 @@ module.exports = function(configPath)
 		}
 	}
 
+	this.quit = function()
+	{
+		for(var kServer in this.servers)
+		{
+			this.servers[kServer].quit();
+		}
+	}
+
 	this.loadModule = function(name, server)
 	{
 		var path = undefined;

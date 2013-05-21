@@ -482,7 +482,8 @@ exports.mod = function(context)
 			case 'quit':
 				if(server.master.test(prefix.mask))
 				{
-					server.quit();
+					if(params[0] === 'all') context.quit();
+					else server.quit();
 				}
 				break;
 			case 'save':
