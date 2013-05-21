@@ -34,6 +34,7 @@ exports.mod = function(context)
 	this.segmentDuration = 10000;
 	this.segmentInterval = undefined;
 	this.schedules = [];
+	this.timeouts = [];
 
 	this._load = function(data)
 	{
@@ -51,7 +52,8 @@ exports.mod = function(context)
 		{
 			lastCbInterval: this.lastCbInterval,
 			segmentInterval: this.segmentInterval,
-			schedules: this.schedules
+			schedules: this.schedules,
+			timeouts: this.timeouts
 		};
 		return data;
 	}
@@ -61,6 +63,7 @@ exports.mod = function(context)
 		if(data.lastCbInterval !== undefined) this.lastCbInterval = data.lastCbInterval;
 		if(data.segmentInterval !== undefined) this.segmentInterval = data.segmentInterval;
 		if(data.schedules !== undefined) this.schedules = data.schedules;
+		if(data.timeouts !== undefined) this.timeouts = data.timeouts;
 	}
 
 	this._loaded = function(server)
@@ -95,7 +98,11 @@ exports.mod = function(context)
 	this._unloaded = function(server)
 	{
 		clearInterval(this.segmentInterval);
-		this.segmentInterval = undefined;
+
+		for(var iTimeout in this.timeouts)
+		{
+			clearTimeout(this.timeouts[iTimeout]);
+		}
 	}
 
 	this.core$cmd = function(server, prefix, target, cmd, params)
@@ -110,7 +117,10 @@ exports.mod = function(context)
 					if(isNaN(offset)) offset = 0;
 					if(isNaN(segments)) segments = 0;
 
-					server.do('scheduler$schedule', server, offset, segments);
+					server.do('scheduler$schedule', server, offset, segments, function()
+					{
+						server.do('core$cmd', server, prefix, target, params[3], params.slice(4));
+					});
 					break;
 				case '?':
 					server.send('PRIVMSG ' + target + ' :Number of schedules: ' + this.schedules.length);
@@ -119,16 +129,24 @@ exports.mod = function(context)
 		}
 	}
 
-	this._schedule = function(server, offset, segments)
+	this._schedule = function(server, offset, segments, callback)
 	{
-		var newOffset = offset;
-
-		if(this.lastCbInterval !== undefined)
+		if(segments > 0)
 		{
-			var diff = process.hrtime(this.lastCbInterval);
-			newOffset += Math.floor(diff[0] * 1000 + diff[1] / 1000000);
+			var newOffset = offset;
+
+			if(this.lastCbInterval !== undefined)
+			{
+				var diff = process.hrtime(this.lastCbInterval);
+				newOffset += Math.floor(diff[0] * 1000 + diff[1] / 1000000);
+			}
+
+			this.schedules.push({offset:newOffset, segments:segments, callback:callback});
 		}
-		this.schedules.push({offset:newOffset, segments:segments});
+		else
+		{
+			this.timeouts.push(setTimeout(callback, offset));
+		}
 	}
 
 	this._unschedule = function(index)
@@ -148,10 +166,7 @@ exports.mod = function(context)
 
 			if(this.schedules[iSchedule].segments <= 0)
 			{
-				setTimeout(function()
-				{
-					server.do('log$logTargets', server, iSchedule + ': fired!');
-				}.bind(this), this.schedules[iSchedule].offset);
+				this.timeouts.push(setTimeout(this.schedules[iSchedule].callback, this.schedules[iSchedule].offset));
 				this.schedules.splice(iSchedule, 1);
 			}
 		}
