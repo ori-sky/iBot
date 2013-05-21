@@ -31,7 +31,7 @@
 
 exports.mod = function(context)
 {
-	this.segmentDuration = 10000;
+	this.segmentDuration = 604800000;
 	this.segmentInterval = undefined;
 	this.schedules = [];
 	this.timeouts = [];
