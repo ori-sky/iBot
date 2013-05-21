@@ -142,6 +142,17 @@ exports.mod = function(context)
 
 Here you will find the list of changes in iBot.
 
+#### Module `scheduler`
+
+* Scheduler module added to replace Server.fireTimed.
+* Now uses a segments/offset system to support very high durations (theoretically above 300.000,000,000,000 years)
+* Segments determines how many 10 minute intervals to wait before scheduling offset.
+* Offset determines how many milliseconds to schedule for.
+
+Syntax is as follows:
+
+`Server.do('scheduler$schedule', server, offset, segments, callback);`
+
 #### Module `scraper`
 
 * The scraper module provides a way to scrape data from a web page using a regexp.
