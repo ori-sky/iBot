@@ -58,14 +58,14 @@ exports.mod = function(context)
 					if(server.master.test(prefix.mask))
 					{
 						this.active = true;
-						server.send('PRIVMSG ' + target + ' :Scrape command is now active.');
+						server.do('core$privmsg', server, target, 'Scrape command is now active.');
 					}
 					break;
 				case 'off':
 					if(server.master.test(prefix.mask))
 					{
 						this.active = false;
-						server.send('PRIVMSG ' + target + ' :Scrape command is now inactive.');
+						server.do('core$privmsg', server, target, 'Scrape command is now inactive.');
 					}
 					break;
 			}
@@ -76,12 +76,12 @@ exports.mod = function(context)
 			var path = params[1];
 			var expr = params[2];
 
-			server.send('PRIVMSG ' + target + ' :Scraping: ' + host + path);
+			server.do('core$privmsg', server, target, 'Scraping: ' + host + path);
 
 			server.do('scraper$scrape', server, target, host, path, 'Data', new RegExp(expr), function(server, target, key, value)
 			{
-				if(value !== undefined) server.send('PRIVMSG ' + target + ' :' + key + ': ' + value);
-				else server.send('PRIVMSG ' + target + ' :Scrape failed.');
+				if(value !== undefined) server.do('core$privmsg', server, target, key + ': ' + value);
+				else server.do('core$privmsg', server, target, 'Scrape failed.');
 			});
 		}
 	}
