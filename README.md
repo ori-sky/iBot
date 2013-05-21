@@ -142,6 +142,11 @@ exports.mod = function(context)
 
 Here you will find the list of changes in iBot.
 
+#### `core$privmsg` function
+
+* `core` now has a _privmsg function which can be used to send a PRIVMSG.
+* See examples for usage.
+
 #### Module `scheduler`
 
 * Scheduler module added to replace Server.fireTimed.
