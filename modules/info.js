@@ -69,6 +69,6 @@ exports.mod = function(context)
 
 	this.core$mode = function(server, prefix, channel, state, modechar, param)
 	{
-		server.do('core$privmsg', server, target, 'Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
+		server.do('core$privmsg', server, channel, 'Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
 	}
 }
