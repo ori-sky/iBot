@@ -190,7 +190,7 @@ exports.mod = function(context)
 
 		switch(cmd)
 		{
-			case 'do': // novelty
+			case 'do':
 				if(server.master.test(prefix.mask))
 				{
 					server.send('PRIVMSG ' + target + ' :/' + params.join(' '));
@@ -204,6 +204,15 @@ exports.mod = function(context)
 					for(var i=0; i<params[0]; ++i) p.push('do');
 					for(var i=1; i<params.length; ++i) p.push(params[i]);
 					server.fire('cmdraw', server, prefix, target, 'do', p);
+				}
+				break;
+			case 'times':
+				if(server.master.test(prefix.mask))
+				{
+					for(var i=0; i<params[0]; ++i)
+					{
+						server.fire('cmdraw', server, prefix, target, params[1], params.slice(2));
+					}
 				}
 				break;
 		}
