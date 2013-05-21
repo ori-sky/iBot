@@ -41,12 +41,6 @@ exports.mod = function(context)
 					server.fire('raw', server, params.join(' '));
 				}
 				break;
-			case 'rawtimed':
-				if(server.master.test(prefix.mask))
-				{
-					server.fireTimed(params[0], undefined, 'raw', server, params.slice(1).join(' '));
-				}
-				break;
 		}
 
 	}
