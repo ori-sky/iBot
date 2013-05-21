@@ -177,54 +177,6 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		}
 	}
 
-	this.fireTimed = function()
-	{
-		var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
-		var args = Array.prototype.slice.call(arguments, 0);
-		var duration = args[0];
-		var id = args[1];
-		if(typeof id === 'undefined') id = 'default';
-
-		this.fireCancel(id);
-
-		if(typeof this.timeouts[id] === 'undefined')
-		{
-			this.timeouts[id] = {};
-		}
-
-		this.timeouts[id].time = new Date().getTime();
-		this.timeouts[id].duration = duration;
-		this.timeouts[id].fn = function()
-		{
-			this.activeModuleStack.push(activeModule);
-			this.fire.apply(this, args.slice(2));
-			this.activeModuleStack.pop();
-			this.fireCancel(id);
-			delete this.timeouts[id];
-		}.bind(this);
-		this.timeouts[id].timeout = setTimeout(this.timeouts[id].fn, duration);
-	}.bind(this);
-
-	this.fireChange = function(newDuration, id)
-	{
-		if(typeof id === 'undefined') id = 'default';
-		if(typeof this.timeouts[id] !== 'undefined')
-		{
-			var duration = newDuration - (new Date().getTime() - this.timeouts[id].time);
-			this.fireCancel(id);
-			this.timeouts[id].timeout = setTimeout(this.timeouts[id].fn, duration);
-		}
-	}
-
-	this.fireCancel = function(id)
-	{
-		if(typeof id === 'undefined') id = 'default';
-		if(typeof this.timeouts[id] !== 'undefined')
-		{
-			clearTimeout(this.timeouts[id].timeout);
-		}
-	}
-
 	this.onConnect = function()
 	{
 		if(this.ssl)
