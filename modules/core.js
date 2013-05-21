@@ -193,8 +193,8 @@ exports.mod = function(context)
 			case 'do':
 				if(server.master.test(prefix.mask))
 				{
-					server.send('PRIVMSG ' + target + ' :/' + params.join(' '));
-					server.fire('cmdraw', server, prefix, target, params[0], params.slice(1));
+					server.do('core$privmsg', server, target, '/' + params.join(' '));
+					server.do('core$cmd', server, prefix, target, params[0], params.slice(1));
 				}
 				break;
 			case 'do-r':
@@ -203,7 +203,7 @@ exports.mod = function(context)
 					var p = []
 					for(var i=0; i<params[0]; ++i) p.push('do');
 					for(var i=1; i<params.length; ++i) p.push(params[i]);
-					server.fire('cmdraw', server, prefix, target, 'do', p);
+					server.do('core$cmd', server, prefix, target, 'do', p);
 				}
 				break;
 			case 'times':
@@ -211,7 +211,7 @@ exports.mod = function(context)
 				{
 					for(var i=0; i<params[0]; ++i)
 					{
-						server.fire('cmdraw', server, prefix, target, params[1], params.slice(2));
+						server.do('core$cmd', server, prefix, target, params[1], params.slice(2));
 					}
 				}
 				break;
@@ -365,8 +365,8 @@ exports.mod = function(context)
 					for(var i=0; i<modules.length; ++i)
 					{
 						var result = context.loadModule(modules[i], srv);
-						if(result !== '') server.send('PRIVMSG ' + target + ' :' + result);
-						else server.send('PRIVMSG ' + target + ' :Loaded module: ' + modules[i]);
+						if(result !== '') server.do('core$privmsg', server, target, result);
+						else server.do('core$privmsg', server, target, 'Loaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -381,8 +381,8 @@ exports.mod = function(context)
 					for(var i=0; i<modules.length; ++i)
 					{
 						var result = context.loadModule(modules[i]);
-						if(result !== '') server.send('PRIVMSG ' + target + ' :' + result);
-						else server.send('PRIVMSG ' + target + ' :Loaded module: ' + modules[i]);
+						if(result !== '') server.do('core$privmsg', server, target, result);
+						else server.do('core$privmsg', server, target, 'Loaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -400,7 +400,7 @@ exports.mod = function(context)
 					for(var i=0; i<modules.length; ++i)
 					{
 						context.unloadModule(modules[i], srv);
-						server.send('PRIVMSG ' + target + ' :Unloaded module: ' + modules[i]);
+						server.do('core$privmsg', server, target, 'Unloaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -415,7 +415,7 @@ exports.mod = function(context)
 					for(var i=0; i<modules.length; ++i)
 					{
 						context.unloadModule(modules[i]);
-						server.send('PRIVMSG ' + target + ' :Unloaded module: ' + modules[i]);
+						server.do('core$privmsg', server, target, 'Unloaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -432,7 +432,7 @@ exports.mod = function(context)
 					var master = params[6]
 					var modules = params[7];
 
-					if(nick === undefined) { server.send('PRIVMSG ' + target + ' :' + syntax); break; }
+					if(nick === undefined) { server.do('core$privmsg', server, target, syntax); break; }
 					if(ident === undefined) ident = 'ibot';
 					if(isNaN(port)) port = 6667;
 					ssl = ssl === 'true';
@@ -454,7 +454,7 @@ exports.mod = function(context)
 					}
 
 					context.servers[name].connect();
-					server.send('PRIVMSG ' + target + ' :done');
+					server.do('core$privmsg', server, target, 'Done');
 				}
 				break;
 			case 'rmsrv':
@@ -463,10 +463,10 @@ exports.mod = function(context)
 					var syntax = 'Syntax: rmsrv <name>';
 					var name = params[0];
 
-					if(name === undefined) { server.send('PRIVMSG ' + target + ' :' + syntax); break; }
+					if(name === undefined) { server.do('core$privmsg', server, target, syntax); break; }
 
 					context.servers[name].quit();
-					server.send('PRIVMSG ' + target + ' :done');
+					server.do('core$privmsg', server, target, 'Done');
 				}
 				break;
 			case 'modules':
@@ -474,10 +474,10 @@ exports.mod = function(context)
 				var srv = server;
 				if(server.master.test(prefix.mask) && name !== undefined) srv = context.servers[name];
 
-				server.send('PRIVMSG ' + target + ' :Modules: ' + srv.getModules(', '));
+				server.do('core$privmsg', server, target, 'Modules: ' + srv.getModules(', '));
 				break;
 			case 'servers':
-				server.send('PRIVMSG ' + target + ' :Servers: ' + Object.keys(context.servers).join(', '));
+				server.do('core$privmsg', server, target, 'Servers: ' + Object.keys(context.servers).join(', '));
 				break;
 			case 'quit':
 				if(server.master.test(prefix.mask))
@@ -488,13 +488,18 @@ exports.mod = function(context)
 				break;
 			case 'save':
 				context.save();
-				server.send('PRIVMSG ' + target + ' :Config saved to disk.');
+				server.do('core$privmsg', server, target, 'Config written.');
 				break;
 			case 'rehash':
 				context.load();
-				server.send('PRIVMSG ' + target + ' :Config rehashed from disk.');
+				server.do('core$privmsg', server, target, 'Config rehashed.');
 				break;
 		}
+	}
+
+	this._privmsg = function(server, target, msg)
+	{
+		server.send('PRIVMSG ' + target + ' :' + msg);
 	}
 
 	this._cmd = function(server, prefix, target, cmd, params)
