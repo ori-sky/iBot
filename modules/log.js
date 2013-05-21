@@ -51,13 +51,14 @@ exports.mod = function(context)
 			{
 				case '+':
 					this.data.targets[params[1]] = true;
-					server.send('PRIVMSG ' + target + ' :done');
+					server.do('core$privmsg', server, target, 'Done');
 					break;
 				case '-':
 					delete this.data.targets[params[1]];
-					server.send('PRIVMSG ' + target + ' :done');
+					server.do('core$privmsg', server, target, 'Done');
 					break;
 				case '?':
+					// TODO
 					break;
 			}
 		}
@@ -96,7 +97,7 @@ exports.mod = function(context)
 			{
 				if(this.data.targets[kTarget] === true)
 				{
-					server.send('PRIVMSG ' + kTarget + ' :' + dataSafe);
+					server.do('core$privmsg', server, kTarget, dataSafe);
 				}
 			}
 		}
