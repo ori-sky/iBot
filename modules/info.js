@@ -46,22 +46,22 @@ exports.mod = function(context)
 					k = Object.keys(server.users[params[0]].channels);
 				}
 
-				server.send('PRIVMSG ' + target + ' :Channels: ' + k.join(', '));
+				server.do('core$privmsg', server, target, 'Channels: ' + k.join(', '));
 				break;
 			case 'myinfo':
-				server.send('PRIVMSG ' + target + ' :MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
+				server.do('core$privmsg', server, target, 'MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
 				break;
 			case 'isupport':
-				server.send('PRIVMSG ' + target + ' :ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
+				server.do('core$privmsg', server, target, 'ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
 				break;
 			case 'mynick':
-				server.send('PRIVMSG ' + target + ' :My nick is ' + server.user.nick);
+				server.do('core$privmsg', server, target, 'My nick is ' + server.user.nick);
 				break;
 			case 'identof':
-				server.send('PRIVMSG ' + target + ' :Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
+				server.do('core$privmsg', server, target, 'Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
 				break;
 			case 'hostof':
-				server.send('PRIVMSG ' + target + ' :Host of ' + params[0] + ' = ' + server.users[params[0]].host);
+				server.do('core$privmsg', server, target, 'Host of ' + params[0] + ' = ' + server.users[params[0]].host);
 				break;
 
 		}
@@ -69,6 +69,6 @@ exports.mod = function(context)
 
 	this.core$mode = function(server, prefix, channel, state, modechar, param)
 	{
-		server.send('PRIVMSG ' + channel + ' :Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
+		server.do('core$privmsg', server, target, 'Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
 	}
 }
