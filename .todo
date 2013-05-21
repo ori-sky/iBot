@@ -36,6 +36,9 @@
     <note priority="veryhigh" time="1368209568" done="1368440203">
         Implement JSON config saving/updating
     </note>
+    <note priority="veryhigh" time="1368471528" done="1369102515">
+        Clear timeouts on Server.quit
+    </note>
     <note priority="veryhigh" time="1368716690" done="1368899888">
         Invoke _save in all modules when Context.save is called
     </note>
@@ -90,6 +93,9 @@
     <note priority="high" time="1367894305" done="1369074314">
         Fix remind module with any time period above 2 weeks (number too big) or remove
     </note>
+    <note priority="high" time="1367926604" done="1369074329">
+        Add daily scheduled timer for scheduled events longer than a day (or week?)
+    </note>
     <note priority="high" time="1367927512" done="1367928685">
         Remove server reference from context when quitting
     </note>
@@ -132,14 +138,8 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1368471528">
-        Clear timeouts on Server.quit
-    </note>
-    <note priority="veryhigh" time="1368628201">
+    <note priority="veryhigh" time="1368628201" done="1369102533">
         Rewrite scheduler system to be better
-    </note>
-    <note priority="high" time="1367926604" done="1369074329">
-        Add daily scheduled timer for scheduled events longer than a day (or week?)
     </note>
     <note priority="high" time="1368129482">
         Move ping timeout code out of Server all into mod core
