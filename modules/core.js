@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, David Farrell <shokku.ra@gmail.com>
+ *                     Quora Dodrill <quora@lavabit.com>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
