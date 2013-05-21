@@ -129,6 +129,22 @@ exports.mod = function(context)
 		}
 	}
 
+	this._fire = function()
+	{
+		var args = arguments;
+		var server = args[0];
+		var offset = args[1];
+		var segments = args[2];
+		var eventName = args[3];
+		var params = Array.prototype.slice.call(arguments, 4);
+		var a = [eventName].concat(params);
+
+		server.do('scheduler$schedule', server, offset, segments, function()
+		{
+			server.fire.apply(server, a);
+		});
+	}
+
 	this._schedule = function(server, offset, segments, callback)
 	{
 		if(segments > 0)
