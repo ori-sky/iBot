@@ -162,8 +162,6 @@ exports.mod = function(context)
 		{
 			--this.schedules[iSchedule].segments;
 
-			server.do('log$logTargets', server, iSchedule + ': ' + this.schedules[iSchedule].offset + ',' + this.schedules[iSchedule].segments);
-
 			if(this.schedules[iSchedule].segments <= 0)
 			{
 				this.timeouts.push(setTimeout(this.schedules[iSchedule].callback, this.schedules[iSchedule].offset));
