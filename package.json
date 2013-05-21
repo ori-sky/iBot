@@ -2,13 +2,6 @@
   "name": "ibot",
   "version": "0.5.3",
   "description": "iBot is an IRC client-side framework designed to be extensible and easy to use",
-  "keywords": [
-    "ibot",
-    "irc",
-    "client",
-    "framework",
-    "bot"
-  ],
   "author": {
     "name": "Shockk",
     "email": "shockk@green.shockk.co.uk",
@@ -21,14 +14,22 @@
       "url": "https://github.com/ShockkPony/"
     },
     {
-      "name": "Jessica Williams",
+      "name": "Jessica Dodrill",
       "email": "quora@lavabit.com",
       "url": "https://github.com/quora-wings/"
     }
+  ],
+  "keywords": [
+    "ibot",
+    "irc",
+    "client",
+    "framework",
+    "bot"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ShockkPony/iBot.git"
   },
+  "license": "BSD",
   "main": "index"
 }
