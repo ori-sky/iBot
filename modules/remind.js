@@ -36,16 +36,17 @@ exports.mod = function(context)
 		switch(cmd)
 		{
 			case 'remind':
-				server.fireTimed(this.timeToMilliseconds(params[0]), target + '$' + prefix.nick, 'remind', server, prefix.nick, target, params.slice(1).join(' '));
+				server.do('scheduler$fire', server, this.timeToMilliseconds(params[0]), params[1], 'remind$remind', server, prefix.nick, target, params.slice(2).join(' '));
 				break;
 			case 'remindme':
-				server.fireTimed(this.timeToMilliseconds(params[0]), prefix.nick, 'remind', server, prefix.nick, prefix.nick, params.slice(1).join(' '));
+				server.do('scheduler$fire', server, this.timeToMilliseconds(params[0]), params[1], 'remind$remind', server, prefix.nick, prefix.nick, params.slice(2).join(' '));
 				break;
 		}
 	}
 
 	this.remind$remind = function(server, from, to, msg)
 	{
+		console.log(4567);
 		server.send('PRIVMSG ' + to + ' :Reminder from ' + from + ': ' + msg);
 	}
 
