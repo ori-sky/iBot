@@ -153,10 +153,15 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		{
 			var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
 			var eventName = arguments[0];
-			if(eventName !== undefined && eventName[0] === '$')
+
+			if(eventName !== undefined)
 			{
-				activeModule = '';
-				eventName = eventName.substr(1);
+				var s = eventName.split('$');
+				if(s.length > 1)
+				{
+					activeModule = s[0];
+					eventName = s[1];
+				}
 			}
 
 			if(this.modules[kModule][activeModule + '$' + eventName] !== undefined)
