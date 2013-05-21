@@ -39,6 +39,9 @@
     <note priority="veryhigh" time="1368471528" done="1369102515">
         Clear timeouts on Server.quit
     </note>
+    <note priority="veryhigh" time="1368628201" done="1369102533">
+        Rewrite scheduler system to be better
+    </note>
     <note priority="veryhigh" time="1368716690" done="1368899888">
         Invoke _save in all modules when Context.save is called
     </note>
@@ -138,9 +141,6 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1368628201" done="1369102533">
-        Rewrite scheduler system to be better
-    </note>
     <note priority="high" time="1368129482">
         Move ping timeout code out of Server all into mod core
     </note>
@@ -153,7 +153,7 @@
     <note priority="high" time="1368839979">
         [core] Implement ability to change server master
     </note>
-    <note priority="high" time="1368911541">
+    <note priority="high" time="1368911541" done="1369162929">
         [core] Implement _privmsg and other functions, and use these in other modules
     </note>
     <note priority="medium" time="1368826802">
