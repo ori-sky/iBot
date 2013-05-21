@@ -112,12 +112,7 @@ exports.mod = function(context)
 			switch(params[0])
 			{
 				case '+':
-					var offset = parseInt(params[1]);
-					var segments = parseInt(params[2]);
-					if(isNaN(offset)) offset = 0;
-					if(isNaN(segments)) segments = 0;
-
-					server.do('scheduler$schedule', server, offset, segments, function()
+					server.do('scheduler$schedule', server, params[1], params[2], function()
 					{
 						server.do('core$cmd', server, prefix, target, params[3], params.slice(4));
 					});
@@ -147,6 +142,8 @@ exports.mod = function(context)
 
 	this._schedule = function(server, offset, segments, callback)
 	{
+		var offset = server.do('scheduler$timeToMilliseconds', offset);
+
 		if(segments > 0)
 		{
 			var newOffset = offset;
@@ -185,4 +182,19 @@ exports.mod = function(context)
 			}
 		}
 	}.bind(this);
+
+	this._timeToMilliseconds = function(timeString)
+	{
+		var r = /(\d+d)?(\d+h)?(\d+m)?(\d+s)?(\d+)?/;
+		var match = r.exec(timeString);
+
+		var t = 0;
+		if(match[1] !== undefined) t += parseInt(match[1]) * 1000 * 60 * 60 * 24;
+		if(match[2] !== undefined) t += parseInt(match[2]) * 1000 * 60 * 60;
+		if(match[3] !== undefined) t += parseInt(match[3]) * 1000 * 60;
+		if(match[4] !== undefined) t += parseInt(match[4]) * 1000;
+		if(match[5] !== undefined) t += parseInt(match[5]);
+
+		return t;
+	}
 }
