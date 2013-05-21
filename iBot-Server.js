@@ -117,15 +117,19 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.do = function()
 	{
-		var moduleName = undefined;
+		var fullName = arguments[0];
+		if(typeof fullName !== 'string') return undefined;
+
+		var s1 = fullName.split('$');
+		if(s1.length < 2) return undefined;
+
+		var moduleName = s1[0];
+		var methodName = s1[1];
+
+		this.activeModuleStack.push(moduleName);
 
 		try
 		{
-			var fullName = arguments[0];
-			var s1 = fullName.split('$');
-			moduleName = s1[0];
-			var methodName = s1[1];
-
 			if(this.modules[moduleName] !== undefined && this.modules[moduleName]['_' + methodName] !== undefined)
 			{
 				var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], Array.prototype.slice.call(arguments, 1));
@@ -137,6 +141,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			if(moduleName === undefined) console.log(e.message);
 			else console.log('[' + moduleName + '] ' + e.message);
 		}
+
+		this.activeModuleStack.pop();
 
 		return undefined;
 	}
