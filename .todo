@@ -108,6 +108,9 @@
     <note priority="high" time="1367984619" done="1368015264">
         Implement JSON data for modules
     </note>
+    <note priority="high" time="1368911541" done="1369162929">
+        [core] Implement _privmsg and other functions, and use these in other modules
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
@@ -153,9 +156,6 @@
     <note priority="high" time="1368839979">
         [core] Implement ability to change server master
     </note>
-    <note priority="high" time="1368911541" done="1369162929">
-        [core] Implement _privmsg and other functions, and use these in other modules
-    </note>
     <note priority="medium" time="1368826802">
         Add SSL client cert support
     </note>
@@ -176,5 +176,8 @@
     </note>
     <note priority="low" time="1368918269">
         Account system
+    </note>
+    <note priority="low" time="1369163545">
+        Write relay module
     </note>
 </todo>
