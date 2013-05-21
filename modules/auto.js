@@ -107,15 +107,15 @@ exports.mod = function(context)
 		{
 			case '+':
 				if(typeof this.join.indexOf(channel === -1)) this.join.push(channel);
-				server.send('PRIVMSG ' + target + ' :done');
+				server.do('core$privmsg', server, target, 'Done');
 				break;
 			case '-':
 				var i = this.join.indexOf(channel);
 				if(i !== -1) this.join.splice(i, 1);
-				server.send('PRIVMSG ' + target + ' :done');
+				server.do('core$privmsg', server, target, 'Done');
 				break;
 			case '?':
-				server.send('PRIVMSG ' + target + ' :Auto join: ' + this.join.join(', '));
+				server.do('core$privmsg', server, target, 'Auto join: ' + this.join.join(', '));
 				break;
 		}
 	}
@@ -126,11 +126,11 @@ exports.mod = function(context)
 		{
 			case '+':
 				this.perform.push(param);
-				server.send('PRIVMSG ' + target + ' :done');
+				server.do('core$privmsg', server, target, 'Done');
 				break;
 			case '-':
 				if(param >= 0 && param < this.perform.length) this.perform.splice(param, 1);
-				server.send('PRIVMSG ' + target + ' :done');
+				server.do('core$privmsg', server, target, 'Done');
 				break;
 			case '?':
 				var a = [];
@@ -139,7 +139,7 @@ exports.mod = function(context)
 					a.push(i + '[' + util.inspect(this.perform[i]) + ']');
 				}
 
-				server.send('PRIVMSG ' + target + ' :Auto perform: ' + a.join(', '));
+				server.do('core$privmsg', server, target, 'Auto perform: ' + a.join(', '));
 				break;
 		}
 	}
