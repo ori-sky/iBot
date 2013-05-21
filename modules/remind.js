@@ -47,7 +47,7 @@ exports.mod = function(context)
 	this.remind$remind = function(server, from, to, msg)
 	{
 		console.log(4567);
-		server.send('PRIVMSG ' + to + ' :Reminder from ' + from + ': ' + msg);
+		server.do('core$privmsg', server, to, 'Reminder from ' + from + ': ' + msg);
 	}
 
 	this.timeToMilliseconds = function(timeString)
