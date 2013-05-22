@@ -29,10 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	// hook into global recv event
-	this.$recv = function(server, prefix, opcode, params)
+	this.$recv = function(prefix, opcode, params)
 	{
 		// params[0] is target, params[1] is message
 		switch(opcode)

@@ -34,14 +34,14 @@ var Server = require('../iBot-Server');
 var User = require('../iBot-User');
 var Channel = require('../iBot-Channel');
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this._loaded = function(server)
 	{
 		server.send('VERSION');
 	}
 
-	this.$recv = function(server, prefix, opcode, params)
+	this.$recv = function(prefix, opcode, params)
 	{
 		switch(opcode)
 		{
