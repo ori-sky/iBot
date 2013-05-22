@@ -31,7 +31,7 @@
 
 var http = require('http');
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this.active = false;
 
@@ -48,7 +48,7 @@ exports.mod = function(context)
 		return { active: this.active };
 	}
 
-	this.core$cmd = function(server, prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params)
 	{
 		if(cmd === 'scraper')
 		{
@@ -58,14 +58,14 @@ exports.mod = function(context)
 					if(server.master.test(prefix.mask))
 					{
 						this.active = true;
-						server.do('core$privmsg', server, target, 'Scrape command is now active.');
+						server.do('core$privmsg', target, 'Scrape command is now active.');
 					}
 					break;
 				case 'off':
 					if(server.master.test(prefix.mask))
 					{
 						this.active = false;
-						server.do('core$privmsg', server, target, 'Scrape command is now inactive.');
+						server.do('core$privmsg', target, 'Scrape command is now inactive.');
 					}
 					break;
 			}
@@ -76,17 +76,17 @@ exports.mod = function(context)
 			var path = params[1];
 			var expr = params[2];
 
-			server.do('core$privmsg', server, target, 'Scraping: ' + host + path);
+			server.do('core$privmsg', target, 'Scraping: ' + host + path);
 
-			server.do('scraper$scrape', server, target, host, path, 'Data', new RegExp(expr), function(server, target, key, value)
+			server.do('scraper$scrape', target, host, path, 'Data', new RegExp(expr), function(target, key, value)
 			{
-				if(value !== undefined) server.do('core$privmsg', server, target, key + ': ' + value);
-				else server.do('core$privmsg', server, target, 'Scrape failed.');
-			});
+				if(value !== undefined) server.do('core$privmsg', target, key + ': ' + value);
+				else server.do('core$privmsg', target, 'Scrape failed.');
+			}, undefined);
 		}
 	}
 
-	this._scrape = function(server, target, host, path, key, expr, callback, processor)
+	this._scrape = function(target, host, path, key, expr, callback, processor)
 	{
 		if(processor === undefined)
 		{
@@ -98,9 +98,9 @@ exports.mod = function(context)
 			if(data !== undefined)
 			{
 				var match = data.match(expr);
-				callback(server, target, key, processor(match));
+				callback(target, key, processor(match));
 			}
-			else callback(server, target, key, undefined);
+			else callback(target, key, undefined);
 		}.bind(this));
 	}
 

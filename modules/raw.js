@@ -29,23 +29,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
-	this.core$cmdraw = function(server, prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params)
 	{
 		switch(cmd)
 		{
 			case 'raw':
 				if(server.master.test(prefix.mask))
 				{
-					server.fire('raw', server, params.join(' '));
+					server.fire('raw', params.join(' '));
 				}
 				break;
 		}
 
 	}
 
-	this.raw$raw = function(server, data)
+	this.raw$raw = function(data)
 	{
 		server.send(data);
 	}

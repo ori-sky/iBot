@@ -29,24 +29,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
-	this.core$cmdraw = function(server, prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params)
 	{
 		switch(cmd)
 		{
 			case 'remind':
-				server.do('scheduler$fire', server, params[0], params[1], 'remind$remind', server, prefix.nick, target, params.slice(2).join(' '));
+				server.do('scheduler$fire', params[0], params[1], 'remind$remind', prefix.nick, target, params.slice(2).join(' '));
 				break;
 			case 'remindme':
-				server.do('scheduler$fire', server, params[0], params[1], 'remind$remind', server, prefix.nick, prefix.nick, params.slice(2).join(' '));
+				server.do('scheduler$fire', params[0], params[1], 'remind$remind', prefix.nick, prefix.nick, params.slice(2).join(' '));
 				break;
 		}
 	}
 
-	this.remind$remind = function(server, from, to, msg)
+	this.remind$remind = function(from, to, msg)
 	{
-		console.log(4567);
-		server.do('core$privmsg', server, to, 'Reminder from ' + from + ': ' + msg);
+		server.do('core$privmsg', to, 'Reminder from ' + from + ': ' + msg);
 	}
 }

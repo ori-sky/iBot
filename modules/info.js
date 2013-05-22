@@ -29,9 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
-	this.core$cmd = function(server, prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params)
 	{
 		switch(cmd)
 		{
@@ -46,29 +46,29 @@ exports.mod = function(context)
 					k = Object.keys(server.users[params[0]].channels);
 				}
 
-				server.do('core$privmsg', server, target, 'Channels: ' + k.join(', '));
+				server.do('core$privmsg', target, 'Channels: ' + k.join(', '));
 				break;
 			case 'myinfo':
-				server.do('core$privmsg', server, target, 'MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
+				server.do('core$privmsg', target, 'MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
 				break;
 			case 'isupport':
-				server.do('core$privmsg', server, target, 'ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
+				server.do('core$privmsg', target, 'ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
 				break;
 			case 'mynick':
-				server.do('core$privmsg', server, target, 'My nick is ' + server.user.nick);
+				server.do('core$privmsg', target, 'My nick is ' + server.user.nick);
 				break;
 			case 'identof':
-				server.do('core$privmsg', server, target, 'Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
+				server.do('core$privmsg', target, 'Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
 				break;
 			case 'hostof':
-				server.do('core$privmsg', server, target, 'Host of ' + params[0] + ' = ' + server.users[params[0]].host);
+				server.do('core$privmsg', target, 'Host of ' + params[0] + ' = ' + server.users[params[0]].host);
 				break;
 
 		}
 	}
 
-	this.core$mode = function(server, prefix, channel, state, modechar, param)
+	this.core$mode = function(prefix, channel, state, modechar, param)
 	{
-		server.do('core$privmsg', server, channel, 'Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
+		server.do('core$privmsg', channel, 'Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
 	}
 }

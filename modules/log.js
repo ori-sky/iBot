@@ -31,7 +31,7 @@
 
 var util = require('util');
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this.streams =
 	{
@@ -41,7 +41,7 @@ exports.mod = function(context)
 		verbose: null,
 	};
 
-	this.core$cmd = function(server, prefix, target, command, params)
+	this.core$cmd = function(prefix, target, command, params)
 	{
 		if(command === 'log')
 		{
@@ -51,11 +51,11 @@ exports.mod = function(context)
 			{
 				case '+':
 					this.data.targets[params[1]] = true;
-					server.do('core$privmsg', server, target, 'Done');
+					server.do('core$privmsg', target, 'Done');
 					break;
 				case '-':
 					delete this.data.targets[params[1]];
-					server.do('core$privmsg', server, target, 'Done');
+					server.do('core$privmsg', target, 'Done');
 					break;
 				case '?':
 					// TODO
@@ -87,7 +87,7 @@ exports.mod = function(context)
 		}
 	}
 
-	this._logTargets = function(server, data)
+	this._logTargets = function(data)
 	{
 		var dataSafe = util.inspect(data);
 
@@ -97,7 +97,7 @@ exports.mod = function(context)
 			{
 				if(this.data.targets[kTarget] === true)
 				{
-					server.do('core$privmsg', server, kTarget, dataSafe);
+					server.do('core$privmsg', kTarget, dataSafe);
 				}
 			}
 		}

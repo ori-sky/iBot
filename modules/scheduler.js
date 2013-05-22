@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this.segmentDuration = 604800000;
 	this.segmentInterval = undefined;
@@ -105,20 +105,20 @@ exports.mod = function(context)
 		}
 	}
 
-	this.core$cmd = function(server, prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params)
 	{
 		if(cmd === 'scheduler')
 		{
 			switch(params[0])
 			{
 				case '+':
-					server.do('scheduler$schedule', server, params[1], params[2], function()
+					server.do('scheduler$schedule', params[1], params[2], function()
 					{
-						server.do('core$cmd', server, prefix, target, params[3], params.slice(4));
+						server.do('core$cmd', prefix, target, params[3], params.slice(4));
 					});
 					break;
 				case '?':
-					server.do('core$privmsg', server, target, 'Number of schedules: ' + this.schedules.length);
+					server.do('core$privmsg', target, 'Number of schedules: ' + this.schedules.length);
 					break;
 			}
 		}
@@ -127,20 +127,19 @@ exports.mod = function(context)
 	this._fire = function()
 	{
 		var args = arguments;
-		var server = args[0];
-		var offset = args[1];
-		var segments = args[2];
-		var eventName = args[3];
-		var params = Array.prototype.slice.call(arguments, 4);
+		var offset = args[0];
+		var segments = args[1];
+		var eventName = args[2];
+		var params = Array.prototype.slice.call(arguments, 3);
 		var a = [eventName].concat(params);
 
-		server.do('scheduler$schedule', server, offset, segments, function()
+		server.do('scheduler$schedule', offset, segments, function()
 		{
 			server.fire.apply(server, a);
 		});
 	}
 
-	this._schedule = function(server, offset, segments, callback)
+	this._schedule = function(offset, segments, callback)
 	{
 		var offset = server.do('scheduler$timeToMilliseconds', offset);
 

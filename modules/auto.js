@@ -31,7 +31,7 @@
 
 var util = require('util');
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this.join = [];
 	this.perform = [];
@@ -56,7 +56,7 @@ exports.mod = function(context)
 		};
 	}
 
-	this.core$376 = function(server, prefix, message)
+	this.core$376 = function(prefix, message)
 	{
 		for(var i in this.join)
 		{
@@ -69,7 +69,7 @@ exports.mod = function(context)
 		}
 	}
 
-	this.core$cmdraw = function(server, prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params)
 	{
 		if(cmd === 'auto')
 		{
@@ -78,14 +78,14 @@ exports.mod = function(context)
 				switch(params[0])
 				{
 					case 'perform':
-						server.do('auto$perform', server, prefix, target, params[1], params.slice(2).join(' '));
+						server.do('auto$perform', prefix, target, params[1], params.slice(2).join(' '));
 						break;
 				}
 			}
 		}
 	}
 
-	this.core$cmd = function(server, prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params)
 	{
 		if(cmd === 'auto')
 		{
@@ -94,43 +94,43 @@ exports.mod = function(context)
 				switch(params[0])
 				{
 					case 'join':
-						server.do('auto$join', server, prefix, target, params[1], params[2]);
+						server.do('auto$join', prefix, target, params[1], params[2]);
 						break;
 				}
 			}
 		}
 	}
 
-	this._join = function(server, prefix, target, opcode, channel)
+	this._join = function(prefix, target, opcode, channel)
 	{
 		switch(opcode)
 		{
 			case '+':
 				if(typeof this.join.indexOf(channel === -1)) this.join.push(channel);
-				server.do('core$privmsg', server, target, 'Done');
+				server.do('core$privmsg', target, 'Done');
 				break;
 			case '-':
 				var i = this.join.indexOf(channel);
 				if(i !== -1) this.join.splice(i, 1);
-				server.do('core$privmsg', server, target, 'Done');
+				server.do('core$privmsg', target, 'Done');
 				break;
 			case '?':
-				server.do('core$privmsg', server, target, 'Auto join: ' + this.join.join(', '));
+				server.do('core$privmsg', target, 'Auto join: ' + this.join.join(', '));
 				break;
 		}
 	}
 
-	this._perform = function(server, prefix, target, opcode, param)
+	this._perform = function(prefix, target, opcode, param)
 	{
 		switch(opcode)
 		{
 			case '+':
 				this.perform.push(param);
-				server.do('core$privmsg', server, target, 'Done');
+				server.do('core$privmsg', target, 'Done');
 				break;
 			case '-':
 				if(param >= 0 && param < this.perform.length) this.perform.splice(param, 1);
-				server.do('core$privmsg', server, target, 'Done');
+				server.do('core$privmsg', target, 'Done');
 				break;
 			case '?':
 				var a = [];
@@ -139,7 +139,7 @@ exports.mod = function(context)
 					a.push(i + '[' + util.inspect(this.perform[i]) + ']');
 				}
 
-				server.do('core$privmsg', server, target, 'Auto perform: ' + a.join(', '));
+				server.do('core$privmsg', target, 'Auto perform: ' + a.join(', '));
 				break;
 		}
 	}

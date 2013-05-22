@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this.counter = 0;
 
@@ -58,11 +58,11 @@ exports.mod = function(context)
 	}
 
 	// hook into cmd event from core
-	this.core$cmd = function(server, prefix, target, command, params)
+	this.core$cmd = function(prefix, target, command, params)
 	{
 		if(command === 'counter')
 		{
-			server.do('core$privmsg', server, target, 'Counter is now: ' + ++this.counter);
+			server.do('core$privmsg', target, 'Counter is now: ' + ++this.counter);
 		}
 	}
 }
