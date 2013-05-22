@@ -161,13 +161,13 @@ module.exports = function(configPath)
 			{
 				for(var kServer in this.servers)
 				{
-					var mod = new module.mod(this);
+					var mod = new module.mod(this, this.servers[kServer]);
 					this.servers[kServer].addModule(name, mod);
 				}
 			}
 			else
 			{
-				var mod = new module.mod(this);
+				var mod = new module.mod(this, server);
 				server.addModule(name, mod);
 			}
 
