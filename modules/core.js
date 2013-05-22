@@ -46,26 +46,26 @@ exports.mod = function(context, server)
 		switch(opcode)
 		{
 			case '004': // RPL_MYINFO
-				server.fire('004', server, prefix, params[1], params[2], params[3], params[4], params.slice(5));
+				server.fire('004', prefix, params[1], params[2], params[3], params[4], params.slice(5));
 			case '005': // RPL_ISUPPORT
-				server.fire('005', server, prefix, params.slice(1, params.length - 1), params[params.length - 1]);
+				server.fire('005', prefix, params.slice(1, params.length - 1), params[params.length - 1]);
 				break;
 			case '352': // RPL_WHOREPLY
 				var split = params[7].split(' ');
-				server.fire('352', server, prefix, params[1], params[2], params[3], params[4], params[5], params[6], split[0], split[1]);
+				server.fire('352', prefix, params[1], params[2], params[3], params[4], params[5], params[6], split[0], split[1]);
 				break;
 			case '353': // RPL_NAMREPLY
-				server.fire('353', server, prefix, params[1], params[2], params[3].split(' '));
+				server.fire('353', prefix, params[1], params[2], params[3].split(' '));
 				break;
 			case '376': // RPL_ENDOFMOTD
-				server.fire('376', server, prefix, params[1]);
+				server.fire('376', prefix, params[1]);
 				break;
 			case 'PING':
-				server.fire('ping', server, prefix, params[0]);
+				server.fire('ping', prefix, params[0]);
 				server.send('PONG :' + params[0]);
 				break;
 			case 'PONG':
-				server.fire('pong', server, prefix, params[0], params[1]);
+				server.fire('pong', prefix, params[0], params[1]);
 				server.ponged = true;
 				break;
 			case 'PRIVMSG':
@@ -73,30 +73,30 @@ exports.mod = function(context, server)
 				var target = params[0];
 				if(target === server.user.nick) target = prefix.nick;
 
-				server.fire('privmsg', server, prefix, target, params[1], words);
+				server.fire('privmsg', prefix, target, params[1], words);
 				break;
 			case 'JOIN':
-				server.fire('join', server, prefix, params[0]);
+				server.fire('join', prefix, params[0]);
 				break;
 			case 'NICK':
-				server.fire('nick', server, prefix, params[0]);
+				server.fire('nick', prefix, params[0]);
 				break;
 			case 'QUIT':
-				server.fire('quit', server, prefix, params[0]);
+				server.fire('quit', prefix, params[0]);
 				break;
 			case 'PART':
-				server.fire('part', server, prefix, params[0], params[1]);
+				server.fire('part', prefix, params[0], params[1]);
 				break;
 			case 'KICK':
-				server.fire('kick', server, prefix, params[0], params[1], params[2]);
+				server.fire('kick', prefix, params[0], params[1], params[2]);
 				break;
 			case 'MODE':
-				server.fire('mode_raw', server, prefix, params[0], params[1], params.slice(2));
+				server.fire('mode_raw', prefix, params[0], params[1], params.slice(2));
 				break;
 		}
 	}
 
-	this.core$004 = function(server, prefix, servername, version, usermodes, chanmodes, extra)
+	this.core$004 = function(prefix, servername, version, usermodes, chanmodes, extra)
 	{
 		var data = server.get();
 		if(typeof data.myinfo === 'undefined') data.myinfo = {};
@@ -107,7 +107,7 @@ exports.mod = function(context, server)
 		data.myinfo.extra = extra;
 	}
 
-	this.core$005 = function(server, prefix, options, message)
+	this.core$005 = function(prefix, options, message)
 	{
 		var data = server.get();
 		if(typeof data.isupport === 'undefined') data.isupport = {};
@@ -120,7 +120,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$352 = function(server, prefix, channel, ident, host, serverhost, nick, extrainfo, hopcount, realname)
+	this.core$352 = function(prefix, channel, ident, host, serverhost, nick, extrainfo, hopcount, realname)
 	{
 		if(server.channels[channel] !== 'undefined')
 		{
@@ -130,7 +130,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$353 = function(server, prefix, channelPrefix, channel, names)
+	this.core$353 = function(prefix, channelPrefix, channel, names)
 	{
 		var split1 = server.get().isupport.PREFIX.split(')');
 		var split2 = split1[0].split('(');
@@ -154,7 +154,7 @@ exports.mod = function(context, server)
 		server.send('WHO ' + channel);
 	}
 
-	this.core$privmsg = function(server, prefix, target, message, words)
+	this.core$privmsg = function(prefix, target, message, words)
 	{
 		var cmd = undefined;
 		var params = undefined;
@@ -177,25 +177,25 @@ exports.mod = function(context, server)
 			}
 		}
 
-		if(cmd !== undefined) server.fire('cmdraw', server, prefix, target, cmd, params);
+		if(cmd !== undefined) server.fire('cmdraw', prefix, target, cmd, params);
 	}
 
-	this.core$cmdraw = function(server, prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params)
 	{
 		var paramsFiltered = params.filter(function(element, i, arr)
 		{
 			return (element !== '');
 		});
 
-		server.fire('cmd', server, prefix, target, cmd, paramsFiltered);
+		server.fire('cmd', prefix, target, cmd, paramsFiltered);
 
 		switch(cmd)
 		{
 			case 'do':
 				if(server.master.test(prefix.mask))
 				{
-					server.do('core$privmsg', server, target, '/' + params.join(' '));
-					server.do('core$cmd', server, prefix, target, params[0], params.slice(1));
+					server.do('core$privmsg', target, '/' + params.join(' '));
+					server.do('core$cmd', prefix, target, params[0], params.slice(1));
 				}
 				break;
 			case 'do-r':
@@ -204,7 +204,7 @@ exports.mod = function(context, server)
 					var p = []
 					for(var i=0; i<params[0]; ++i) p.push('do');
 					for(var i=1; i<params.length; ++i) p.push(params[i]);
-					server.do('core$cmd', server, prefix, target, 'do', p);
+					server.do('core$cmd', prefix, target, 'do', p);
 				}
 				break;
 			case 'times':
@@ -212,14 +212,14 @@ exports.mod = function(context, server)
 				{
 					for(var i=0; i<params[0]; ++i)
 					{
-						server.do('core$cmd', server, prefix, target, params[1], params.slice(2));
+						server.do('core$cmd', prefix, target, params[1], params.slice(2));
 					}
 				}
 				break;
 		}
 	}
 
-	this.core$join = function(server, prefix, channel)
+	this.core$join = function(prefix, channel)
 	{
 		
 		if(typeof server.users[prefix.nick] === 'undefined')
@@ -236,14 +236,14 @@ exports.mod = function(context, server)
 		server.channels[channel].users[prefix.nick] = server.users[prefix.nick];
 	}
 
-	this.core$nick = function(server, prefix, nick)
+	this.core$nick = function(prefix, nick)
 	{
 		server.users[nick] = server.users[prefix.nick];
 		server.users[nick].nick = nick;
 		delete server.users[prefix.nick];
 	}
 
-	this.core$quit = function(server, prefix, message)
+	this.core$quit = function(prefix, message)
 	{
 		if(typeof server.users[prefix.nick] !== 'undefined')
 		{
@@ -259,7 +259,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$part = function(server, prefix, channel, message)
+	this.core$part = function(prefix, channel, message)
 	{
 		if(typeof server.users[prefix.nick] !== 'undefined')
 		{
@@ -282,7 +282,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$kick = function(server, prefix, channel, target, message)
+	this.core$kick = function(prefix, channel, target, message)
 	{
 		if(typeof server.users[target] !== 'undefined')
 		{
@@ -305,7 +305,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$mode_raw = function(server, prefix, channel, modestring, params)
+	this.core$mode_raw = function(prefix, channel, modestring, params)
 	{
 		var plus = true;
 		var index = 0;
@@ -337,18 +337,18 @@ exports.mod = function(context, server)
 				
 				if(section === 0 || section === 1 || (section === 2 && plus)) 
 				{
-					server.fire('mode', server, prefix, channel, plus, modestring[i], params[index]);
+					server.fire('mode', prefix, channel, plus, modestring[i], params[index]);
 					++index;
 				} 
 				else 
 				{
-					server.fire('mode', server, prefix, channel, plus, modestring[i], null);
+					server.fire('mode', prefix, channel, plus, modestring[i], null);
 				}
 			}
 		}
 	}
 
-	this.core$cmd = function(server, prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params)
 	{
 		switch(cmd)
 		{
@@ -366,8 +366,8 @@ exports.mod = function(context, server)
 					for(var i=0; i<modules.length; ++i)
 					{
 						var result = context.loadModule(modules[i], srv);
-						if(result !== '') server.do('core$privmsg', server, target, result);
-						else server.do('core$privmsg', server, target, 'Loaded module: ' + modules[i]);
+						if(result !== '') server.do('core$privmsg', target, result);
+						else server.do('core$privmsg', target, 'Loaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -382,8 +382,8 @@ exports.mod = function(context, server)
 					for(var i=0; i<modules.length; ++i)
 					{
 						var result = context.loadModule(modules[i]);
-						if(result !== '') server.do('core$privmsg', server, target, result);
-						else server.do('core$privmsg', server, target, 'Loaded module: ' + modules[i]);
+						if(result !== '') server.do('core$privmsg', target, result);
+						else server.do('core$privmsg', target, 'Loaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -401,7 +401,7 @@ exports.mod = function(context, server)
 					for(var i=0; i<modules.length; ++i)
 					{
 						context.unloadModule(modules[i], srv);
-						server.do('core$privmsg', server, target, 'Unloaded module: ' + modules[i]);
+						server.do('core$privmsg', target, 'Unloaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -416,7 +416,7 @@ exports.mod = function(context, server)
 					for(var i=0; i<modules.length; ++i)
 					{
 						context.unloadModule(modules[i]);
-						server.do('core$privmsg', server, target, 'Unloaded module: ' + modules[i]);
+						server.do('core$privmsg', target, 'Unloaded module: ' + modules[i]);
 					}
 				}
 				break;
@@ -433,7 +433,7 @@ exports.mod = function(context, server)
 					var master = params[6]
 					var modules = params[7];
 
-					if(nick === undefined) { server.do('core$privmsg', server, target, syntax); break; }
+					if(nick === undefined) { server.do('core$privmsg', target, syntax); break; }
 					if(ident === undefined) ident = 'ibot';
 					if(isNaN(port)) port = 6667;
 					ssl = ssl === 'true';
@@ -455,7 +455,7 @@ exports.mod = function(context, server)
 					}
 
 					context.servers[name].connect();
-					server.do('core$privmsg', server, target, 'Done');
+					server.do('core$privmsg', target, 'Done');
 				}
 				break;
 			case 'rmsrv':
@@ -464,10 +464,10 @@ exports.mod = function(context, server)
 					var syntax = 'Syntax: rmsrv <name>';
 					var name = params[0];
 
-					if(name === undefined) { server.do('core$privmsg', server, target, syntax); break; }
+					if(name === undefined) { server.do('core$privmsg', target, syntax); break; }
 
 					context.servers[name].quit();
-					server.do('core$privmsg', server, target, 'Done');
+					server.do('core$privmsg', target, 'Done');
 				}
 				break;
 			case 'modules':
@@ -475,10 +475,10 @@ exports.mod = function(context, server)
 				var srv = server;
 				if(server.master.test(prefix.mask) && name !== undefined) srv = context.servers[name];
 
-				server.do('core$privmsg', server, target, 'Modules: ' + srv.getModules(', '));
+				server.do('core$privmsg', target, 'Modules: ' + srv.getModules(', '));
 				break;
 			case 'servers':
-				server.do('core$privmsg', server, target, 'Servers: ' + Object.keys(context.servers).join(', '));
+				server.do('core$privmsg', target, 'Servers: ' + Object.keys(context.servers).join(', '));
 				break;
 			case 'quit':
 				if(server.master.test(prefix.mask))
@@ -489,22 +489,22 @@ exports.mod = function(context, server)
 				break;
 			case 'save':
 				context.save();
-				server.do('core$privmsg', server, target, 'Config written.');
+				server.do('core$privmsg', target, 'Config written.');
 				break;
 			case 'rehash':
 				context.load();
-				server.do('core$privmsg', server, target, 'Config rehashed.');
+				server.do('core$privmsg', target, 'Config rehashed.');
 				break;
 		}
 	}
 
-	this._privmsg = function(server, target, msg)
+	this._privmsg = function(target, msg)
 	{
 		server.send('PRIVMSG ' + target + ' :' + msg);
 	}
 
-	this._cmd = function(server, prefix, target, cmd, params)
+	this._cmd = function(prefix, target, cmd, params)
 	{
-		server.fire('cmdraw', server, prefix, target, cmd, params);
+		server.fire('cmdraw', prefix, target, cmd, params);
 	}
 }
