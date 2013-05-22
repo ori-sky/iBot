@@ -3,61 +3,61 @@
 $recv:
 	Data was received (most basic event)
 	
-	params: server, prefix, opcode, params array
+	params: prefix, opcode, params array
 
 ## Core events:
 
 core$cmd:
 	A command-like message was received
 
-	params: server, prefix, target, command, params
+	params: prefix, target, command, params
 
 core$cmdraw
 	Same as core$cmd except unfiltered params
 
-	params: server, prefix, target, command, params
+	params: prefix, target, command, params
 
 core$ping:
 	A PING message was recieved and replied to
 	
-	params: server, prefix, the message the server pinged with
+	params: prefix, the message the server pinged with
 	
 core$pong:
 	A PONG message was sent from the server
 	
-	params: server, prefix, message
+	params: prefix, message
 	
 core$privmsg:
 	A PRIVMSG was recieved to the bot
 	
-	params: server, prefix, target (channel or user), message in a string, message split into an array
+	params: prefix, target (channel or user), message in a string, message split into an array
 	
 core$join:
 	A JOIN was recieved to the bot
 	
-	params: server, prefix, channel joined to
+	params: prefix, channel joined to
 	
 core$nick:
 	Someone changed nicks
 	
-	prarams: server, prefix, new nick
+	params: prefix, new nick
 	
 core$quit:
 	Someone quit IRC
 	
-	params: server, prefix, message
+	params: prefix, message
 	
 core$part:
 	Someone parted a channel
 	
-	params: server, prefix, channel, message
+	params: prefix, channel, message
 	
 core$kick:
 	Someone kicked someone from a channel
 	
-	params: server, prefix, channel, kickee, message
+	params: prefix, channel, kickee, message
 	
 core$mode:
 	A mode was changed. Pay attention, this gets interesting
 	
-	params: server, prefix, channel, mode being applied or removed, the mode being changed, parameters for the mode if any--otherwise null
+	params: prefix, channel, mode being applied or removed, the mode being changed, parameters for the mode if any--otherwise null

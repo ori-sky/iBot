@@ -55,15 +55,15 @@ iBot has an extensible and robust module system. A number of modules are bundled
 
 ##### Outputs `Hello, <nick>!`
 ```javascript
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	// hook into cmd event from core
-	this.core$cmd = function(server, prefix, target, command, params)
+	this.core$cmd = function(prefix, target, command, params, $core)
 	{
 		if(command === 'helloworld')
 		{
 			// will output "Hello, <nick>!"
-			server.do('core$privmsg', server, target, 'Hello, ' + prefix.nick + '!');
+			$core._privmsg(target, 'Hello, ' + prefix.nick + '!');
 		}
 	}
 }
@@ -72,7 +72,7 @@ exports.mod = function(context)
 ##### Increments a counter and saves back to the config
 
 ```javascript
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	this.counter = 0;
 
@@ -101,11 +101,11 @@ exports.mod = function(context)
 	}
 
 	// hook into cmd event from core
-	this.core$cmd = function(server, prefix, target, command, params)
+	this.core$cmd = function(prefix, target, command, params)
 	{
 		if(command === 'counter')
 		{
-			server.do('core$privmsg', server, target, 'Counter is now: ' + ++this.counter);
+			server.do('core$privmsg', target, 'Counter is now: ' + ++this.counter);
 		}
 	}
 }
@@ -113,10 +113,10 @@ exports.mod = function(context)
 
 ##### Detects CTCP requests and replies
 ```javascript
-exports.mod = function(context)
+exports.mod = function(context, server)
 {
 	// hook into global recv event
-	this.$recv = function(server, prefix, opcode, params)
+	this.$recv = function(prefix, opcode, params)
 	{
 		// params[0] is target, params[1] is message
 		switch(opcode)
@@ -141,6 +141,12 @@ exports.mod = function(context)
 ## Changelog
 
 Here you will find the list of changes in iBot.
+
+#### `core` event changes
+
+* `server` param has been removed from all events fired by core.
+* Modules will have to be updated or they will most likely break.
+* Additionally, `server` is now passed as the second param in module creation (first param being `context`)
 
 #### `core$privmsg` function
 
