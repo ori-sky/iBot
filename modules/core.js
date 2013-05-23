@@ -63,6 +63,7 @@ exports.mod = function(context, server)
 				else
 				{
 					server.reconnect();
+					this.hasPonged = true;
 				}
 			}.bind(this), 180000);
 		}
