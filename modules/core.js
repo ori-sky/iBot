@@ -36,9 +36,43 @@ var Channel = require('../iBot-Channel');
 
 exports.mod = function(context, server)
 {
-	this._loaded = function(server)
+	this._suspend = function()
 	{
+		var data = { hasPonged: this.hasPonged, pingInterval: this.pingInterval };
+		return data;
+	}
+
+	this._resume = function(data)
+	{
+		this.hasPonged = data.hasPonged;
+		this.pingInterval = data.pingInterval;
+	}
+
+	this._loaded = function()
+	{
+		if(this.pingInterval === undefined)
+		{
+			this.hasPonged = true;
+			this.pingInterval = setInterval(function()
+			{
+				if(this.hasPonged)
+				{
+					this.hasPonged = false;
+					server.send('PING :keepalive');
+				}
+				else
+				{
+					server.reconnect();
+				}
+			}.bind(this), 180000);
+		}
+
 		server.send('VERSION');
+	}
+
+	this._unloaded = function()
+	{
+		if(this.pingInterval !== undefined) clearInterval(this.pingInterval);
 	}
 
 	this.$recv = function(prefix, opcode, params)
@@ -66,7 +100,7 @@ exports.mod = function(context, server)
 				break;
 			case 'PONG':
 				server.fire('pong', prefix, params[0], params[1]);
-				server.ponged = true;
+				this.hasPonged = true;
 				break;
 			case 'PRIVMSG':
 				var words = params[1].split(' ');

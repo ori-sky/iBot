@@ -144,7 +144,7 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1368129482">
+    <note priority="high" time="1368129482" done="1369314353">
         Move ping timeout code out of Server all into mod core
     </note>
     <note priority="high" time="1368192099">

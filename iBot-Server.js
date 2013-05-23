@@ -232,20 +232,6 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		this.send('NICK ' + this.nick);
 		this.send('USER ' + this.ident + ' 0 * :' + this.user.realname);
-
-		this.ponged = true;
-		this.pingInterval = setInterval(function()
-		{
-			if(this.ponged)
-			{
-				this.ponged = false;
-				this.send('PING :keepalive');
-			}
-			else
-			{
-				this.reconnect();
-			}
-		}.bind(this), 120000);
 	}.bind(this);
 
 	this.accumulator = '';
