@@ -45,7 +45,7 @@ The IRC commands available through core are as follows. Angle bracket parameters
 * `!lmsrv <module> [name]`             - load a module instance into the current server or the server specified by name
 * `!umsrv <module> [name]`             - unload a module from the current server or the server specified by name
 * `!modules [name]`                    - list the loaded modules for the current server or the server specified by name
-* `!addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master] [modules a,b,etc]` - connect to a new server with the specified options
+* `!addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master] [modules a,b,etc] [pass]` - connect to a new server with the specified options
 * `!rmsrv <name>`                      - disconnect from and remove the server specified by name
 * `!quit`                              - disconnect from the current server and remove it
 

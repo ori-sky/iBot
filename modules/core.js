@@ -461,7 +461,7 @@ exports.mod = function(context, server)
 			case 'addsrv':
 				if(server.master.test(prefix.mask))
 				{
-					var syntax = 'Syntax: addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master regular!exp@ression] [modules one,two,etc]';
+					var syntax = 'Syntax: addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master regular!exp@ression] [modules one,two,etc] [pass]';
 					var name = params[0];
 					var host = params[1];
 					var nick = params[2];
@@ -470,6 +470,7 @@ exports.mod = function(context, server)
 					var ssl = params[5];
 					var master = params[6]
 					var modules = params[7];
+					var pass = params[8];
 
 					if(nick === undefined) { server.do('core$privmsg', target, syntax); break; }
 					if(ident === undefined) ident = 'ibot';
@@ -484,7 +485,7 @@ exports.mod = function(context, server)
 
 					if(context.servers[name] !== undefined) context.servers[name].quit();
 
-					context.servers[name] = new Server(context, host, port, nick, ident, false, ssl);
+					context.servers[name] = new Server(context, host, port, nick, ident, pass, ssl);
 					context.servers[name].master = master;
 
 					for(var i=0; i<modules.length; ++i)
