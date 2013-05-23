@@ -108,6 +108,9 @@
     <note priority="high" time="1367984619" done="1368015264">
         Implement JSON data for modules
     </note>
+    <note priority="high" time="1368129482" done="1369314353">
+        Move ping timeout code out of Server all into mod core
+    </note>
     <note priority="high" time="1368911541" done="1369162929">
         [core] Implement _privmsg and other functions, and use these in other modules
     </note>
@@ -144,9 +147,6 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="high" time="1368129482" done="1369314353">
-        Move ping timeout code out of Server all into mod core
-    </note>
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
     </note>
@@ -156,7 +156,7 @@
     <note priority="high" time="1368839979">
         [core] Implement ability to change server master
     </note>
-    <note priority="high" time="1369312420">
+    <note priority="high" time="1369312420" done="1369314819">
         Implement Server.connected state. [core] Only send VERSION on load if server is connected
     </note>
     <note priority="medium" time="1368826802">

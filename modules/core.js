@@ -67,7 +67,10 @@ exports.mod = function(context, server)
 			}.bind(this), 180000);
 		}
 
-		server.send('VERSION');
+		if(server.isConnected)
+		{
+			server.send('VERSION');
+		}
 	}
 
 	this._unloaded = function()

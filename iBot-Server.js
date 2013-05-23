@@ -45,6 +45,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.activeModuleStack = [];
 	this.timeouts = {};
 
+	this.isConnected = false;
 	this.willQuit = false;
 
 	this.save = function()
@@ -199,6 +200,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			this.fire('$log', 'TLS negotiation: ' + (this.client.authorized ? 'authorized' : 'unauthorized'), 'err');
 		}
 
+		this.isConnected = true;
+
 		this.user = new User(this.nick, this.ident, '', 'iBot');
 		this.users[this.nick] = this.user;
 
@@ -252,6 +255,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.onClose = function()
 	{
 		this.fire('$log', 'Connection closed', 'err');
+		this.isConnected = false;
 
 		clearInterval(this.pingInterval);
 
