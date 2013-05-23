@@ -196,7 +196,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		if(this.ssl)
 		{
-			this.fire('$log', 'TLS negotiation: ' + this.client.authorized ? 'authorized' : 'unauthorized', 'err');
+			this.fire('$log', 'TLS negotiation: ' + (this.client.authorized ? 'authorized' : 'unauthorized'), 'err');
 		}
 
 		this.user = new User(this.nick, this.ident, '', 'iBot');
@@ -243,8 +243,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 			else
 			{
-				this.client.end();
-				this.client.destroy();
+				this.reconnect();
 			}
 		}.bind(this), 120000);
 	}.bind(this);
@@ -394,6 +393,12 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	this.sendSilent = function(data)
 	{
 		this.client.write(data + '\r\n');
+	}.bind(this);
+
+	this.reconnect = function()
+	{
+		this.client.end();
+		this.client.destroy();
 	}.bind(this);
 
 	this.quit = function()
