@@ -38,14 +38,7 @@ exports.mod = function(context, server)
 {
 	this._suspend = function()
 	{
-		var data = { hasPonged: this.hasPonged, pingInterval: this.pingInterval };
-		return data;
-	}
-
-	this._resume = function(data)
-	{
-		this.hasPonged = data.hasPonged;
-		this.pingInterval = data.pingInterval;
+		if(this.pingInterval !== undefined) clearInterval(this.pingInterval);
 	}
 
 	this._loaded = function()
