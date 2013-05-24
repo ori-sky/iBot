@@ -29,7 +29,99 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+var net = require('net');
+var util = require('util');
+
 exports.mod = function(context, server)
 {
-	
+	this.server = undefined;
+	this.clients = [];
+
+	this._suspend = function()
+	{
+		if(this.timeout !== undefined) clearTimeout(this.timeout);
+		this.destroy();
+	}
+
+	this._loaded = function()
+	{
+		this.timeout = setTimeout(function() { this.create(); }.bind(this), 2000);
+	}
+
+	this._unloaded = function()
+	{
+		if(this.timeout !== undefined) clearTimeout(this.timeout);
+		this.destroy();
+	}
+
+	this.$recv = function(prefix, opcode, params)
+	{
+		for(var iClient in this.clients)
+		{
+			this.clients[iClient].write(prefix.mask + ' ' + opcode + ' ' + params.join(' ') + '\r\n');
+		}
+	}
+
+	this.core$cmd = function(prefix, target, cmd, params, $core)
+	{
+		if(cmd === 'relay')
+		{
+			switch(params[0])
+			{
+				case '?':
+					$core._privmsg(target, this.clients.length);
+					break;
+			}
+		}
+	}
+
+	this.create = function()
+	{
+		this.server = net.createServer();
+		
+		this.server.on('connection', function(c)
+		{
+			this.clients.push(c);
+
+			c.setEncoding('utf8');
+
+			c.on('data', function(data)
+			{
+				server.fire('$log', data);
+				server.send(data.trim());
+			}.bind(this));
+
+			c.on('end', function()
+			{
+				var i = this.clients.indexOf(c);
+				if(i !== -1) this.clients.splice(i, 1);
+			}.bind(this));
+
+			c.on('error', function(err)
+			{
+				console.log(err);
+			}.bind(this));
+		}.bind(this));
+
+		this.server.on('error', function(err)
+		{
+			console.log(err);
+		});
+
+		this.server.listen(18010);
+	}
+
+	this.destroy = function()
+	{
+		if(this.server !== undefined)
+		{
+			for(var iClient in this.clients)
+			{
+				this.clients[iClient].end();
+				this.clients[iClient].destroy();
+			}
+
+			this.server.close();
+		}
+	}
 }
