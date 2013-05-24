@@ -72,6 +72,11 @@ exports.mod = function(context, server)
 		if(this.pingInterval !== undefined) clearInterval(this.pingInterval);
 	}
 
+	this.$recv_raw = function(data)
+	{
+		server.fire('$log', 'R> ' + data, 'err');
+	}
+
 	this.$recv = function(prefix, opcode, params)
 	{
 		switch(opcode)

@@ -308,7 +308,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.recv = function(data)
 	{
-		this.fire('$log', 'R> ' + data, 'err');
+		this.fire('$recv_raw', data);
+
 		var words = data.split(' ');
 
 		var prefix = null;
