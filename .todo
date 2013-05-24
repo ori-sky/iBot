@@ -114,6 +114,9 @@
     <note priority="high" time="1368911541" done="1369162929">
         [core] Implement _privmsg and other functions, and use these in other modules
     </note>
+    <note priority="high" time="1369312420" done="1369314819">
+        Implement Server.connected state. [core] Only send VERSION on load if server is connected
+    </note>
     <note priority="medium" time="1366032351" done="1366089947">
         Implement channel and user tracking into mod_core
     </note>
@@ -156,8 +159,8 @@
     <note priority="high" time="1368839979">
         [core] Implement ability to change server master
     </note>
-    <note priority="high" time="1369312420" done="1369314819">
-        Implement Server.connected state. [core] Only send VERSION on load if server is connected
+    <note priority="high" time="1369356538">
+        Implement ability to load modules with additional creation params
     </note>
     <note priority="medium" time="1368826802">
         Add SSL client cert support
