@@ -54,11 +54,11 @@ exports.mod = function(context, server)
 		this.destroy();
 	}
 
-	this.$recv = function(prefix, opcode, params)
+	this.$recv_raw = function(data)
 	{
 		for(var iClient in this.clients)
 		{
-			this.clients[iClient].write(prefix.mask + ' ' + opcode + ' ' + params.join(' ') + '\r\n');
+			this.clients[iClient].write(data + '\r\n');
 		}
 	}
 
