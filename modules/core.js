@@ -384,7 +384,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$cmd = function(prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		switch(cmd)
 		{
@@ -505,6 +505,23 @@ exports.mod = function(context, server)
 
 					context.servers[name].quit();
 					server.do('core$privmsg', target, 'Done');
+				}
+				break;
+			case 'setmaster':
+				if(server.master.test(prefix.mask))
+				{
+					var syntax = 'Syntax: setmaster <master regular!exp@ression> [server name]';
+					var master = params[0];
+					var name = params[1];
+					var srv = server;
+
+					if(master === undefined) { $core._privmsg(target, syntax); break; }
+					if(name !== undefined) srv = context.servers[name];
+
+					master = new RegExp(master);
+					srv.master = master;
+
+					$core._privmsg(target, 'Done');
 				}
 				break;
 			case 'modules':

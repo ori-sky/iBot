@@ -48,6 +48,9 @@ The IRC commands available through core are as follows. Angle bracket parameters
 * `!addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master] [modules a,b,etc] [pass]` - connect to a new server with the specified options
 * `!rmsrv <name>`                      - disconnect from and remove the server specified by name
 * `!quit`                              - disconnect from the current server and remove it
+* `!save`                              - save config to disk
+* `!rehash`                            - load config from disk
+* `!setmaster <master> [name]          - set master regexp for the current server or the server specified by name
 
 ### Modules
 
