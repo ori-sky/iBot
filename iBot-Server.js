@@ -391,15 +391,16 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		this.fire('$recv', prefix, opcode, params);
 	}.bind(this);
 
-	this.send = function(data)
+	this.send = function(data, crlf)
 	{
 		this.fire('$log', 'S> ' + data, 'err');
-		this.sendSilent(data);
+		this.sendSilent(data, crlf);
 	}.bind(this);
 
-	this.sendSilent = function(data)
+	this.sendSilent = function(data, crlf)
 	{
-		this.client.write(data + '\r\n');
+		if(crlf === true || crlf === undefined) this.client.write(data + '\r\n');
+		else this.client.write(data);
 	}.bind(this);
 
 	this.reconnect = function()
