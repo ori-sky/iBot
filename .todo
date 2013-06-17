@@ -156,7 +156,7 @@
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
     </note>
-    <note priority="veryhigh" time="1371442064">
+    <note priority="veryhigh" time="1371442064" done="1371446455">
         [core] Fix multiple mode changes not being fired as events
     </note>
     <note priority="veryhigh" time="1371442093">
