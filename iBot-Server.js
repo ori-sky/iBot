@@ -116,8 +116,17 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		return this.moduleData[moduleName];
 	}
 
+	// TODO: sort out this mess of an event system
+	// TODO: maybe combine do and fire somehow?
+
 	this.do = function()
 	{
+		if(this.activeModuleStack.length > 100)
+		{
+			console.log('Exceeded max module stack size.');
+			return undefined;
+		}
+
 		var sender = this.modules[this.activeModuleStack[this.activeModuleStack.length - 1]];
 
 		var fullName = arguments[0];
@@ -156,6 +165,12 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.fire = function()
 	{
+		if(this.activeModuleStack.length > 100)
+		{
+			console.log('Exceeded max module stack size.');
+			return undefined;
+		}
+
 		var sender = this.modules[this.activeModuleStack[this.activeModuleStack.length - 1]];
 
 		for(var kModule in this.modules)
