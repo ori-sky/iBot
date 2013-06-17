@@ -129,6 +129,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		var moduleName = s1[0];
 		var methodName = s1[1];
 
+		var ret = undefined;
+
 		this.activeModuleStack.push(moduleName);
 
 		try
@@ -138,8 +140,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				var params = Array.prototype.slice.call(arguments, 1);
 				params.push(sender);
 
-				var ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], params);
-				return ret;
+				ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], params);
 			}
 		}
 		catch(e)
@@ -150,7 +151,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		this.activeModuleStack.pop();
 
-		return undefined;
+		return ret;
 	}
 
 	this.fire = function()
