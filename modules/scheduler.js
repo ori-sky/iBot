@@ -105,7 +105,7 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$cmd = function(prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		if(cmd === 'scheduler')
 		{
@@ -116,9 +116,10 @@ exports.mod = function(context, server)
 					{
 						server.do('core$cmd', prefix, target, params[3], params.slice(4));
 					});
+					$core._privmsg(target, 'Scheduled event added.');
 					break;
 				case '?':
-					server.do('core$privmsg', target, 'Number of schedules: ' + this.schedules.length);
+					$core._privmsg(target, 'Number of schedules: ' + this.schedules.length);
 					break;
 			}
 		}

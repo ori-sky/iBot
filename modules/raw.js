@@ -31,12 +31,12 @@
 
 exports.mod = function(context, server)
 {
-	this.core$cmdraw = function(prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params, $core)
 	{
 		switch(cmd)
 		{
 			case 'raw':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					server.fire('raw', params.join(' '));
 				}
