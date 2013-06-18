@@ -569,7 +569,7 @@ exports.mod = function(context, server)
 
 	this._privmsg = function(target, msg)
 	{
-		server.send('PRIVMSG ' + target + ' :' + msg);
+		server.send('PRIVMSG ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
 	}
 
 	this._cmd = function(prefix, target, cmd, params)
