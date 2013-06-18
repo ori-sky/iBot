@@ -41,7 +41,7 @@ exports.mod = function(context, server)
 		verbose: null,
 	};
 
-	this.core$cmd = function(prefix, target, command, params)
+	this.core$cmd = function(prefix, target, command, params, $core)
 	{
 		if(command === 'log')
 		{
@@ -51,11 +51,11 @@ exports.mod = function(context, server)
 			{
 				case '+':
 					this.data.targets[params[1]] = true;
-					server.do('core$privmsg', target, 'Done');
+					$core._privmsg(target, 'Done');
 					break;
 				case '-':
 					delete this.data.targets[params[1]];
-					server.do('core$privmsg', target, 'Done');
+					$core._privmsg(target, 'Done');
 					break;
 				case '?':
 					// TODO
