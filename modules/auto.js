@@ -38,14 +38,14 @@ exports.mod = function(context, server)
 
 	this._load = function(data)
 	{
-		if(typeof data.join !== 'undefined') this.join = data.join;
-		if(typeof data.perform !== 'undefined') this.perform = data.perform;
+		if(data.join !== undefined) this.join = data.join;
+		if(data.perform !== undefined) this.perform = data.perform;
 	}
 
 	this._resume = function(data)
 	{
-		if(typeof data.join !== 'undefined') this.join = data.join;
-		if(typeof data.perform !== 'undefined') this.perform = data.perform;
+		if(data.join !== undefined) this.join = data.join;
+		if(data.perform !== undefined) this.perform = data.perform;
 	}
 
 	this._suspend = function()
@@ -56,11 +56,11 @@ exports.mod = function(context, server)
 		};
 	}
 
-	this.core$376 = function(prefix, message)
+	this.core$376 = function(prefix, message, $core)
 	{
 		for(var i in this.join)
 		{
-			server.send('JOIN ' + this.join[i]);
+			$core._join(this.join[i]);
 		}
 
 		for(var i in this.perform)
@@ -69,78 +69,74 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this.core$cmdraw = function(prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params, $core)
 	{
 		if(cmd === 'auto')
 		{
-			if(server.master.test(prefix.mask))
+			if($core._authed(prefix))
 			{
 				switch(params[0])
 				{
 					case 'perform':
-						server.do('auto$perform', prefix, target, params[1], params.slice(2).join(' '));
+						var opcode = params[1];
+						var param = params.slice(2).join(' ');
+
+						switch(opcode)
+						{
+							case '+':
+								this.perform.push(param);
+								$core._privmsg(target, 'Done');
+								break;
+							case '-':
+								if(param >= 0 && param < this.perform.length) this.perform.splice(param, 1);
+								$core._privmsg(target, 'Done');
+								break;
+							case '?':
+								var a = [];
+								for(var i in this.perform)
+								{
+									a.push(i + '[' + util.inspect(this.perform[i]) + ']');
+								}
+
+								$core._privmsg(target, 'Auto perform: ' + a.join(', '));
+								break;
+						}
 						break;
 				}
 			}
 		}
 	}
 
-	this.core$cmd = function(prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		if(cmd === 'auto')
 		{
-			if(server.master.test(prefix.mask))
+			if($core._authed(prefix))
 			{
 				switch(params[0])
 				{
 					case 'join':
-						server.do('auto$join', prefix, target, params[1], params[2]);
+						var opcode = params[1];
+						var channel = params[2];
+
+						switch(opcode)
+						{
+							case '+':
+								if(typeof this.join.indexOf(channel === -1)) this.join.push(channel);
+								$core._privmsg(target, 'Done');
+								break;
+							case '-':
+								var i = this.join.indexOf(channel);
+								if(i !== -1) this.join.splice(i, 1);
+								$core._privmsg(target, 'Done');
+								break;
+							case '?':
+								$core._privmsg(target, 'Auto join: ' + this.join.join(', '));
+								break;
+						}
 						break;
 				}
 			}
-		}
-	}
-
-	this._join = function(prefix, target, opcode, channel)
-	{
-		switch(opcode)
-		{
-			case '+':
-				if(typeof this.join.indexOf(channel === -1)) this.join.push(channel);
-				server.do('core$privmsg', target, 'Done');
-				break;
-			case '-':
-				var i = this.join.indexOf(channel);
-				if(i !== -1) this.join.splice(i, 1);
-				server.do('core$privmsg', target, 'Done');
-				break;
-			case '?':
-				server.do('core$privmsg', target, 'Auto join: ' + this.join.join(', '));
-				break;
-		}
-	}
-
-	this._perform = function(prefix, target, opcode, param)
-	{
-		switch(opcode)
-		{
-			case '+':
-				this.perform.push(param);
-				server.do('core$privmsg', target, 'Done');
-				break;
-			case '-':
-				if(param >= 0 && param < this.perform.length) this.perform.splice(param, 1);
-				server.do('core$privmsg', target, 'Done');
-				break;
-			case '?':
-				var a = [];
-				for(var i in this.perform)
-				{
-					a.push(i + '[' + util.inspect(this.perform[i]) + ']');
-				}
-
-				server.do('core$privmsg', target, 'Auto perform: ' + a.join(', '));
-				break;
 		}
 	}
 }
