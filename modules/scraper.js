@@ -48,24 +48,24 @@ exports.mod = function(context, server)
 		return { active: this.active };
 	}
 
-	this.core$cmd = function(prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		if(cmd === 'scraper')
 		{
 			switch(params[0])
 			{
 				case 'on':
-					if(server.master.test(prefix.mask))
+					if($core._authed(prefix))
 					{
 						this.active = true;
-						server.do('core$privmsg', target, 'Scrape command is now active.');
+						$core._privmsg(target, 'Scrape command is now active.');
 					}
 					break;
 				case 'off':
-					if(server.master.test(prefix.mask))
+					if($core._authed(prefix))
 					{
 						this.active = false;
-						server.do('core$privmsg', target, 'Scrape command is now inactive.');
+						$core._privmsg(target, 'Scrape command is now inactive.');
 					}
 					break;
 			}
@@ -76,12 +76,12 @@ exports.mod = function(context, server)
 			var path = params[1];
 			var expr = params[2];
 
-			server.do('core$privmsg', target, 'Scraping: ' + host + path);
+			$core._privmsg(target, 'Scraping: ' + host + path);
 
 			server.do('scraper$scrape', target, host, path, 'Data', new RegExp(expr), function(target, key, value)
 			{
-				if(value !== undefined) server.do('core$privmsg', target, key + ': ' + value);
-				else server.do('core$privmsg', target, 'Scrape failed.');
+				if(value !== undefined) $core._privmsg(target, key + ': ' + value);
+				else $core._privmsg(target, 'Scrape failed.');
 			}, undefined);
 		}
 	}
