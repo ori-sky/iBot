@@ -171,7 +171,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			return undefined;
 		}
 
-		var sender = this.modules[this.activeModuleStack[this.activeModuleStack.length - 1]];
+		//var sender = this.modules[this.activeModuleStack[this.activeModuleStack.length - 1]];
 
 		for(var kModule in this.modules)
 		{
@@ -187,6 +187,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 					eventName = s[1];
 				}
 			}
+
+			var sender = this.modules[activeModule];
 
 			if(this.modules[kModule][activeModule + '$' + eventName] !== undefined)
 			{
