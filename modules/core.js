@@ -186,8 +186,6 @@ exports.mod = function(context, server)
 			server.users[names[i]].channels[channel] = server.channels[channel];
 			server.channels[channel].users[names[i]] = server.users[names[i]];
 		}
-
-		server.send('WHO ' + channel);
 	}
 
 	this.core$privmsg = function(prefix, target, message, words)
@@ -228,14 +226,14 @@ exports.mod = function(context, server)
 		switch(cmd)
 		{
 			case 'do':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					server.do('core$privmsg', target, '/' + params.join(' '));
 					server.do('core$cmd', prefix, target, params[0], params.slice(1));
 				}
 				break;
 			case 'do-r':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var p = []
 					for(var i=0; i<params[0]; ++i) p.push('do');
@@ -244,7 +242,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'times':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					for(var i=0; i<params[0]; ++i)
 					{
@@ -257,7 +255,6 @@ exports.mod = function(context, server)
 
 	this.core$join = function(prefix, channel)
 	{
-		
 		if(typeof server.users[prefix.nick] === 'undefined')
 		{
 			server.users[prefix.nick] = new User(prefix.nick, prefix.ident, prefix.host, null);
@@ -270,6 +267,11 @@ exports.mod = function(context, server)
 
 		server.users[prefix.nick].channels[channel] = server.channels[channel];
 		server.channels[channel].users[prefix.nick] = server.users[prefix.nick];
+
+		if(prefix.nick === server.user.nick)
+		{
+			server.send('WHO ' + channel);
+		}
 	}
 
 	this.core$nick = function(prefix, nick)
@@ -389,7 +391,7 @@ exports.mod = function(context, server)
 		switch(cmd)
 		{
 			case 'lmsrv':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var modules = params[0];
 					var name = params[1];
@@ -408,7 +410,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'lmctx':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var modules = params[0];
 
@@ -424,7 +426,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'umsrv':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var modules = params[0];
 					var name = params[1];
@@ -442,7 +444,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'umctx':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var modules = params[0];
 
@@ -457,7 +459,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'addsrv':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var syntax = 'Syntax: addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master regular!exp@ression] [modules one,two,etc] [pass]';
 					var name = params[0];
@@ -496,7 +498,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'rmsrv':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var syntax = 'Syntax: rmsrv <name>';
 					var name = params[0];
@@ -508,7 +510,7 @@ exports.mod = function(context, server)
 				}
 				break;
 			case 'setmaster':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					var syntax = 'Syntax: setmaster <master regular!exp@ression> [server name]';
 					var master = params[0];
@@ -527,7 +529,7 @@ exports.mod = function(context, server)
 			case 'modules':
 				var name = params[0];
 				var srv = server;
-				if(server.master.test(prefix.mask) && name !== undefined) srv = context.servers[name];
+				if($core._authed(prefix) && name !== undefined) srv = context.servers[name];
 
 				server.do('core$privmsg', target, 'Modules: ' + srv.getModules(', '));
 				break;
@@ -535,21 +537,34 @@ exports.mod = function(context, server)
 				server.do('core$privmsg', target, 'Servers: ' + Object.keys(context.servers).join(', '));
 				break;
 			case 'quit':
-				if(server.master.test(prefix.mask))
+				if($core._authed(prefix))
 				{
 					if(params[0] === 'all') context.quit();
 					else server.quit();
 				}
 				break;
 			case 'save':
-				context.save();
-				server.do('core$privmsg', target, 'Config written.');
+				if($core._authed(prefix))
+				{
+					context.save();
+					server.do('core$privmsg', target, 'Config written.');
+				}
 				break;
 			case 'rehash':
-				context.load();
-				server.do('core$privmsg', target, 'Config rehashed.');
+				if($core._authed(prefix))
+				{
+					context.load();
+					server.do('core$privmsg', target, 'Config rehashed.');
+				}
 				break;
 		}
+	}
+
+	this._authed = function(prefix)
+	{
+		if(server.master.test(prefix.mask)) return true;
+		if(prefix === '*') return true;
+		return false;
 	}
 
 	this._privmsg = function(target, msg)
