@@ -572,6 +572,11 @@ exports.mod = function(context, server)
 		server.send('PRIVMSG ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
 	}
 
+	this._join = function(channel)
+	{
+		server.send('JOIN ' + channel.replace(/[\r\n]/g, ''));
+	}
+
 	this._cmd = function(prefix, target, cmd, params)
 	{
 		server.fire('cmdraw', prefix, target, cmd, params);
