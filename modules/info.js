@@ -31,44 +31,32 @@
 
 exports.mod = function(context, server)
 {
-	this.core$cmd = function(prefix, target, cmd, params)
+	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		switch(cmd)
 		{
 			case 'channels':
-				var k;
-				if(typeof params[0] === 'undefined')
-				{
-					k = Object.keys(server.user.channels);
-				}
-				else
-				{
-					k = Object.keys(server.users[params[0]].channels);
-				}
+				var k = undefined;
+				if(params[0] === undefined) k = Object.keys(server.user.channels);
+				else k = Object.keys(server.users[params[0]].channels);
 
-				server.do('core$privmsg', target, 'Channels: ' + k.join(', '));
+				$core._privmsg(target, 'Channels: ' + k.join(', '));
 				break;
 			case 'myinfo':
-				server.do('core$privmsg', target, 'MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
+				$core._privmsg(target, 'MYINFO: ' + params[0] + ' = ' + server.get('core').myinfo[params[0]]);
 				break;
 			case 'isupport':
-				server.do('core$privmsg', target, 'ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
+				$core._privmsg(target, 'ISUPPORT: ' + params[0] + ' = ' + server.get('core').isupport[params[0]]);
 				break;
 			case 'mynick':
-				server.do('core$privmsg', target, 'My nick is ' + server.user.nick);
+				$core._privmsg(target, 'My nick is ' + server.user.nick);
 				break;
 			case 'identof':
-				server.do('core$privmsg', target, 'Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
+				$core._privmsg(target, 'Ident of ' + params[0] + ' = ' + server.users[params[0]].ident);
 				break;
 			case 'hostof':
-				server.do('core$privmsg', target, 'Host of ' + params[0] + ' = ' + server.users[params[0]].host);
+				$core._privmsg(target, 'Host of ' + params[0] + ' = ' + server.users[params[0]].host);
 				break;
-
 		}
-	}
-
-	this.core$mode = function(prefix, channel, state, modechar, param)
-	{
-		server.do('core$privmsg', channel, 'Mode change detected: ' + (state ? '+' : '-') + modechar + ' ' + param);
 	}
 }
