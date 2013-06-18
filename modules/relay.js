@@ -34,6 +34,105 @@ var util = require('util');
 
 exports.mod = function(context, server)
 {
+	this.Client = function(clients, connection)
+	{
+		this.clients = clients;
+		this.connection = connection;
+		this.registered = false;
+		this.accumulator = '';
+
+		this.onData = function(data)
+		{
+			var text = this.accumulator + data.toString();
+			var texts = text.split('\r\n');
+
+			for(var i=0; i<(texts.length-1); ++i)
+			{
+				this.recv(texts[i]);
+			}
+
+			this.accumulator = texts[texts.length - 1];
+		}.bind(this);
+
+		this.recv = function(data)
+		{
+			var words = data.split(' ');
+			var opcode = words[0];
+
+			if(this.registered === true)
+			{
+				switch(opcode.toUpperCase())
+				{
+					case 'PRIVMSG':
+						var prefix = server.user.nick + '!' + server.user.ident + '!' + server.user.host;
+						server.send(data);
+						break;
+					case 'QUIT':
+						this.quit();
+						break;
+					case 'QUOTE':
+						server.send(words.slice(1).join(' '));
+						break;
+					case 'CMD':
+						var prefix = '*';
+						var target = words[1];
+						var cmd = words[2];
+						var params = words.slice(3);
+
+						if(target === '*') target = server.user.nick;
+
+						server.fire('core$cmd', prefix, target, cmd, params);
+						break;
+					default:
+						server.send(data);
+						break;
+				}
+			}
+			else
+			{
+				switch(opcode.toUpperCase())
+				{
+					case 'QUIT':
+						this.quit();
+						break;
+					case 'NICK':
+						break;
+					case 'PASS':
+						break;
+					case 'USER':
+						this.registered = true;
+						this.connection.write(':ibot 001 ' + server.user.nick + ' :Welcome to iBot ' + server.user.nick + '\r\n');
+
+						for(var kChannel in server.user.channels)
+						{
+							var prefix = server.user.nick + '!' + server.user.ident + '!' + server.user.host;
+							this.connection.write(':' + prefix + ' JOIN ' + kChannel + '\r\n');
+							server.send('NAMES ' + kChannel);
+						}
+
+						break;
+					default:
+						this.connection.write(':ibot 451 * :You have not registered\r\n');
+						break;
+				}
+			}
+		}.bind(this);
+
+		this.quit = function()
+		{
+			for(var iClient in this.clients)
+			{
+				if(this.clients[iClient].connection === this.connection)
+				{
+					this.clients.splice(iClient, 1);
+				}
+			}
+
+			this.connection.end();
+			this.connection.destroy();
+		}.bind(this);
+	}
+
 	this.server = undefined;
 	this.clients = [];
 
@@ -58,7 +157,10 @@ exports.mod = function(context, server)
 	{
 		for(var iClient in this.clients)
 		{
-			this.clients[iClient].write(data + '\r\n');
+			if(this.clients[iClient].registered === true)
+			{
+				this.clients[iClient].connection.write(data + '\r\n');
+			}
 		}
 	}
 
@@ -81,25 +183,35 @@ exports.mod = function(context, server)
 		
 		this.server.on('connection', function(c)
 		{
-			this.clients.push(c);
+			var client = new this.Client(this.clients, c);
+			this.clients.push(client);
 
 			c.setEncoding('utf8');
 
-			c.on('data', function(data)
-			{
-				server.fire('$log', data);
-				server.send(data.trim());
-			}.bind(this));
+			c.on('data', client.onData);
 
 			c.on('end', function()
 			{
-				var i = this.clients.indexOf(c);
-				if(i !== -1) this.clients.splice(i, 1);
+				for(var iClient in this.clients)
+				{
+					if(this.clients[iClient].connection === c)
+					{
+						this.clients[iClient].quit();
+					}
+				}
 			}.bind(this));
 
 			c.on('error', function(err)
 			{
 				console.log(err);
+
+				for(var iClient in this.clients)
+				{
+					if(this.clients[iClient].connection === c)
+					{
+						this.clients[iClient].quit();
+					}
+				}
 			}.bind(this));
 		}.bind(this));
 
@@ -117,8 +229,8 @@ exports.mod = function(context, server)
 		{
 			for(var iClient in this.clients)
 			{
-				this.clients[iClient].end();
-				this.clients[iClient].destroy();
+				this.clients[iClient].connection.end();
+				this.clients[iClient].connection.destroy();
 			}
 
 			this.server.close();
