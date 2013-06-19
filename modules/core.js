@@ -509,6 +509,17 @@ exports.mod = function(context, server)
 					server.do('core$privmsg', target, 'Done');
 				}
 				break;
+			case 'getmaster':
+				if($core._authed(prefix))
+				{
+					var name = params[0];
+					var srv = server;
+
+					if(name !== undefined) srv = context.servers[name];
+
+					$core._privmsg(target, 'Master: ' + srv.master.source);
+				}
+				break;
 			case 'setmaster':
 				if($core._authed(prefix))
 				{
