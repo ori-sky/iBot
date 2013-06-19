@@ -214,7 +214,7 @@ exports.mod = function(context, server)
 		if(cmd !== undefined) server.fire('cmdraw', prefix, target, cmd, params);
 	}
 
-	this.core$cmdraw = function(prefix, target, cmd, params)
+	this.core$cmdraw = function(prefix, target, cmd, params, $core)
 	{
 		var paramsFiltered = params.filter(function(element, i, arr)
 		{

@@ -39,6 +39,7 @@ exports.mod = function(context, server)
 		this.clients = clients;
 		this.connection = connection;
 		this.registered = false;
+		this.sending = false;
 		this.accumulator = '';
 
 		this.onData = function(data)
@@ -65,6 +66,8 @@ exports.mod = function(context, server)
 				{
 					case 'PRIVMSG':
 						var prefix = server.user.nick + '!' + server.user.ident + '!' + server.user.host;
+
+						this.sending = true;
 						server.send(data);
 						break;
 					case 'QUIT':
@@ -81,9 +84,10 @@ exports.mod = function(context, server)
 
 						if(target === '*') target = server.user.nick;
 
-						server.fire('core$cmd', prefix, target, cmd, params);
+						server.fire('core$cmdraw', prefix, target, cmd, params);
 						break;
 					default:
+						this.sending = true;
 						server.send(data);
 						break;
 				}
@@ -161,6 +165,27 @@ exports.mod = function(context, server)
 			{
 				this.clients[iClient].connection.write(data + '\r\n');
 			}
+		}
+	}
+
+	this.$send = function(data)
+	{
+		for(var iClient in this.clients)
+		{
+			if(this.clients[iClient].registered === true && this.clients[iClient].sending === false)
+			{
+				var words = data.split(' ');
+				var opcode = words[0];
+
+				switch(opcode)
+				{
+					case 'PRIVMSG':
+						var prefix = server.user.nick + '!' + server.user.ident + '!' + server.user.host;
+						this.clients[iClient].connection.write(':' + prefix + ' ' + data);
+						break;
+				}
+			}
+			else if(this.clients[iClient].sending === true) this.clients[iClient].sending = false;
 		}
 	}
 
