@@ -395,6 +395,9 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.send = function(data, crlf)
 	{
+		if(crlf === true || crlf === undefined) this.fire('$send', data + '\r\n');
+		else this.fire('$send', data);
+
 		this.fire('$log', 'S> ' + data, 'err');
 		this.sendSilent(data, crlf);
 	}.bind(this);
