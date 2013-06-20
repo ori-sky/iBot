@@ -42,13 +42,21 @@ exports.mod = function(context, server)
 		if(data.perform !== undefined) this.perform = data.perform;
 	}
 
+	this._suspend = function()
+	{
+		return {
+			join: this.join,
+			perform: this.perform
+		};
+	}
+
 	this._resume = function(data)
 	{
 		if(data.join !== undefined) this.join = data.join;
 		if(data.perform !== undefined) this.perform = data.perform;
 	}
 
-	this._suspend = function()
+	this._save = function()
 	{
 		return {
 			join: this.join,
