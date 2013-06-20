@@ -145,11 +145,17 @@ exports.mod = function(context, server)
 
 Here you will find the list of changes in iBot.
 
+#### `private.config.json`
+
+* Module data is now saved to a separate file `private.config.json` instead of `config.json`.
+* This will allow for easier config editing without having to sift through data.
+* Various other changes - see commit messages for details.
+
 #### `core` event changes
 
 * `server` param has been removed from all events fired by core.
 * Modules will have to be updated or they will most likely break.
-* Additionally, `server` is now passed as the second param in module creation (first param being `context`)
+* Additionally, `server` is now passed as the second param in module creation (first param being `context`).
 
 #### `core$privmsg` function
 

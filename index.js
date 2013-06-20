@@ -38,7 +38,7 @@ module.exports =
 	Mode:		require('./iBot-Mode'),
 	start: function(path)
 	{
-		if(path === undefined) path = process.cwd() + '/config.json';
+		if(path === undefined) path = process.cwd();
 		var context = new module.exports.Context(path);
 	}
 };

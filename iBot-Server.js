@@ -52,14 +52,14 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	{
 		for(var kModule in this.modules)
 		{
-			if(this.config !== undefined)
+			if(this.pconfig !== undefined)
 			{
 				var tmp = this.do(kModule + '$save');
 
 				if(tmp !== undefined)
 				{
-					if(this.config.data === undefined) this.config.data = {};
-					this.config.data[kModule] = tmp;
+					if(this.pconfig.data === undefined) this.pconfig.data = {};
+					this.pconfig.data[kModule] = tmp;
 				}
 			}
 		}
@@ -72,11 +72,14 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		if(mod.data === undefined) mod.data = {};
 
-		if(this.config !== undefined)
+		if(this.pconfig !== undefined)
 		{
-			if(this.config.data !== undefined)
+			if(this.pconfig.data !== undefined)
 			{
-				if(this.config.data[name] !== undefined) this.do(name + '$load', JSON.parse(JSON.stringify(this.config.data[name])));
+				if(this.pconfig.data[name] !== undefined)
+				{
+					this.do(name + '$load', JSON.parse(JSON.stringify(this.pconfig.data[name])));
+				}
 			}
 		}
 
@@ -87,14 +90,14 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 	this.rmModule = function(name)
 	{
-		if(this.config !== undefined)
+		if(this.pconfig !== undefined)
 		{
 			var tmp = this.do(name + '$save');
 
 			if(tmp !== undefined)
 			{
-				if(this.config.data === undefined) this.config.data = {};
-				this.config.data[name] = tmp;
+				if(this.pconfig.data === undefined) this.pconfig.data = {};
+				this.pconfig.data[name] = tmp;
 			}
 		}
 
@@ -434,7 +437,11 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 	if(typeof host === 'object')
 	{
 		var config = host;
+		var pconfig = port;
+
 		this.config = config;
+		this.pconfig = pconfig;
+
 		this.host = config.host;
 		this.port = config.port;
 		this.pass = config.pass;

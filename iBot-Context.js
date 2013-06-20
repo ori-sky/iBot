@@ -50,54 +50,51 @@ module.exports = function(configPath)
 
 	this.load = function(all)
 	{
-		fs.readFile(configPath, function(err, data)
+		var c = fs.readFileSync(configPath + '/config.json', 'utf8');
+		var pc = fs.readFileSync(configPath + '/private.config.json', 'utf8');
+
+		try
 		{
-			if(err) console.log(err);
+			this.config = JSON.parse(c);
+			this.pconfig = JSON.parse(pc);
+
+			if(all === true)
+			{
+				if(this.config.servers !== undefined)
+				{
+					for(var kServer in this.config.servers)
+					{
+						this.servers[kServer] = new Server(this, this.config.servers[kServer], this.pconfig.servers[kServer]);
+					}
+				}
+
+				if(this.config.modules !== undefined)
+				{
+					for(var kModule in this.config.modules)
+					{
+						this.loadModule(this.config.modules[kModule]);
+					}
+				}
+
+				this.start();
+			}
 			else
 			{
-				try
+				if(this.config.servers !== undefined)
 				{
-					this.config = JSON.parse(data);
-
-					if(all === true)
+					for(var kServer in this.config.servers)
 					{
-						if(this.config.servers !== undefined)
-						{
-							for(var kServer in this.config.servers)
-							{
-								this.servers[kServer] = new Server(this, this.config.servers[kServer]);
-							}
-						}
-
-						if(this.config.modules !== undefined)
-						{
-							for(var kModule in this.config.modules)
-							{
-								this.loadModule(this.config.modules[kModule]);
-							}
-						}
-
-						this.start();
-						this.save();
+						this.servers[kServer].config = this.config.servers[kServer];
+						this.servers[kServer].pconfig = this.pconfig.servers[kServer];
 					}
-					else
-					{
-						if(this.config.servers !== undefined)
-						{
-							for(var kServer in this.config.servers)
-							{
-								this.servers[kServer].config = this.config.servers[kServer];
-							}
-						}
-					}
-				}
-				catch(e)
-				{
-					console.log('Errors parsing config file:');
-					console.log(e.stack);
 				}
 			}
-		}.bind(this));
+		}
+		catch(e)
+		{
+			console.log('Errors parsing config file:');
+			console.log(e.stack);
+		}
 	}
 
 	this.save = function()
@@ -107,15 +104,22 @@ module.exports = function(configPath)
 			this.servers[kServer].save();
 		}
 
-		var s = JSON.stringify(this.config, null, 2) + '\n';
+		var c = JSON.stringify(this.config, null, 2) + '\n';
+		var pc = JSON.stringify(this.pconfig, null, 2) + '\n';
 
-		if(s !== undefined)
+		if(pc === undefined) pc = '\n';
+
+		if(c !== undefined)
 		{
-			fs.writeFile(configPath, s, function(err)
+			try
 			{
-				if(err) console.log(err);
-				else console.log('Saved config to ' + util.inspect(configPath));
-			}.bind(this));
+				fs.writeFileSync(configPath + '/config.json', c);
+				fs.writeFileSync(configPath + '/private.config.json', pc);
+			}
+			catch(e)
+			{
+				console.log(e);
+			}
 		}
 	}
 
