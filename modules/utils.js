@@ -13,13 +13,16 @@ exports.mod = function(context, server)
 			case 'digest':
 				if(params.length < 2)
 				{
-					$core._privmsg(target, 'Syntax: hash <type> <string>');
+					$core._privmsg(target, 'Syntax: digest <type> <string>');
 					break;
 				}
 
 				var h = crypto.createHash(params[0]);
 				h.update(params[1]);
 				$core._privmsg(target, 'Hash: ' + h.digest('hex'));
+				break;
+			case 'hashtypes':
+				$core._privmsg(target, 'Hash Types: ' + crypto.getHashes());
 				break;
 			case 'memusage':
 				$core._privmsg(target, util.inspect(process.memoryUsage()));
