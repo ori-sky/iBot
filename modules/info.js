@@ -35,6 +35,14 @@ exports.mod = function(context, server)
 	{
 		switch(cmd)
 		{
+			case 'users':
+				var syntax = 'Syntax: users <channel>';
+				var channel = params[0];
+				if(channel === undefined) { $core._privmsg(target, syntax); break; }
+
+				var k = Object.keys(server.channels[channel].users);
+				$core._privmsg(target, 'Users: ' + k.join(', '));
+				break;
 			case 'channels':
 				var k = undefined;
 				if(params[0] === undefined) k = Object.keys(server.user.channels);
