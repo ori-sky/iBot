@@ -26,7 +26,8 @@ exports.mod = function(context, server)
 	this._suspend = function()
 	{
 		return {
-			accounts: this.accounts
+			accounts: this.accounts,
+			logins: this.logins
 		};
 	}
 
@@ -34,6 +35,7 @@ exports.mod = function(context, server)
 	{
 		
 		if(data.accounts !== undefined) this.accounts = data.accounts;
+		if(data.logins !== undefined) this.logins = data.logins;
 	}
 
 	this._save = function()
