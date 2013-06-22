@@ -571,10 +571,16 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this._authed = function(prefix)
+	this._authed = function(prefix, level)
 	{
+		if(level === undefined || typeof level === 'object')
+		{
+			level = Number.POSITIVE_INFINITY;
+		}
+
 		if(server.master.test(prefix.mask)) return true;
 		if(prefix === '*') return true;
+		if(server.do('account$authed', prefix, level) === true) return true;
 		return false;
 	}
 
