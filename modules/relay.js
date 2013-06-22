@@ -42,6 +42,9 @@ exports.mod = function(context, server)
 		this.sending = false;
 		this.accumulator = '';
 
+		this.pass = '';
+		this.user = '';
+
 		this.onData = function(data)
 		{
 			var text = this.accumulator + data.toString();
@@ -102,8 +105,18 @@ exports.mod = function(context, server)
 					case 'NICK':
 						break;
 					case 'PASS':
+						if(words[1] !== undefined) this.pass = words[1];
 						break;
 					case 'USER':
+						if(words[1] !== undefined) this.user = words[1].toLowerCase();
+
+						if(server.do('account$checkpasslevel', this.user, this.pass, Number.POSITIVE_INFINITY) === false)
+						{
+							this.connection.write('ERROR :Closing link: 127.0.0.1 (Authentication failed)\r\n');
+							this.quit();
+							break;
+						}
+
 						this.registered = true;
 						this.connection.write(':ibot 001 ' + server.user.nick + ' :Welcome to iBot ' + server.user.nick + '\r\n');
 
