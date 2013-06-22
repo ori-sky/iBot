@@ -3,16 +3,12 @@ var crypto = require('crypto');
 
 exports.mod = function(context, server)
 {
-	this.Account = function(username, password)
+	this.Account = function(username)
 	{
 		this.version = 1;
 		this.username = username;
 		this.accesslevel = 1;
 		this.privileges = [];
-
-		var hash = server.do('account$hash', password, undefined);
-		this.passhash = hash[0].toString();
-		this.passsalt = hash[1];
 	};
 
 	this.accounts = {};
@@ -33,7 +29,6 @@ exports.mod = function(context, server)
 
 	this._resume = function(data)
 	{
-		
 		if(data.accounts !== undefined) this.accounts = data.accounts;
 		if(data.logins !== undefined) this.logins = data.logins;
 	}
@@ -71,6 +66,7 @@ exports.mod = function(context, server)
 					}
 
 					this.accounts[lusername] = new this.Account(username, password);
+					this._setpass(lusername, password);
 					$core._privmsg(target, 'Account created');
 
 					break;
@@ -99,7 +95,7 @@ exports.mod = function(context, server)
 						break;
 					}
 
-					if(this._passcheck(lusername, password) !== true)
+					if(this._checkpass(lusername, password) !== true)
 					{
 						$core._privmsg(target, 'Password incorrect');
 						break;
@@ -123,6 +119,59 @@ exports.mod = function(context, server)
 
 					$core._privmsg(target, 'Hash: ' + util.inspect(hash[0]));
 					$core._privmsg(target, 'Salt: ' + util.inspect(hash[1]));
+					break;
+				case 'setpass':
+					var syntax = 'Syntax account setpass [username] <password>';
+					var username = params[1];
+					var password = params[2];
+
+					if(password === undefined)
+					{
+						$core._privmsg(target, syntax);
+						break;
+					}
+
+					var lusername = username.toLowerCase();
+
+					if(this.logins[prefix.nick] === lusername || $core.authed(prefix))
+					{
+						this._setpass(lusername, password);
+						$core._privmsg(target, 'Password set');
+					}
+					else
+					{
+						$core._privmsg(target, 'Not authorized to set password for user');
+					}
+
+					break;
+				case 'setlevel':
+					if($core._authed(prefix))
+					{
+						var syntax = 'Syntax: account setlevel <username> <level>';
+						var username = params[1];
+
+						var level = params[2];;
+						if(level === '*') level = Number.POSITIVE_INFINITY;
+						else if(level === '-*') level = Number.NEGATIVE_INFINITY;
+						else level = parseInt(level);
+
+						if(isNaN(level))
+						{
+							$core._privmsg(target, syntax);
+							break;
+						}
+
+						var lusername = username.toLowerCase();
+
+						if(this.accounts[lusername] === undefined)
+						{
+							$core._privmsg(target, 'Account not registered');
+							break;
+						}
+
+						this.accounts[lusername].accesslevel = level;
+						$core._privmsg(target, 'Access level set to ' + level);
+					}
 					break;
 				case 'getall':
 					if($core._authed(prefix))
@@ -158,11 +207,28 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this._passcheck = function(username, password)
+	this._setpass = function(username, password)
+	{
+		var h = server.do('account$hash', password, undefined);
+		this.accounts[username].passhash = h[0];
+		this.accounts[username].passsalt = h[1];
+	}
+
+	this._checkpass = function(username, password)
 	{
 		var h = server.do('account$hash', password, this.accounts[username].passsalt);
 		
-		return (h[0].toString() === this.accounts[username].passhash);
+		return (h[0] === this.accounts[username].passhash);
+	}
+
+	this._authed = function(prefix, level)
+	{
+		if(this.logins[prefix.nick] !== undefined)
+		{
+			if(this.accounts[this.logins[prefix.nick]].accesslevel >= level) return true;
+		}
+
+		return false;
 	}
 
 	this._hash = function(data, salt)
@@ -175,7 +241,7 @@ exports.mod = function(context, server)
 		{
 			if(salt === undefined) salt = crypto.randomBytes(saltlen).toString('ascii');
 
-			var hash = crypto.pbkdf2Sync(data, salt, iters, keylen);
+			var hash = crypto.pbkdf2Sync(data, salt, iters, keylen).toString();
 
 			return [
 				hash,
