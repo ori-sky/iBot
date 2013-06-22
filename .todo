@@ -63,6 +63,9 @@
     <note priority="veryhigh" time="1368833919" done="1368896753">
         Avoid attempting to fire or do if function does not exist
     </note>
+    <note priority="veryhigh" time="1368918269" done="1371934695">
+        Account system
+    </note>
     <note priority="veryhigh" time="1369358157" done="1369361069">
         Add utils command to show memory usage
     </note>
@@ -171,11 +174,11 @@
             Implemented data in private.config.json for potential future private sections
         </comment>
     </note>
-    <note priority="veryhigh" time="1368918269">
-        Account system
-    </note>
     <note priority="veryhigh" time="1371606892">
         [relay] Ignore non-channel targets when relaying sent PRIVMSGs to clients
+    </note>
+    <note priority="veryhigh" time="1371939073">
+        [relay] Drop clients which don't authenticate within a set time
     </note>
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
@@ -204,7 +207,7 @@
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
     </note>
-    <note priority="low" time="1369163545">
+    <note priority="low" time="1369163545" done="1371939083">
         Write relay module
     </note>
     <note priority="low" time="1371442203">
