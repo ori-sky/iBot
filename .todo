@@ -159,8 +159,20 @@
     <note priority="medium" time="1367984670" done="1368440216">
         Update README with new JSON stuff
     </note>
+    <note priority="medium" time="1368837621" done="1371909425">
+        [auto] Implement save handler
+    </note>
     <note priority="low" time="1366160834" done="1366403918">
         Add SSL support
+    </note>
+    <note priority="low" time="1368840098" done="1371775451">
+        Implement data.json for instance-specific data which should be separate from config
+        <comment>
+            Implemented data in private.config.json for potential future private sections
+        </comment>
+    </note>
+    <note priority="veryhigh" time="1368918269">
+        Account system
     </note>
     <note priority="veryhigh" time="1371606892">
         [relay] Ignore non-channel targets when relaying sent PRIVMSGs to clients
@@ -180,9 +192,6 @@
     <note priority="medium" time="1368826802">
         Add SSL client cert support
     </note>
-    <note priority="medium" time="1368837621">
-        [auto] Implement save handler
-    </note>
     <note priority="medium" time="1368917947">
         [core] Implement register event for modules to register for commands
     </note>
@@ -194,12 +203,6 @@
     </note>
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
-    </note>
-    <note priority="low" time="1368840098">
-        Implement data.json for instance-specific data which should be separate from config
-    </note>
-    <note priority="low" time="1368918269">
-        Account system
     </note>
     <note priority="low" time="1369163545">
         Write relay module
