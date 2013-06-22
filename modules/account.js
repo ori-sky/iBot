@@ -221,6 +221,12 @@ exports.mod = function(context, server)
 		return (h[0] === this.accounts[username].passhash);
 	}
 
+	this._checkpasslevel = function(username, password, level)
+	{
+		if(this._checkpass(username, password) && this.accounts[username].accesslevel >= level) return true;
+		else return false;
+	}
+
 	this._authed = function(prefix, level)
 	{
 		if(this.logins[prefix.nick] !== undefined)
