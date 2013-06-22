@@ -216,9 +216,13 @@ exports.mod = function(context, server)
 
 	this._checkpass = function(username, password)
 	{
-		var h = server.do('account$hash', password, this.accounts[username].passsalt);
-		
-		return (h[0] === this.accounts[username].passhash);
+		if(this.accounts[username] !== undefined)
+		{
+			var h = server.do('account$hash', password, this.accounts[username].passsalt);
+			if(h[0] === this.accounts[username].passhash) return true;
+		}
+
+		return false;
 	}
 
 	this._checkpasslevel = function(username, password, level)
