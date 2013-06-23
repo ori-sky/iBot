@@ -183,7 +183,7 @@
     <note priority="low" time="1369163545" done="1371939083">
         Write relay module
     </note>
-    <note priority="veryhigh" time="1371939073">
+    <note priority="veryhigh" time="1371939073" done="1372013355">
         [relay] Drop clients which don't authenticate within a set time
     </note>
     <note priority="veryhigh" time="1371989419">
