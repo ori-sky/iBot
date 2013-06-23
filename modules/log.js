@@ -77,7 +77,15 @@ exports.mod = function(context, server)
 	this.logUnsafe = function(data, stream)
 	{
 		var d = new Date();
-		var t = '[' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ']';
+		var hours = d.getHours().toString();
+		var minutes = d.getMinutes().toString();
+		var seconds = d.getSeconds().toString();
+
+		if(hours.length === 1) hours = '0' + hours;
+		if(minutes.length === 1) minutes = '0' + minutes;
+		if(seconds.length === 1) seconds = '0' + seconds;
+
+		var t = '[' + hours + ':' + minutes + ':' + seconds + ']';
 
 		if(typeof this.streams[stream] === 'undefined') stream = 'out';
 
