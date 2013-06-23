@@ -74,7 +74,12 @@ exports.mod = function(context, server)
 
 	this.$recv_raw = function(data)
 	{
-		server.fire('$log', 'R> ' + data, 'err');
+		server.fire('$log', '<- ' + data, 'err');
+	}
+
+	this.$send = function(data)
+	{
+		server.fire('$log', '-> ' + data, 'err');
 	}
 
 	this.$recv = function(prefix, opcode, params)
