@@ -112,8 +112,7 @@ exports.mod = function(context, server)
 
 						if(server.do('account$checkpasslevel', this.user, this.pass, Number.POSITIVE_INFINITY) === false)
 						{
-							this.connection.write('ERROR :Closing link: 127.0.0.1 (Authentication failed)\r\n');
-							this.quit();
+							this.error('Authentication failed');
 							break;
 						}
 
@@ -133,6 +132,22 @@ exports.mod = function(context, server)
 						break;
 				}
 			}
+		}.bind(this);
+
+		this.error = function(reason)
+		{
+			if(reason === undefined) reason = 'Connection closed';
+
+			try
+			{
+				this.connection.write('ERROR :Closing link: 127.0.0.1 (' + reason + ')\r\n');
+			}
+			catch(e)
+			{
+				console.log(e);
+			}
+
+			this.quit();
 		}.bind(this);
 
 		this.quit = function()
@@ -223,6 +238,10 @@ exports.mod = function(context, server)
 		{
 			var client = new this.Client(this.clients, c);
 			this.clients.push(client);
+			setTimeout(function()
+			{
+				if(client.registered === false) client.error('Registration timed out');
+			}.bind(this), 30000);
 
 			c.setEncoding('utf8');
 
