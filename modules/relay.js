@@ -71,7 +71,7 @@ exports.mod = function(context, server)
 						var prefix = server.user.nick + '!' + server.user.ident + '!' + server.user.host;
 
 						this.sending = true;
-						server.send(data);
+						server.do('core$send', data);
 						break;
 					case 'QUIT':
 						this.quit();
@@ -91,7 +91,7 @@ exports.mod = function(context, server)
 						break;
 					default:
 						this.sending = true;
-						server.send(data);
+						server.do('core$send', data);
 						break;
 				}
 			}
@@ -123,7 +123,7 @@ exports.mod = function(context, server)
 						{
 							var prefix = server.user.nick + '!' + server.user.ident + '!' + server.user.host;
 							this.connection.write(':' + prefix + ' JOIN ' + kChannel + '\r\n');
-							server.send('NAMES ' + kChannel);
+							server.do('core$send', 'NAMES ' + kChannel);
 						}
 
 						break;
