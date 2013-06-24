@@ -507,16 +507,25 @@ exports.mod = function(context, server)
 					if(isNaN(port)) port = 6667;
 					ssl = ssl === 'true';
 
-					if(master === undefined) master = /./;
-					else master = new RegExp(master); // TODO: case insensitive?
+					if(master === undefined) master = /^$/;
+					else master = new RegExp(master);
 
 					if(modules === undefined) modules = [];
 					else modules = modules.split(',');
 
 					if(context.servers[name] !== undefined) context.servers[name].quit();
 
-					context.servers[name] = new Server(context, host, port, nick, ident, pass, ssl);
-					context.servers[name].master = master;
+					var config = {
+						host: host,
+						port: port,
+						nick: nick,
+						ident: ident,
+						pass: pass,
+						ssl: ssl,
+						master: master
+					};
+
+					context.addServer(name, config);
 
 					for(var i=0; i<modules.length; ++i)
 					{
