@@ -65,7 +65,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		}
 	}
 
-	this.addModule = function(name, mod)
+	this.addModule = function(name, mod, updateConfig)
 	{
 		var tmp = this.do(name + '$suspend');
 		this.modules[name] = mod;
@@ -83,12 +83,23 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 		}
 
+		if(updateConfig !== false)
+		{
+			var inArray = false;
+			for(var i=0; i<this.config.modules.length; ++i)
+			{
+				if(this.config.modules[i] === name) inArray = true;
+			}
+
+			if(inArray === false) this.config.modules.push(name);
+		}
+
 		if(tmp !== undefined) this.do(name + '$resume', tmp);
 
 		this.do(name + '$loaded', this);
 	}
 
-	this.rmModule = function(name)
+	this.rmModule = function(name, updateConfig)
 	{
 		if(this.pconfig !== undefined)
 		{
@@ -98,6 +109,14 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			{
 				if(this.pconfig.data === undefined) this.pconfig.data = {};
 				this.pconfig.data[name] = tmp;
+			}
+		}
+
+		if(updateConfig !== false)
+		{
+			for(var i=0; i<this.config.modules.length; ++i)
+			{
+				if(this.config.modules[i] === name) this.config.modules.splice(i, 1);
 			}
 		}
 
@@ -422,7 +441,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		for(var kModule in this.modules)
 		{
-			this.rmModule(kModule);
+			this.rmModule(kModule, false);
 		}
 
 		if(this.client !== undefined) this.client.end();
