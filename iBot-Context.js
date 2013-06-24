@@ -123,6 +123,14 @@ module.exports = function(configPath)
 		}
 	}
 
+	this.addServer = function(name, config)
+	{
+		if(this.config === undefined) this.config = {};
+		if(this.config.servers === undefined) this.config.servers = {};
+		this.config.servers[name] = config;
+		this.servers[name] = new Server(this, config);
+	}
+
 	this.quit = function()
 	{
 		for(var kServer in this.servers)
