@@ -85,6 +85,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		if(updateConfig !== false)
 		{
+			if(this.config.modules === undefined) this.config.modules = [];
+
 			var inArray = false;
 			for(var i=0; i<this.config.modules.length; ++i)
 			{
