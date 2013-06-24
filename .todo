@@ -90,6 +90,9 @@
             Not relevant as infinity changed to one billion
         </comment>
     </note>
+    <note priority="veryhigh" time="1372010056" done="1372078762">
+        [core] Add message send interval loop for throttling
+    </note>
     <note priority="high" time="1366031670" done="1366033877">
         Implement module unloading
     </note>
@@ -192,13 +195,10 @@
     <note priority="low" time="1369163545" done="1371939083">
         Write relay module
     </note>
-    <note priority="veryhigh" time="1372010056" done="1372078762">
-        [core] Add message send interval loop for throttling
-    </note>
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
     </note>
-    <note priority="high" time="1368839943">
+    <note priority="high" time="1368839943" done="1372080337">
         Implement server config saving
     </note>
     <note priority="high" time="1369356538">
