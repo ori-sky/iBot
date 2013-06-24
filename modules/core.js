@@ -36,13 +36,37 @@ var Channel = require('../iBot-Channel');
 
 exports.mod = function(context, server)
 {
+	this.messageLoopInterval = undefined;
+	this.messageQueue = [];
+
 	this._suspend = function()
 	{
+		if(this.messageLoopInterval !== undefined) clearInterval(this.messageLoopInterval);
 		if(this.pingInterval !== undefined) clearInterval(this.pingInterval);
 	}
 
 	this._loaded = function()
 	{
+		if(this.messageLoopInterval === undefined)
+		{
+			this.messageLoopInterval = setInterval(function()
+			{
+				try
+				{
+					var elements = this.messageQueue.splice(0, 1);
+
+					for(var i=0; i<elements.length; ++i)
+					{
+						server.send(elements[i], false);
+					}
+				}
+				catch(e)
+				{
+					console.log(e);
+				}
+			}.bind(this), 500);
+		}
+
 		if(this.pingInterval === undefined)
 		{
 			this.hasPonged = true;
@@ -69,6 +93,7 @@ exports.mod = function(context, server)
 
 	this._unloaded = function()
 	{
+		if(this.messageLoopInterval !== undefined) clearInterval(this.messageLoopInterval);
 		if(this.pingInterval !== undefined) clearInterval(this.pingInterval);
 	}
 
@@ -589,14 +614,20 @@ exports.mod = function(context, server)
 		return false;
 	}
 
+	this._send = function(data, crlf)
+	{
+		var d = data + ((crlf !== false) ? '\r\n' : '');
+		this.messageQueue.push(d);
+	}
+
 	this._privmsg = function(target, msg)
 	{
-		server.send('PRIVMSG ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
+		this._send('PRIVMSG ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
 	}
 
 	this._join = function(channel)
 	{
-		server.send('JOIN ' + channel.replace(/[\r\n]/g, ''));
+		this._send('JOIN ' + channel.replace(/[\r\n]/g, ''));
 	}
 
 	this._cmd = function(prefix, target, cmd, params)
