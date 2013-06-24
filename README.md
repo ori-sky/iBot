@@ -44,17 +44,22 @@ The IRC commands available through core are as follows. Angle bracket parameters
 * `!umctx <module>`                    - unload a module from all servers
 * `!lmsrv <module> [name]`             - load a module instance into the current server or the server specified by name
 * `!umsrv <module> [name]`             - unload a module from the current server or the server specified by name
-* `!modules [name]`                    - list the loaded modules for the current server or the server specified by name
+* `!modules [name]`                    - list all loaded modules for the current server or the server specified by name
+* `!servers`                           - list all servers in the context
 * `!addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master] [modules a,b,etc] [pass]` - connect to a new server with the specified options
 * `!rmsrv <name>`                      - disconnect from and remove the server specified by name
 * `!quit`                              - disconnect from the current server and remove it
 * `!save`                              - save config to disk
 * `!rehash`                            - load config from disk
+* `!getmaster [name]`                  - get master regexp for the current server or the server specified by name
 * `!setmaster <master> [name]`         - set master regexp for the current server or the server specified by name
+
+* `!do <command>`                      - echo the command and then run it
+* `!times <num> <command>`             - run the command multiple times
 
 ### Modules
 
-iBot has an extensible and robust module system. A number of modules are bundled with the package, such as `core` and `log`. If you want to include other modules or write your own, this section explains how to do so. Modules should go inside a directory called `modules` in the project's root directory. They can be loaded by adding them to the `modules` section in config.json or by loading them through `core` at runtime.
+iBot has an extensible, robust module system. Some modules are bundled with the package, such as `core` and `log`. User modules should go inside the `modules` directory in the root project directory. Modules can be loaded at startup by adding them to the modules section of config.json as in the Quick Start.
 
 ##### Outputs `Hello, <nick>!`
 ```javascript

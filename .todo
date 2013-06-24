@@ -216,9 +216,6 @@
     <note priority="medium" time="1368917947">
         [core] Implement register event for modules to register for commands
     </note>
-    <note priority="medium" time="1368982494">
-        Write extensive documentation
-    </note>
     <note priority="medium" time="1371442134">
         Add SASL PLAIN/EXTERNAL support
     </note>
@@ -227,6 +224,9 @@
     </note>
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
+    </note>
+    <note priority="low" time="1368982494">
+        Write extensive documentation
     </note>
     <note priority="low" time="1371442203">
         Write todo list module
