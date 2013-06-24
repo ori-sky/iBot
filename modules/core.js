@@ -87,7 +87,7 @@ exports.mod = function(context, server)
 
 		if(server.isConnected)
 		{
-			server.send('VERSION');
+			server.do('core$send', 'VERSION');
 		}
 	}
 
@@ -300,7 +300,7 @@ exports.mod = function(context, server)
 
 		if(prefix.nick === server.user.nick)
 		{
-			server.send('WHO ' + channel);
+			server.do('core$send', 'WHO ' + channel);
 		}
 	}
 

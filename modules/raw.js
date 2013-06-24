@@ -47,6 +47,6 @@ exports.mod = function(context, server)
 
 	this.raw$raw = function(data)
 	{
-		server.send(data);
+		server.do('core$send', data);
 	}
 }

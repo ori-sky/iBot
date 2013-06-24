@@ -73,7 +73,7 @@ exports.mod = function(context, server)
 
 		for(var i in this.perform)
 		{
-			server.send(this.perform[i]);
+			server.do('core$send', this.perform[i]);
 		}
 	}
 
