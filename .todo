@@ -141,6 +141,9 @@
     <note priority="high" time="1368129482" done="1369314353">
         Move ping timeout code out of Server all into mod core
     </note>
+    <note priority="high" time="1368839943" done="1372080337">
+        Implement server config saving
+    </note>
     <note priority="high" time="1368839979" done="1371441992">
         [core] Implement ability to change server master
     </note>
@@ -198,9 +201,6 @@
     <note priority="high" time="1368192099">
         Add ability to wait for a duration in auto performs
     </note>
-    <note priority="high" time="1368839943" done="1372080337">
-        Implement server config saving
-    </note>
     <note priority="high" time="1369356538">
         Implement ability to load modules with additional creation params
     </note>
@@ -221,6 +221,9 @@
     </note>
     <note priority="medium" time="1371442134">
         Add SASL PLAIN/EXTERNAL support
+    </note>
+    <note priority="medium" time="1372081549">
+        Add ability to remove global module from server, either with a blacklist or by updating all other servers and removing from global modules
     </note>
     <note priority="low" time="1366619222">
         [core] Sync channel ban and invite exception lists
