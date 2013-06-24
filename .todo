@@ -81,6 +81,9 @@
             Not necessary and provides better functionality than bouncers which don't do this
         </comment>
     </note>
+    <note priority="veryhigh" time="1371939073" done="1372013355">
+        [relay] Drop clients which don't authenticate within a set time
+    </note>
     <note priority="high" time="1366031670" done="1366033877">
         Implement module unloading
     </note>
@@ -183,11 +186,11 @@
     <note priority="low" time="1369163545" done="1371939083">
         Write relay module
     </note>
-    <note priority="veryhigh" time="1371939073" done="1372013355">
-        [relay] Drop clients which don't authenticate within a set time
-    </note>
-    <note priority="veryhigh" time="1371989419">
+    <note priority="veryhigh" time="1371989419" done="1372074211">
         [account] Save accesslevel as * if POSITIVE_INFINITY and -* if NEGATIVE_INFINITY
+        <comment>
+            Not relevant as infinity changed to one billion
+        </comment>
     </note>
     <note priority="veryhigh" time="1372010056">
         [core] Add message send interval loop for throttling

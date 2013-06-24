@@ -580,7 +580,7 @@ exports.mod = function(context, server)
 	{
 		if(level === undefined || typeof level === 'object')
 		{
-			level = Number.POSITIVE_INFINITY;
+			level = 1000000000;
 		}
 
 		if(server.master.test(prefix.mask)) return true;

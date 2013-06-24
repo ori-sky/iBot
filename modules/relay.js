@@ -110,7 +110,7 @@ exports.mod = function(context, server)
 					case 'USER':
 						if(words[1] !== undefined) this.user = words[1].toLowerCase();
 
-						if(server.do('account$checkpasslevel', this.user, this.pass, Number.POSITIVE_INFINITY) === false)
+						if(server.do('account$checkpasslevel', this.user, this.pass, 1000000000) === false)
 						{
 							this.error('Authentication failed');
 							break;

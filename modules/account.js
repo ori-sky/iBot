@@ -151,8 +151,8 @@ exports.mod = function(context, server)
 						var username = params[1];
 
 						var level = params[2];;
-						if(level === '*') level = Number.POSITIVE_INFINITY;
-						else if(level === '-*') level = Number.NEGATIVE_INFINITY;
+						if(level === '*') level = 1000000000;
+						else if(level === '-*') level = -1000000000;
 						else level = parseInt(level);
 
 						if(isNaN(level))
