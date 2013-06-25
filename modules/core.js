@@ -107,10 +107,27 @@ exports.mod = function(context, server)
 		server.fire('$log', '-> ' + data, 'err');
 	}
 
+	this.$connect_start = function()
+	{
+		server.send('CAP LS');
+	}
+
 	this.$recv = function(prefix, opcode, params)
 	{
 		switch(opcode)
 		{
+			case 'CAP':
+				server.fire('cap', prefix, params[1], params.slice(2));
+				break;
+			case '001':
+				server.fire('001', prefix, params[1], params[2]);
+				break;
+			case '002':
+				server.fire('002', prefix, params[1], params[2]);
+				break;
+			case '003':
+				server.fire('003', prefix, params[1], params[2]);
+				break;
 			case '004': // RPL_MYINFO
 				server.fire('004', prefix, params[1], params[2], params[3], params[4], params.slice(5));
 			case '005': // RPL_ISUPPORT
@@ -625,17 +642,20 @@ exports.mod = function(context, server)
 
 	this._send = function(data, crlf)
 	{
+		data = data.toString();
 		var d = data + ((crlf !== false) ? '\r\n' : '');
 		this.messageQueue.push(d);
 	}
 
 	this._privmsg = function(target, msg)
 	{
+		msg = msg.toString();
 		this._send('PRIVMSG ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
 	}
 
 	this._join = function(channel)
 	{
+		channel = channel.toString();
 		this._send('JOIN ' + channel.replace(/[\r\n]/g, ''));
 	}
 
