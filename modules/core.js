@@ -107,11 +107,6 @@ exports.mod = function(context, server)
 		server.fire('$log', '-> ' + data, 'err');
 	}
 
-	this.$connect_start = function()
-	{
-		server.send('CAP LS');
-	}
-
 	this.$recv = function(prefix, opcode, params)
 	{
 		switch(opcode)

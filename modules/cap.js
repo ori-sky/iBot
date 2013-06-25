@@ -33,6 +33,11 @@ exports.mod = function(context, server)
 {
 	this.counter = 0;
 
+	this.$connect_start = function()
+	{
+		server.send('CAP LS');
+	}
+
 	this.core$cap = function(prefix, opcode, params)
 	{
 		switch(opcode)
