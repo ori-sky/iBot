@@ -247,6 +247,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		this.user = new User(this.nick, this.ident, '', 'iBot');
 		this.users[this.nick] = this.user;
 
+		this.fire('$connect_start');
+
 		if(typeof this.pass === 'string' && this.pass !== '')
 		{
 			this.sendSilent('PASS ' + this.pass);
@@ -277,6 +279,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		this.send('NICK ' + this.nick);
 		this.send('USER ' + this.ident + ' 0 * :' + this.user.realname);
+
+		this.fire('$connect_end');
 	}.bind(this);
 
 	this.accumulator = '';
