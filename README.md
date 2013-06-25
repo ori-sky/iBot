@@ -53,7 +53,6 @@ The IRC commands available through core are as follows. Angle bracket parameters
 * `!rehash`                            - load config from disk
 * `!getmaster [name]`                  - get master regexp for the current server or the server specified by name
 * `!setmaster <master> [name]`         - set master regexp for the current server or the server specified by name
-
 * `!do <command>`                      - echo the command and then run it
 * `!times <num> <command>`             - run the command multiple times
 
