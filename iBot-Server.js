@@ -93,7 +93,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				if(this.config.modules[i] === name) inArray = true;
 			}
 
-			if(inArray === false) this.config.modules.push(name);
+			//if(inArray === false) this.config.modules.push(name);
 		}
 
 		if(tmp !== undefined) this.do(name + '$resume', tmp);
@@ -118,7 +118,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		{
 			for(var i=0; i<this.config.modules.length; ++i)
 			{
-				if(this.config.modules[i] === name) this.config.modules.splice(i, 1);
+				//if(this.config.modules[i] === name) this.config.modules.splice(i, 1);
 			}
 		}
 
