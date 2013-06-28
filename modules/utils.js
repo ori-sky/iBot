@@ -13,10 +13,21 @@ exports.mod = function(context, server)
 		switch(topic)
 		{
 			case 'utils':
-				return {
-					text: 'Provides various utility commands.',
-					sub: ['ping', 'digest', 'memusage']
-				};
+				switch(params[0])
+				{
+					case 'ping':
+						return "Send a ping to the bot (useful for connection checks).";
+					case 'digest':
+						return "Digest a string into a hash.";
+					case 'memusage':
+						return "Show current memory usage.";
+					default:
+						return {
+							text: 'Provides various utility commands.',
+							sub: ['ping', 'digest', 'memusage']
+						};
+				}
+				break;
 		}
 	}
 
