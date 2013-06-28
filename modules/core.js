@@ -36,6 +36,8 @@ var Channel = require('../iBot-Channel');
 
 exports.mod = function(context, server)
 {
+	this.cmd_prefix = '!';
+
 	this.messageLoopInterval = undefined;
 	this.messageQueue = [];
 
@@ -235,7 +237,7 @@ exports.mod = function(context, server)
 		var cmd = undefined;
 		var params = undefined;
 
-		if(words[0][0] === '!')
+		if(words[0][0] === this.cmd_prefix)
 		{
 			cmd = words[0].substr(1);
 			params = words.slice(1);
