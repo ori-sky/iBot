@@ -29,6 +29,7 @@ exports.mod = function(context, server)
 			case 'help':
 				var syntax = 'Syntax: help <topic>';
 				var topic = params[0];
+				var topic_all = params.join(' ');
 
 				if(topic === undefined)
 				{
@@ -53,14 +54,14 @@ exports.mod = function(context, server)
 
 				if(typeof h === 'string')
 				{
-					$core._privmsg(target, topic + ': ' + h);
+					$core._privmsg(target, topic_all + ': ' + h);
 					break;
 				}
 				else if(typeof h === 'object')
 				{
 					if(h.text !== undefined)
 					{
-						$core._privmsg(target, topic + ': ' + h.text);
+						$core._privmsg(target, topic_all + ': ' + h.text);
 					}
 
 					if(h.sub !== undefined)
