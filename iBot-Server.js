@@ -99,6 +99,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		if(tmp !== undefined) this.do(name + '$resume', tmp);
 
 		this.do(name + '$loaded', this);
+		this.fire('$loaded', name);
 	}
 
 	this.rmModule = function(name, updateConfig)
@@ -123,6 +124,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		}
 
 		this.do(name + '$unloaded', this);
+		this.fire('$unloaded', name);
+
 		this.modules[name] = undefined;
 		delete this.modules[name];
 	}
