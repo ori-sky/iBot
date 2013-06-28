@@ -11,7 +11,6 @@ exports.mod = function(context, server)
 		{
 			case 'helloworld':
 				return 'Prints a hello message.';
-				break;
 		}
 	}
 

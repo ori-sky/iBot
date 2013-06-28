@@ -1,6 +1,6 @@
 exports.mod = function(context, server)
 {
-	this.registers = {};
+	this.topics = {};
 	
 	this.$loaded = function(name)
 	{
@@ -14,12 +14,12 @@ exports.mod = function(context, server)
 
 	this._register = function(topic, $sender, $name)
 	{
-		this.registers[topic] = $name;
+		this.topics[topic] = $name;
 	}
 
 	this.$unloaded = function(name)
 	{
-		if(this.registers[name] !== undefined) delete this.registers[name];
+		if(this.topics[name] !== undefined) delete this.topics[name];
 	}
 
 	this.core$cmd = function(prefix, target, cmd, params, $core)
@@ -33,24 +33,42 @@ exports.mod = function(context, server)
 				if(topic === undefined)
 				{
 					$core._privmsg(target, syntax);
+					$core._privmsg(target, 'Topics: ' + Object.keys(this.topics).join(', '));
 					break;
 				}
 
-				if(this.registers[topic] === undefined)
+				if(this.topics[topic] === undefined)
 				{
 					$core._privmsg(target, 'No help available for \'' + topic + '\'');
 					break;
 				}
 
-				var h = server.do(this.registers[topic] + '$help', topic, params.slice(1));
+				var h = server.do(this.topics[topic] + '$help', topic, params.slice(1));
 
-				if(h === undefined || h === '')
+				if(h === undefined)
 				{
 					$core._privmsg(target, 'No help available for \'' + topic + '\'');
 					break;
 				}
 
-				$core._privmsg(target, topic + ': ' + h);
+				if(typeof h === 'string')
+				{
+					$core._privmsg(target, topic + ': ' + h);
+					break;
+				}
+				else if(typeof h === 'object')
+				{
+					if(h.text !== undefined)
+					{
+						$core._privmsg(target, topic + ': ' + h.text);
+					}
+
+					if(h.sub !== undefined)
+					{
+						$core._privmsg(target, 'Sub-topics: ' + h.sub.join(', '));
+					}
+				}
+
 				break;
 		}
 	}

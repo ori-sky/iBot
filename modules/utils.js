@@ -3,6 +3,23 @@ var util = require('util');
 
 exports.mod = function(context, server)
 {
+	this.help$register = function()
+	{
+		server.do('help$register', 'utils');
+	}
+
+	this._help = function(topic, params)
+	{
+		switch(topic)
+		{
+			case 'utils':
+				return {
+					text: 'Provides various utility commands.',
+					sub: ['ping', 'digest', 'memusage']
+				};
+		}
+	}
+
 	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		switch(cmd)
@@ -20,9 +37,6 @@ exports.mod = function(context, server)
 				var h = crypto.createHash(params[0]);
 				h.update(params[1]);
 				$core._privmsg(target, 'Hash: ' + h.digest('hex'));
-				break;
-			case 'hashtypes':
-				$core._privmsg(target, 'Hash Types: ' + crypto.getHashes());
 				break;
 			case 'memusage':
 				$core._privmsg(target, util.inspect(process.memoryUsage()));
