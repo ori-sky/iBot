@@ -133,7 +133,7 @@ exports.mod = function(context, server)
 
 					var lusername = username.toLowerCase();
 
-					if(this.logins[prefix.nick] === lusername || $core.authed(prefix))
+					if(this.logins[prefix.nick] === lusername || $core._authed(prefix))
 					{
 						this._setpass(lusername, password);
 						$core._privmsg(target, 'Password set');
