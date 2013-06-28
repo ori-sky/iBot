@@ -154,7 +154,8 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			return undefined;
 		}
 
-		var sender = this.modules[this.activeModuleStack[this.activeModuleStack.length - 1]];
+		var senderName = this.activeModuleStack[this.activeModuleStack.length - 1];
+		var sender = this.modules[senderName];
 
 		var fullName = arguments[0];
 		if(typeof fullName !== 'string') return undefined;
@@ -175,6 +176,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			{
 				var params = Array.prototype.slice.call(arguments, 1);
 				params.push(sender);
+				params.push(senderName);
 
 				ret = this.modules[moduleName]['_' + methodName].apply(this.modules[moduleName], params);
 			}
@@ -204,6 +206,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 		{
 			var activeModule = this.activeModuleStack[this.activeModuleStack.length - 1];
 			var eventName = arguments[0];
+			var targetName = undefined;
 
 			if(eventName !== undefined)
 			{
@@ -213,6 +216,18 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 					activeModule = s[0];
 					eventName = s[1];
 				}
+
+				s = eventName.split('^');
+				if(s.length > 1)
+				{
+					eventName = s[0];
+					targetName = s[1];
+				}
+			}
+
+			if(targetName !== undefined)
+			{
+				if(kModule !== targetName) continue;
 			}
 
 			var sender = this.modules[activeModule];
@@ -225,6 +240,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 				{
 					var params = Array.prototype.slice.call(arguments, 1);
 					params.push(sender);
+					params.push(activeModule);
 
 					this.modules[kModule][activeModule + '$' + eventName].apply(this.modules[kModule], params);
 				}
