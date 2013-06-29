@@ -37,6 +37,7 @@ var Channel = require('../iBot-Channel');
 exports.mod = function(context, server)
 {
 	this.cmd_prefix = '!';
+	this.log_colors = true;
 
 	this.messageLoopInterval = undefined;
 	this.messageQueue = [];
@@ -101,16 +102,43 @@ exports.mod = function(context, server)
 
 	this.$recv_raw = function(data)
 	{
-		server.fire('$log', '<- ' + data, 'err');
+		if(this.log_colors === false)
+		{
+			server.fire('$log', '<- ' + data, 'err');
+		}
 	}
 
 	this.$send = function(data)
 	{
-		server.fire('$log', '-> ' + data, 'err');
+		server.do('log$log_interleaved', 'err', ['-> ', data]);
 	}
 
 	this.$recv = function(prefix, opcode, params)
 	{
+		if(this.log_colors === true)
+		{
+			var log_params = ['<-', ''];
+			if(prefix !== null)
+			{
+				log_params.push(' \x1b[35m\x1b[1m');
+				log_params.push(prefix.mask);
+			}
+
+			log_params.push('\x1b[0m \x1b[31m\x1b[1m');
+			log_params.push(opcode);
+
+			for(var i=0; i<params.length; ++i)
+			{
+				if(i % 2 === 1)	log_params.push('\x1b[0m \x1b[33m\x1b[1m');
+				else		log_params.push('\x1b[0m \x1b[32m\x1b[1m');
+				log_params.push(params[i]);
+			}
+
+			log_params.push('\x1b[0m');
+
+			server.do('log$log_interleaved', 'err', log_params);
+		}
+
 		switch(opcode)
 		{
 			case 'CAP':

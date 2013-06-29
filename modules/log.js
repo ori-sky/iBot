@@ -66,15 +66,39 @@ exports.mod = function(context, server)
 
 	this.$log = function(data, stream)
 	{
-		this.log(data, stream)
+		this._log(data, stream)
 	}
 
-	this.log = function(data, stream)
+	this._log_interleaved = function(stream, args)
 	{
-		this.logUnsafe(util.inspect(data), stream);
+		var str = '';
+		var safe = false;
+
+		for(var i=0; (i < args.length && typeof args[i] === 'string'); ++i)
+		{
+			if(safe === true)
+			{
+				var inspected = util.inspect(args[i]);
+				str += inspected.substr(1, inspected.length - 2);
+			}
+			else
+			{
+				str += args[i];
+			}
+
+			safe = !safe;
+		}
+
+		this._log_unsafe(str, stream);
 	}
 
-	this.logUnsafe = function(data, stream)
+	this._log = function(data, stream)
+	{
+		var d = util.inspect(data);
+		this._log_unsafe(d, stream);
+	}
+
+	this._log_unsafe = function(data, stream)
 	{
 		var d = new Date();
 		var hours = d.getHours().toString();
