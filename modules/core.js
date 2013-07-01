@@ -42,6 +42,20 @@ exports.mod = function(context, server)
 	this.messageLoopInterval = undefined;
 	this.messageQueue = [];
 
+	this._load = function(data)
+	{
+		if(data.cmd_prefix !== undefined) this.cmd_prefix = data.cmd_prefix;
+		if(data.log_colors !== undefined) this.log_colors = data.log_colors;
+	}
+
+	this._save = function()
+	{
+		return {
+			cmd_prefix: this.cmd_prefix,
+			log_colors: this.log_colors
+		};
+	}
+
 	this._suspend = function()
 	{
 		if(this.messageLoopInterval !== undefined) clearInterval(this.messageLoopInterval);
