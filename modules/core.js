@@ -262,6 +262,16 @@ exports.mod = function(context, server)
 
 	this.core$privmsg = function(prefix, target, message, words)
 	{
+		if(message[0] === '\x01' && message[message.length - 1] === '\x01')
+		{
+			var opcode = words[0].substr(1);
+			var start_pos = words[0].length + 1;
+			var data = message.substr(start_pos, message.length - start_pos - 1);
+			var w = data.split(' ');
+
+			server.fire('ctcp_request', prefix, target, opcode, data, w);
+		}
+
 		var cmd = undefined;
 		var params = undefined;
 
