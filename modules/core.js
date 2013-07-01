@@ -618,6 +618,32 @@ exports.mod = function(context, server)
 					$core._privmsg(target, 'Done');
 				}
 				break;
+			case 'getsrvaddr':
+				if($core._authed(prefix))
+				{
+					var name = params[0];
+					var srv = server;
+
+					if(name !== undefined) srv = context.servers[name];
+
+					$core._privmsg(target, 'Server address: ' + srv.host);
+				}
+				break;
+			case 'setsrvaddr':
+				if($core._authed(prefix))
+				{
+					var syntax = 'Syntax: setsrvaddr <addr> [server name]';
+					var addr = params[0];
+					var name = params[1];
+					var srv = server;
+
+					if(addr === undefined) { $core._privmsg(target, syntax); break; }
+					if(name !== undefined) srv = context.servers[name];
+
+					srv.host = addr;
+					$core._privmsg(target, 'Done');
+				}
+				break;
 			case 'modules':
 				var name = params[0];
 				var srv = server;
