@@ -183,6 +183,10 @@ exports.mod = function(context, server)
 
 				server.fire('privmsg', prefix, target, params[1], words);
 				break;
+			case 'NOTICE':
+				var words = params[1].split(' ');
+				var target = params[0];
+				server.fire('notice', prefix, target, params[1], words);
 			case 'JOIN':
 				server.fire('join', prefix, params[0]);
 				break;
@@ -294,6 +298,19 @@ exports.mod = function(context, server)
 		}
 
 		if(cmd !== undefined) server.fire('cmdraw', prefix, target, cmd, params);
+	}
+
+	this.core$notice = function(prefix, target, message, words)
+	{
+		if(message[0] === '\x01' && message[message.length - 1] === '\x01')
+		{
+			var opcode = words[0].substr(1);
+			var start_pos = words[0].length + 1;
+			var data = message.substr(start_pos, message.length - start_pos - 1);
+			var w = data.split(' ');
+
+			server.fire('ctcp_reply', prefix, target, opcode, data, w);
+		}
 	}
 
 	this.core$cmdraw = function(prefix, target, cmd, params, $core)
