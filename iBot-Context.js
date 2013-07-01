@@ -84,8 +84,11 @@ module.exports = function(configPath)
 				{
 					for(var kServer in this.config.servers)
 					{
-						this.servers[kServer].config = this.config.servers[kServer];
-						this.servers[kServer].pconfig = this.pconfig.servers[kServer];
+						if(this.servers[kServer] !== undefined)
+						{
+							this.servers[kServer].config = this.config.servers[kServer];
+							this.servers[kServer].pconfig = this.pconfig.servers[kServer];
+						}
 					}
 				}
 			}
