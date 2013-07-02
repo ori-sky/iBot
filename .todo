@@ -198,6 +198,9 @@
     <note priority="low" time="1369163545" done="1371939083">
         Write relay module
     </note>
+    <note priority="low" time="1371442203" done="1372730762">
+        Write todo list module
+    </note>
     <note priority="veryhigh" time="1372163430">
         Remove server from config when rmsrv is called
     </note>
@@ -216,6 +219,9 @@
     <note priority="high" time="1372009909">
         Add ability to bind server to specific IP (host)
     </note>
+    <note priority="high" time="1372730825">
+        [todo] Display priority, add ability to set priority, add ability to change data and priority
+    </note>
     <note priority="medium" time="1368826802">
         Add SSL client cert support
     </note>
@@ -233,8 +239,5 @@
     </note>
     <note priority="low" time="1368982494">
         Write extensive documentation
-    </note>
-    <note priority="low" time="1371442203">
-        Write todo list module
     </note>
 </todo>
