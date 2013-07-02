@@ -47,6 +47,8 @@ exports.mod = function(context, server)
 			switch(params[0])
 			{
 				case 'register':
+					$core._hide_current_message();
+
 					var syntax = 'Syntax: account register <username> <password>';
 					var username = params[1];
 					var password = params[2];
@@ -54,6 +56,12 @@ exports.mod = function(context, server)
 					if(password === undefined)
 					{
 						$core._privmsg(target, syntax);
+						break;
+					}
+
+					if(this.logins[prefix.nick] !== undefined)
+					{
+						$core._privmsg(target, 'You are already logged in.');
 						break;
 					}
 
@@ -67,10 +75,14 @@ exports.mod = function(context, server)
 
 					this.accounts[lusername] = new this.Account(username, password);
 					this._setpass(lusername, password);
-					$core._privmsg(target, 'Your account has been created.');
+
+					this.logins[prefix.nick] = lusername;
+					$core._privmsg(target, 'Your account has been created. You are now logged in.');
 
 					break;
 				case 'login':
+					$core._hide_current_message();
+
 					var syntax = 'Syntax: account login <username> <password>';
 					var username = params[1];
 					var password = params[2];
@@ -121,6 +133,8 @@ exports.mod = function(context, server)
 					$core._privmsg(target, 'Salt: ' + util.inspect(hash[1]));
 					break;
 				case 'setpass':
+					$core._hide_current_message();
+
 					var syntax = 'Syntax account setpass [username] <password>';
 					var username = params[1];
 					var password = params[2];
