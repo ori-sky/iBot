@@ -66,16 +66,24 @@ exports.mod = function(context, server)
 	{
 		if(this.messageLoopInterval === undefined)
 		{
+			this.mq_count = 0;
 			this.messageLoopInterval = setInterval(function()
 			{
 				try
 				{
-					var elements = this.messageQueue.splice(0, 1);
-
-					for(var i=0; i<elements.length; ++i)
+					if(this.mq_count < 3)
 					{
-						server.send(elements[i], false);
+						var elements = this.messageQueue.splice(0, 1);
+
+						for(var i=0; i<elements.length; ++i)
+						{
+							server.send(elements[i], false);
+							++this.mq_count;
+						}
 					}
+
+					this.mq_count -= 0.4;
+					if(this.mq_count < 0) this.mq_count = 0;
 				}
 				catch(e)
 				{
@@ -743,6 +751,12 @@ exports.mod = function(context, server)
 	{
 		msg = msg.toString();
 		this._send('PRIVMSG ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
+	}
+
+	this._notice = function(target, msg)
+	{
+		msg = msg.toString();
+		this._send('NOTICE ' + target + ' :' + msg.replace(/[\r\n]/g, ''));
 	}
 
 	this._join = function(channel)
