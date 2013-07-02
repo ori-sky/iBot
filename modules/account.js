@@ -61,13 +61,13 @@ exports.mod = function(context, server)
 
 					if(this.accounts[lusername] !== undefined)
 					{
-						$core._privmsg(target, 'Account already registered');
+						$core._privmsg(target, 'That account is already registered.');
 						break;
 					}
 
 					this.accounts[lusername] = new this.Account(username, password);
 					this._setpass(lusername, password);
-					$core._privmsg(target, 'Account created');
+					$core._privmsg(target, 'Your account has been created.');
 
 					break;
 				case 'login':
@@ -83,7 +83,7 @@ exports.mod = function(context, server)
 
 					if(this.logins[prefix.nick] !== undefined)
 					{
-						$core._privmsg(target, 'Already logged in');
+						$core._privmsg(target, 'You are already logged in.');
 						break;
 					}
 
@@ -91,28 +91,28 @@ exports.mod = function(context, server)
 
 					if(this.accounts[lusername] === undefined)
 					{
-						$core._privmsg(target, 'Account not registered');
+						$core._privmsg(target, 'That account is not registered.');
 						break;
 					}
 
 					if(this._checkpass(lusername, password) !== true)
 					{
-						$core._privmsg(target, 'Password incorrect');
+						$core._privmsg(target, 'Password incorrect.');
 						break;
 					}
 
 					this.logins[prefix.nick] = lusername;
-					$core._privmsg(target, 'Logged in');
+					$core._privmsg(target, 'You are now logged in.');
 					break;
 				case 'logout':
 					if(this.logins[prefix.nick] === undefined)
 					{
-						$core._privmsg(target, 'Not logged in');
+						$core._privmsg(target, 'You are not logged in.');
 						break;
 					}
 
 					delete this.logins[prefix.nick];
-					$core._privmsg(target, 'Logged out');
+					$core._privmsg(target, 'You are now logged out.');
 					break;
 				case 'hash':
 					var hash = this._hash(params[1], params[2]);
@@ -136,11 +136,11 @@ exports.mod = function(context, server)
 					if(this.logins[prefix.nick] === lusername || $core._authed(prefix))
 					{
 						this._setpass(lusername, password);
-						$core._privmsg(target, 'Password set');
+						$core._privmsg(target, 'Password set.');
 					}
 					else
 					{
-						$core._privmsg(target, 'Not authorized to set password for user');
+						$core._privmsg(target, 'You are not allowed to use this command.');
 					}
 
 					break;
@@ -165,12 +165,12 @@ exports.mod = function(context, server)
 
 						if(this.accounts[lusername] === undefined)
 						{
-							$core._privmsg(target, 'Account not registered');
+							$core._privmsg(target, 'That account is not registered.');
 							break;
 						}
 
 						this.accounts[lusername].accesslevel = level;
-						$core._privmsg(target, 'Access level set to ' + level);
+						$core._privmsg(target, 'Access level set to ' + level + '.');
 					}
 					break;
 				case 'getall':
@@ -189,7 +189,7 @@ exports.mod = function(context, server)
 
 						if(this.accounts[lusername] === undefined)
 						{
-							$core._privmsg(target, 'Account not registered');
+							$core._privmsg(target, 'That account is not registered.');
 							break;
 						}
 
@@ -200,7 +200,7 @@ exports.mod = function(context, server)
 					if($core._authed(prefix))
 					{
 						this.accounts = {};
-						$core._privmsg(target, 'Done');
+						$core._privmsg(target, 'All accounts wiped from data.');
 					}
 					break;
 			}
@@ -239,6 +239,11 @@ exports.mod = function(context, server)
 		}
 
 		return false;
+	}
+
+	this._getlogin = function(prefix)
+	{
+		return this.logins[prefix.nick];
 	}
 
 	this._hash = function(data, salt)
