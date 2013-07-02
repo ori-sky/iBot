@@ -437,7 +437,7 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 			}
 		}
 
-		this.fire('$recv', prefix, opcode, params);
+		this.fire('$recv', prefix, opcode, params, data);
 	}.bind(this);
 
 	this.send = function(data, crlf)
