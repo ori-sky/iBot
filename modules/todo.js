@@ -15,11 +15,11 @@ exports.mod = function(context, server)
 				switch(params[0])
 				{
 					case '+':
-						return "Adds an entry to your todo list.";
+						return 'Add an entry to your todo list.';
 					case '-':
-						return "Removes an entry from your todo list.";
+						return 'Remove an entry from your todo list.';
 					case '?':
-						return "Displays your todo list.";
+						return 'Display your todo list.';
 					default:
 						return {
 							text: 'A simple account-based todo list.',
