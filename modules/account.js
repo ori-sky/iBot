@@ -14,6 +14,36 @@ exports.mod = function(context, server)
 	this.accounts = {};
 	this.logins = {};
 
+	this.help$register = function()
+	{
+		server.do('help$register', 'account');
+	}
+
+	this._help = function(topic, params)
+	{
+		switch(topic)
+		{
+			case 'account':
+				switch(params[0])
+				{
+					case 'register':
+						return 'Register a new account.';
+					case 'login':
+						return 'Log into your account.';
+					case 'logout':
+						return 'Log out of your account.';
+					case 'setpass':
+						return 'Change your account password.';
+					default:
+						return {
+							text: 'A simple account system.',
+							sub: ['register', 'login', 'logout', 'setpass']
+						};
+				}
+				break;
+		}
+	}
+
 	this._load = function(data)
 	{
 		if(data.accounts !== undefined) this.accounts = data.accounts;
