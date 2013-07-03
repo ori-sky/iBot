@@ -2,6 +2,34 @@ exports.mod = function(context, server)
 {
 	this.lists = {};
 
+	this.help$register = function()
+	{
+		server.do('help$register', 'todo');
+	}
+
+	this._help = function(topic, params)
+	{
+		switch(topic)
+		{
+			case 'todo':
+				switch(params[0])
+				{
+					case '+':
+						return "Adds an entry to your todo list.";
+					case '-':
+						return "Removes an entry from your todo list.";
+					case '?':
+						return "Displays your todo list.";
+					default:
+						return {
+							text: 'A simple account-based todo list.',
+							sub: ['+', '-', '?']
+						};
+				}
+				break;
+		}
+	}
+
 	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		if(cmd === 'todo')
