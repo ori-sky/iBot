@@ -1,5 +1,6 @@
 exports.mod = function(context, server)
 {
+	this.max_length = 10;
 	this.lists = {};
 
 	this.help$register = function()
@@ -30,6 +31,34 @@ exports.mod = function(context, server)
 		}
 	}
 
+	this._load = function(data)
+	{
+		if(data.max_length !== undefined) this.max_length = data.max_length;
+		if(data.lists !== undefined) this.lists = data.lists;
+	}
+
+	this._suspend = function()
+	{
+		return {
+			max_length: this.max_length,
+			lists: this.lists
+		};
+	}
+
+	this._resume = function(data)
+	{
+		if(data.max_length !== undefined) this.max_length = data.max_length;
+		if(data.lists !== undefined) this.lists = data.lists;
+	}
+
+	this._save = function()
+	{
+		return {
+			max_length: this.max_length,
+			lists: this.lists
+		};
+	}
+
 	this.core$cmd = function(prefix, target, cmd, params, $core)
 	{
 		if(cmd === 'todo')
@@ -52,16 +81,24 @@ exports.mod = function(context, server)
 
 					if(this.lists[login] === undefined) this.lists[login] = [];
 
+					if(this.lists[login].length === this.max_length)
+					{
+						$core._privmsg(target, 'Too many entries on todo list (max=' + this.max_length + ').');
+						break;
+					}
+
 					// TODO: make priority configurable
 					this.lists[login].push({data: data, priority: 5});
 
 					$core._privmsg(target, 'Added entry to todo list.');
 					break;
 				case '-':
-					var syntax = 'Syntax: todo - <entry #>';
+					var syntax = 'Syntax: todo - <entry #> [num to remove]';
 					var entry_no = parseInt(params[1]);
+					var num_to_remove = parseInt(params[2]);
 
 					if(isNaN(entry_no)) { $core._privmsg(target, syntax); break; }
+					if(isNaN(num_to_remove)) num_to_remove = 1;
 
 					var login = server.do('account$getlogin', prefix);
 
@@ -77,10 +114,16 @@ exports.mod = function(context, server)
 						break;
 					}
 
-					var entry = this.lists[login].splice(entry_no - 1, 1);
+					var entry = this.lists[login].splice(entry_no - 1, num_to_remove);
 
-					$core._privmsg(target, 'Removed entry from todo list. Sending removed entry via NOTICE.');
-					$core._notice(prefix.nick, '#' + entry_no + ': ' + entry[0].data);
+					var s = (num_to_remove === 1) ? 'entry' : 'entries';
+
+					$core._privmsg(target, 'Removed ' + num_to_remove + ' ' + s + ' from todo list. Sending removed ' + s + ' via NOTICE.');
+
+					for(var i=0; i<entry.length; ++i)
+					{
+						$core._notice(prefix.nick, '#' + entry_no + ': ' + entry[i].data);
+					}
 					break;
 				case '?':
 				default:
