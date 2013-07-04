@@ -23,8 +23,8 @@ exports.mod = function(context, server)
 						return 'Display your todo list.';
 					default:
 						return {
-							text: 'A simple account-based todo list.',
-							sub: ['+', '-', '?']
+							text: 'Add an entry to your todo list.',
+							sub: ['-', '?']
 						};
 				}
 				break;
@@ -65,9 +65,71 @@ exports.mod = function(context, server)
 		{
 			switch(params[0])
 			{
-				case '+':
-					var syntax = 'Syntax: todo + <data>';
-					var data = params.slice(1).join(' ');
+				case '-':
+					var syntax = 'Syntax: todo - <entry #>';
+					var entry_no = parseInt(params[1]);
+					var num_to_remove = parseInt(params[2]);
+
+					// TODO: implement ranges
+					num_to_remove = 1;
+
+					if(isNaN(entry_no)) { $core._privmsg(target, syntax); break; }
+					if(isNaN(num_to_remove)) num_to_remove = 1;
+
+					var login = server.do('account$getlogin', prefix);
+
+					if(login === undefined)
+					{
+						$core._privmsg(target, 'You are not logged in.');
+						break;
+					}
+
+					if(entry_no < 1 || this.lists[login] === undefined || this.lists[login].length < entry_no)
+					{
+						$core._privmsg(target, 'That entry does not exist on your todo list.');
+						break;
+					}
+
+					var entry = this.lists[login].splice(entry_no - 1, num_to_remove);
+
+					var s = (num_to_remove === 1) ? 'entry' : 'entries';
+
+					$core._privmsg(target, 'Removed ' + entry.length + ' ' + s + ' from todo list. Sending removed ' + s + ' via NOTICE.');
+
+					for(var i=0; i<entry.length; ++i)
+					{
+						$core._notice(prefix.nick, '#' + (entry_no + i) + ': ' + entry[i].data);
+					}
+					break;
+				case '?':
+				case '':
+				case undefined:
+				case null:
+					var login = server.do('account$getlogin', prefix);
+
+					if(login === undefined)
+					{
+						$core._privmsg(target, 'You are not logged in.');
+						break;
+					}
+
+					if(this.lists[login] === undefined || this.lists[login].length === 0)
+					{
+						$core._privmsg(target, 'Your todo list is empty.');
+						break;
+					}
+
+					$core._privmsg(target, 'Sending todo list via NOTICE.');
+
+					for(var iTodo=0; iTodo<this.lists[login].length; ++iTodo)
+					{
+						$core._notice(prefix.nick, '#' + (iTodo + 1) + ': ' + this.lists[login][iTodo].data);
+					}
+
+					break;
+				default:
+					var syntax = 'Syntax: todo <data>';
+					var data = params.join(' ');
 
 					if(data === '') { $core._privmsg(target, syntax); break; }
 
@@ -91,63 +153,6 @@ exports.mod = function(context, server)
 					this.lists[login].push({data: data, priority: 5});
 
 					$core._privmsg(target, 'Added entry to todo list.');
-					break;
-				case '-':
-					var syntax = 'Syntax: todo - <entry #> [num to remove]';
-					var entry_no = parseInt(params[1]);
-					var num_to_remove = parseInt(params[2]);
-
-					if(isNaN(entry_no)) { $core._privmsg(target, syntax); break; }
-					if(isNaN(num_to_remove)) num_to_remove = 1;
-
-					var login = server.do('account$getlogin', prefix);
-
-					if(login === undefined)
-					{
-						$core._privmsg(target, 'You are not logged in.');
-						break;
-					}
-
-					if(entry_no < 1 || this.lists[login] === undefined || this.lists[login].length < entry_no)
-					{
-						$core._privmsg(target, 'That entry does not exist on your todo list.');
-						break;
-					}
-
-					var entry = this.lists[login].splice(entry_no - 1, num_to_remove);
-
-					var s = (num_to_remove === 1) ? 'entry' : 'entries';
-
-					$core._privmsg(target, 'Removed ' + num_to_remove + ' ' + s + ' from todo list. Sending removed ' + s + ' via NOTICE.');
-
-					for(var i=0; i<entry.length; ++i)
-					{
-						$core._notice(prefix.nick, '#' + entry_no + ': ' + entry[i].data);
-					}
-					break;
-				case '?':
-				default:
-					var login = server.do('account$getlogin', prefix);
-
-					if(login === undefined)
-					{
-						$core._privmsg(target, 'You are not logged in.');
-						break;
-					}
-
-					if(this.lists[login] === undefined || this.lists[login].length === 0)
-					{
-						$core._privmsg(target, 'Your todo list is empty.');
-						break;
-					}
-
-					$core._privmsg(target, 'Sending todo list via NOTICE.');
-
-					for(var iTodo=0; iTodo<this.lists[login].length; ++iTodo)
-					{
-						$core._notice(prefix.nick, '#' + (iTodo + 1) + ': ' + this.lists[login][iTodo].data);
-					}
-
 					break;
 			}
 		}
