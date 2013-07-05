@@ -188,6 +188,28 @@ exports.mod = function(context, server)
 					}
 
 					break;
+				case 'setpriv':
+					if($core._authed(prefix))
+					{
+						var syntax = 'Syntax: account setpriv <username> <privilege> [true/false default=true]';
+						var username = params[1];
+						var priv = params[2];
+						var value = (params[3] !== 'false');
+
+						if(priv === undefined) { $core._privmsg(target, syntax); break; }
+
+						var lusername = username.toLowerCase();
+
+						if(this.accounts[lusername] === undefined)
+						{
+							$core._privmsg(target, 'That account is not registered.');
+							break;
+						}
+
+						this.accounts[lusername].privileges[priv] = value;
+						$core._privmsg(target, 'Privilege ' + priv + ' set to ' + value + '.');
+					}
+					break;
 				case 'setlevel':
 					if($core._authed(prefix))
 					{
@@ -279,7 +301,7 @@ exports.mod = function(context, server)
 	{
 		if(this.logins[prefix.nick] !== undefined)
 		{
-			if(this.accounts[this.logins[prefix.nick]].privileges.indexOf(priv) !== -1) return true;
+			if(this.accounts[this.logins[prefix.nick]].privileges[priv] === true) return true;
 			if(this.accounts[this.logins[prefix.nick]].accesslevel >= level) return true;
 		}
 
