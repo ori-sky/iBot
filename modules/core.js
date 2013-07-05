@@ -730,16 +730,16 @@ exports.mod = function(context, server)
 		}
 	}
 
-	this._authed = function(prefix, level)
+	this._authed = function(prefix, priv, level)
 	{
-		if(level === undefined || typeof level === 'object')
+		if(level === undefined || typeof level === 'object' || typeof level === 'string')
 		{
 			level = 1000000000;
 		}
 
 		if(server.master.test(prefix.mask)) return true;
 		if(prefix === '*') return true;
-		if(server.do('account$authed', prefix, level) === true) return true;
+		if(server.do('account$authed', prefix, priv, level) === true) return true;
 		return false;
 	}
 

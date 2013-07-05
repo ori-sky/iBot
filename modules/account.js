@@ -275,10 +275,11 @@ exports.mod = function(context, server)
 		else return false;
 	}
 
-	this._authed = function(prefix, level)
+	this._authed = function(prefix, priv, level)
 	{
 		if(this.logins[prefix.nick] !== undefined)
 		{
+			if(this.accounts[this.logins[prefix.nick]].privileges.indexOf(priv) !== -1) return true;
 			if(this.accounts[this.logins[prefix.nick]].accesslevel >= level) return true;
 		}
 
