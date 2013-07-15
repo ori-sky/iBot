@@ -750,6 +750,17 @@ exports.mod = function(context, server)
 		this.messageQueue.push(d);
 	}
 
+	this._hide_current_message = function()
+	{
+		this.log_current_message = false;
+		return this.log_current_message;
+	}
+
+	this._cmd = function(prefix, target, cmd, params)
+	{
+		server.fire('cmdraw', prefix, target, cmd, params);
+	}
+
 	this._privmsg = function(target, msg)
 	{
 		msg = msg.toString();
@@ -768,14 +779,11 @@ exports.mod = function(context, server)
 		this._send('JOIN ' + channel.replace(/[\r\n]/g, ''));
 	}
 
-	this._cmd = function(prefix, target, cmd, params)
+	this._ctcp_request = function(target, opcode, data)
 	{
-		server.fire('cmdraw', prefix, target, cmd, params);
-	}
-
-	this._hide_current_message = function()
-	{
-		this.log_current_message = false;
-		return this.log_current_message;
+		target = target.toString().replace(/[\r\n]/g, '');
+		opcode = opcode.toString().replace(/[\r\n]/g, '');
+		data = data.toString().replace(/[\r\n]/g, '');
+		this._send('PRIVMSG ' + target + ' :\x01' + opcode + ' ' + data + '\x01');
 	}
 }
