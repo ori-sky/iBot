@@ -210,6 +210,31 @@ exports.mod = function(context, server)
 						$core._privmsg(target, 'Privilege ' + priv + ' set to ' + value + '.');
 					}
 					break;
+				case 'getprivs':
+					if($core._authed(prefix))
+					{
+						var syntax = 'Syntax: account getprivs <username>';
+						var username = params[1];
+
+						if(username === undefined) { $core._privmsg(target, syntax); break; }
+
+						var lusername = username.toLowerCase();
+
+						if(this.accounts[lusername] === undefined)
+						{
+							$core._privmsg(target, 'That account is not registered.');
+							break;
+						}
+
+						var privs = this.accounts[lusername].privileges;
+						var filtered = Object.keys(privs).filter(function(v, k, a)
+						{
+							return (privs[v] === true);
+						});
+
+						$core._privmsg(target, 'Privileges: ' + filtered.join(', '));
+					}
+					break;
 				case 'setlevel':
 					if($core._authed(prefix))
 					{
