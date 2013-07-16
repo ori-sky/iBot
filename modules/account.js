@@ -5,10 +5,11 @@ exports.mod = function(context, server)
 {
 	this.Account = function(username)
 	{
-		this.version = 1;
+		this.version = 2;
 		this.username = username;
 		this.accesslevel = 1;
 		this.privileges = [];
+		this.data = {};
 	};
 
 	this.accounts = {};
@@ -46,7 +47,22 @@ exports.mod = function(context, server)
 
 	this._load = function(data)
 	{
-		if(data.accounts !== undefined) this.accounts = data.accounts;
+		if(data.accounts !== undefined)
+		{
+			this.accounts = data.accounts;
+
+			for(var k in this.accounts)
+			{
+				var v = this.accounts[k];
+				switch(v.version)
+				{
+					case 1:
+						v.data = {};
+						v.version = 2;
+						break;
+				}
+			}
+		}
 	}
 
 	this._suspend = function()
@@ -59,7 +75,22 @@ exports.mod = function(context, server)
 
 	this._resume = function(data)
 	{
-		if(data.accounts !== undefined) this.accounts = data.accounts;
+		if(data.accounts !== undefined)
+		{
+			this.accounts = data.accounts;
+
+			for(var k in this.accounts)
+			{
+				var v = this.accounts[k];
+				switch(v.version)
+				{
+					case 1:
+						v.data = {};
+						v.version = 2;
+						break;
+				}
+			}
+		}
 		if(data.logins !== undefined) this.logins = data.logins;
 	}
 
@@ -336,6 +367,16 @@ exports.mod = function(context, server)
 	this._getlogin = function(prefix)
 	{
 		return this.logins[prefix.nick];
+	}
+
+	this._get = function(username, key)
+	{
+		return this.accounts[username].data[key];
+	}
+
+	this._set = function(username, key, val)
+	{
+		this.accounts[username].data[key] = val;
 	}
 
 	this._hash = function(data, salt)
