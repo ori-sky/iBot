@@ -727,6 +727,13 @@ exports.mod = function(context, server)
 					server.do('core$privmsg', target, 'Config rehashed.');
 				}
 				break;
+			case 'clrmsgq':
+				if($core._authed(prefix))
+				{
+					this.messageQueue = [];
+					server.do('core$privmsg', target, 'Done.');
+				}
+				break;
 		}
 	}
 

@@ -51,6 +51,7 @@ The IRC commands available through core are as follows. Angle bracket parameters
 * `!quit`                              - disconnect from the current server and remove it
 * `!save`                              - save config to disk
 * `!rehash`                            - load config from disk
+* `!clrmsgq`                           - clear the message queue
 * `!getmaster [name]`                  - get master regexp for the current server or the server specified by name
 * `!setmaster <master> [name]`         - set master regexp for the current server or the server specified by name
 * `!do <command>`                      - echo the command and then run it
