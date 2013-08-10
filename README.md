@@ -2,6 +2,10 @@
 
 iBot is an IRC client-side framework designed to be extensible and easy to use.
 
+## COMPATIBILITY WARNING
+
+iBot v0.7.x will break backwards compability. Modules should be updated before updating to this version.
+
 ## Usage
 
 ### Installation
