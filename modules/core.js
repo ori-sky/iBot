@@ -321,6 +321,11 @@ exports.mod = function(context, server)
 				}
 			}
 		}
+		else if(this._is_query(target))
+		{
+			cmd = words[0];
+			params = words.slice(1);
+		}
 
 		if(cmd !== undefined) server.fire('cmdraw', prefix, target, cmd, params);
 	}
@@ -403,6 +408,12 @@ exports.mod = function(context, server)
 		server.users[nick] = server.users[prefix.nick];
 		server.users[nick].nick = nick;
 		delete server.users[prefix.nick];
+
+		for(var c in server.users[nick].channels)
+		{
+			server.users[nick].channels[c].users[nick] = server.users[nick];
+			delete server.users[nick].channels[c].users[prefix.nick];
+		}
 	}
 
 	this.core$quit = function(prefix, message)
@@ -792,5 +803,12 @@ exports.mod = function(context, server)
 		opcode = opcode.toString().replace(/[\r\n]/g, '');
 		data = data.toString().replace(/[\r\n]/g, '');
 		this._send('PRIVMSG ' + target + ' :\x01' + opcode + ' ' + data + '\x01');
+	}
+
+	this._is_query = function(target)
+	{
+		var data = server.get();
+		var chantypes = (data.isupport !== undefined) ? data.isupport.CHANTYPES : '#&+!';
+		return chantypes.indexOf(target[0]) === -1;
 	}
 }
