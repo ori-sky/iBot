@@ -137,7 +137,7 @@ exports.mod = function(context, server)
 				server.fire('cap', prefix, params[1], params.slice(2));
 				break;
 			case '001':
-				server.fire('001', prefix, params[1], params[2]);
+				server.fire('001', prefix, params.slice(1));
 				break;
 			case '002':
 				server.fire('002', prefix, params[1], params[2]);
