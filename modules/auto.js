@@ -64,7 +64,7 @@ exports.mod = function(context, server)
 		};
 	}
 
-	this.core$376 = function(prefix, message, $core)
+	this.core$001 = function(prefix, message, $core)
 	{
 		for(var i in this.join)
 		{
