@@ -329,7 +329,9 @@ module.exports = function(context, host, port, nick, ident, pass, ssl)
 
 		delete this.users;
 		delete this.channels;
-		delete this.user.channels;
+
+        if(this.user !== undefined && this.user !== null)
+			delete this.user.channels;
 
 		this.users = {};
 		this.channels = {};
