@@ -1,17 +1,17 @@
 {
   "name": "ibot",
   "version": "0.6.6",
-  "description": "iBot is an IRC client-side framework designed to be extensible and easy to use",
+  "description": "ibot is a IRC client framework module for mods, designed to be lightweight and extensible to use",
   "author": {
     "name": "Shockk",
     "email": "shokku.ra@gmail.com",
-    "url": "https://github.com/ShockkPony/"
+    "url": "https://github.com/shockkolate/"
   },
   "contributors": [
     {
       "name": "Shockk",
       "email": "shokku.ra@gmail.com",
-      "url": "https://github.com/ShockkPony/"
+      "url": "https://github.com/shockkolate/"
     },
     {
       "name": "Jessica Dodrill",
@@ -24,12 +24,18 @@
     "irc",
     "client",
     "framework",
-    "bot"
+    "bot",
+    "mods",
+    "module",
+    "mod"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ShockkPony/iBot.git"
+    "url": "https://github.com/shockkolate/ibot.git"
   },
-  "license": "BSD",
-  "main": "index"
+  "license": "Apache-2.0",
+  "main": "index",
+  "engines": {
+    "node": ">=0.8"
+  }
 }
