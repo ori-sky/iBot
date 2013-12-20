@@ -2,9 +2,7 @@
 
 iBot is a `mods` module for a very lightweight, minimal, and extensible IRC client framework.
 
-### `mods` dependencies
-
-* config
+### Dependencies
 
 ```
 $ npm install mods
