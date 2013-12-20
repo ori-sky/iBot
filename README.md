@@ -104,3 +104,9 @@ exports.ibot$recv = function(server, message)
     }
 }
 ```
+
+## Why?
+
+iBot doesn't have a module system, nor does it have a config system. It doesn't include any modules either. Versions of iBot before v0.7.0 did. So, why not?
+
+The module and config systems in previous versions of iBot were completely rewritten as generic, self-contained systems which can be used in any project (not just iBot). This means that the most important part of iBot - the iBot framework itself - is very concise and lightweight, and can be used without any module system or config system if desired. Additionally, it means that the config system it *does* use can be swapped out with another config system entirely.
