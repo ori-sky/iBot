@@ -1,7 +1,7 @@
 {
   "name": "ibot",
   "version": "0.6.6",
-  "description": "ibot is a IRC client framework module for mods, designed to be lightweight and extensible to use",
+  "description": "iBot is a `mods` module for a very lightweight, minimal, and extensible IRC client framework",
   "author": {
     "name": "Shockk",
     "email": "shokku.ra@gmail.com",

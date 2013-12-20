@@ -1,151 +1,107 @@
 # iBot Framework
 
-iBot is an IRC client-side framework designed to be extensible and easy to use.
+iBot is a `mods` module for a very lightweight, minimal, and extensible IRC client framework.
 
-## COMPATIBILITY WARNING
+### `mods` dependencies
 
-iBot v0.7.x will break backwards compability. Modules should be updated before updating to this version.
+* config
+
+```
+$ npm install mods
+$ npm install mods-config
+```
 
 ## Usage
 
 ### Installation
 
 ```
-npm install ibot
+$ npm install ibot
 ```
 
 ### Quick Start
 
-It's very easy to connect to an IRC server using iBot.
+Using iBot, it's very easy to create a minimal bot.
 
 ##### index.js
 ```javascript
-require('ibot').start();
+var mods = new(require('mods'))
+mods.load('mods-config')
+mods.load('ibot')
 ```
 
 ##### config.json
 ```json
 {
-  "servers": {
-    "example": {
-      "host": "irc.example.com",
-      "nick": "MyNick",
-      "master": "^.+!.+@isp\.com$"
+  "ibot": {
+    "servers": {
+      "example": {
+        "host": "irc.example.com",
+        "port": 6667,
+        "ssl": false,
+        "nick": "iBot",
+        "user": "ibot"
+      }
+    }
+  }
+}
+
+### `ibot-essentials`
+
+You probably want iBot to do more than, well, nothing, so it's a good idea to install `ibot-essentials`.
+
+```
+$ npm install ibot-essentials
+```
+
+In this example, iBot shows data sent/received, responds to server PINGs, and automatically joins some channels on connect.
+
+##### index.js
+```javascript
+var mods = new(require('mods'))
+mods.load('mods-config')
+mods.load('ibot')
+mods.load('ibot-essentials/mods/output')
+mods.load('ibot-essentials/mods/ping')
+mods.load('ibot-essentials/mods/autojoin')
+```
+
+##### config.json
+```json
+{
+  "ibot": {
+    "servers": {
+      "example": {
+        "host": "irc.example.com",
+        "port": 6667,
+        "ssl": false,
+        "nick": "iBot",
+        "user": "ibot"
+      }
     }
   },
-  "modules": [
-    "core",
-    "log"
-  ]
+  "ibot_autojoin": {
+    "channels": [
+      "#ibot",
+      "#programming",
+      "#self-learning-for-dummies"
+    ]
+  }
 }
 ```
 
-`Server.master` is a regular expression which is used for permission checking. This may be changed to an authentication system at a later stage.
+### Example Module
 
-The IRC commands available through core are as follows. Angle bracket parameters are required, square bracket parameters are optional.
+This is an example `mods` module which greets users who join a channel. There is a lot of room for improvement but it shows how iBot modules are written.
 
-* `!lmctx <module>`                    - load a module instance into all servers
-* `!umctx <module>`                    - unload a module from all servers
-* `!lmsrv <module> [name]`             - load a module instance into the current server or the server specified by name
-* `!umsrv <module> [name]`             - unload a module from the current server or the server specified by name
-* `!modules [name]`                    - list all loaded modules for the current server or the server specified by name
-* `!servers`                           - list all servers in the context
-* `!addsrv <name> <host> <nick> [ident] [port] [ssl true/false] [master] [modules a,b,etc] [pass]` - connect to a new server with the specified options
-* `!rmsrv <name>`                      - disconnect from and remove the server specified by name
-* `!quit`                              - disconnect from the current server and remove it
-* `!save`                              - save config to disk
-* `!rehash`                            - load config from disk
-* `!clrmsgq`                           - clear the message queue
-* `!getmaster [name]`                  - get master regexp for the current server or the server specified by name
-* `!setmaster <master> [name]`         - set master regexp for the current server or the server specified by name
-* `!do <command>`                      - echo the command and then run it
-* `!times <num> <command>`             - run the command multiple times
-
-### Modules
-
-iBot has an extensible, robust module system. Some modules are bundled with the package, such as `core` and `log`. User modules should go inside the `modules` directory in the root project directory. Modules can be loaded at startup by adding them to the modules section of config.json as in the Quick Start.
-
-##### Outputs `Hello, <nick>!`
+##### greet.js
 ```javascript
-exports.mod = function(context, server)
+exports.name = 'greet'
+exports.ibot$recv = function(server, message)
 {
-	// hook into cmd event from core
-	this.core$cmd = function(prefix, target, command, params, $core)
-	{
-		if(command === 'helloworld')
-		{
-			// will output "Hello, <nick>!"
-			$core._privmsg(target, 'Hello, ' + prefix.nick + '!');
-		}
-	}
-}
-```
-
-##### Increments a counter and saves back to the config
-
-```javascript
-exports.mod = function(context, server)
-{
-	this.counter = 0;
-
-	// load
-	this._load = function(data)
-	{
-		if(typeof data === 'number') this.counter = data;
-	}
-
-	// save
-	this._save = function()
-	{
-		return this.counter;
-	}
-
-	// suspend
-	this._suspend = function()
-	{
-		return this.counter;
-	}
-
-	// resume
-	this._resume = function(data)
-	{
-		if(typeof data === 'number') this.counter = data;
-	}
-
-	// hook into cmd event from core
-	this.core$cmd = function(prefix, target, command, params)
-	{
-		if(command === 'counter')
-		{
-			server.do('core$privmsg', target, 'Counter is now: ' + ++this.counter);
-		}
-	}
-}
-```
-
-##### Detects CTCP requests and replies
-```javascript
-exports.mod = function(context, server)
-{
-	// hook into global recv event
-	this.$recv = function(prefix, opcode, params)
-	{
-		// params[0] is target, params[1] is message
-		switch(opcode)
-		{
-			case 'PRIVMSG':
-				if(params[1][0] === '\001' && params[1][params[1].length - 1] === '\001')
-				{
-					console.log('detected CTCP request!');
-				}
-				break;
-			case 'NOTICE':
-				if(params[1][0] === '\001' && params[1][params[1].length - 1] === '\001')
-				{
-					console.log('detected CTCP reply!');
-				}
-				break;
-		}
-	}
+    if(message.opcode === 'JOIN')
+    {
+        server.send('PRIVMSG ' + message.params[0] + ' :Welcome, ' + message.prefix.nick + '!!')
+    }
 }
 ```
