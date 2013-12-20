@@ -45,6 +45,7 @@ mods.load('ibot')
     }
   }
 }
+```
 
 ### `ibot-essentials`
 
