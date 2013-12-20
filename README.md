@@ -47,7 +47,7 @@ mods.load('ibot')
 }
 ```
 
-### `ibot-essentials`
+### Essentials
 
 You probably want iBot to do more than, well, nothing, so it's a good idea to install `ibot-essentials`.
 
