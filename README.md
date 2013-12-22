@@ -60,6 +60,7 @@ In this example, iBot shows data sent/received, responds to server PINGs, and au
 var mods = new(require('mods'))
 mods.load('mods-config')
 mods.load('ibot')
+mods.load('ibot-essentials/mods/core')
 mods.load('ibot-essentials/mods/output')
 mods.load('ibot-essentials/mods/ping')
 mods.load('ibot-essentials/mods/autojoin')
