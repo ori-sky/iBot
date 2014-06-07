@@ -115,7 +115,7 @@ This is an example module that hooks a command event from `cmd` and provides a s
 exports.name = 'cmd_ping'
 exports.ibot_cmd$cmd_ping = function(server, privmsg, command)
 {
-	privmsg.reply(server, 'Pong!')
+	privmsg.reply('Pong!')
 }
 ```
 
