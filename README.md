@@ -92,17 +92,30 @@ mods.load('ibot-essentials/mods/autojoin')
 
 ### Example Module
 
-This is an example `mods` module which greets users who join a channel. There is a lot of room for improvement but it shows how iBot modules are written.
+This is an example `mods` module that greets users who join a channel. There's room for improvement but it's not meant to be perfect; just to show what an iBot module looks like.
 
 ##### greet.js
 ```javascript
 exports.name = 'greet'
 exports.ibot$recv = function(server, message)
 {
-    if(message.opcode === 'JOIN')
-    {
-        server.send('PRIVMSG ' + message.params[0] + ' :Welcome, ' + message.prefix.nick + '!!')
-    }
+	if(message.opcode === 'JOIN')
+	{
+		server.send('PRIVMSG ' + message.params[0] + ' :Welcome, ' + message.prefix.nick + '!!')
+	}
+}
+```
+
+### Commands
+
+This is an example module that hooks a command event from `cmd` and provides a simple ping command. Note that `ibot-essentials/mods/cmd` needs to be loaded into mods in order for commands to receive events.
+
+##### cmd_ping.js
+```javascript
+exports.name = 'cmd_ping'
+exports.ibot_cmd$cmd_ping = function(server, privmsg, command)
+{
+	privmsg.reply(server, 'Pong!')
 }
 ```
 
