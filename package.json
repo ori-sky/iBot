@@ -1,6 +1,6 @@
 {
   "name": "ibot",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "iBot is a `mods` module for a very lightweight, minimal, and extensible IRC client framework",
   "author": {
     "name": "Shockk",
